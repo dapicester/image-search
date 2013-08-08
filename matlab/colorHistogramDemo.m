@@ -1,4 +1,4 @@
-% COLORHISTOGRAMTEST Extract color histograms from sample images.
+% COLORHISTOGRAMDEMO Extract color histograms from sample images.
 
 % Author: Paolo D'Apice
 
