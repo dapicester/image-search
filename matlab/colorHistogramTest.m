@@ -10,10 +10,11 @@ images = { 'peppers.png', 'saturn.png', 'pears.png', ...
            'shoe2.jpg', ...
          };
 for str = images
-    image = imread(char(str));
+    name = char(str);
+    image = load_image(name);
     colorHistogram(image);
-    %print(sprintf('%s-histogram.eps', char(str)), '-depsc2', '-f1')
-    %print(sprintf('%s-histogram.png', char(str)), '-dpng', '-f1')
+    %print(sprintf('%s-histogram.eps', name), '-depsc2', '-f1')
+    %print(sprintf('%s-histogram.png', name), '-dpng', '-f1')
     pause
 end
 close
