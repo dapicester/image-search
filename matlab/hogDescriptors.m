@@ -1,29 +1,54 @@
-function [hog_matrix] = hogDescriptors(image, cellsize, bins)
+function [hog_matrix] = hogDescriptors(image, varargin)
 % HOGDESCRIPTORS  Extract histogram of oriented gradients from the image.
 %
 %   HOG = HOGDESCRIPTORS(IMAGE) extracts HOG
 %
-%   ... = HOGDESCRIPTORS(..., cellsize, bins) allows to specify the
-%   cellsize (defaults to 8) and the number of bins into wich divide the
-%   [0, pi) range.
+%   The function accepts the following options:
+%
+%   Cellsize:: [8]
+%
+%   Bins:: [9]
+%
+%   Edges:: [false]
+%
+%   Display:: [true]
+%
+%   The returned a matrix contains HISTOGRAM_SIZE x NUM_HISTOGRAMS values, 
+%   where HISTOGRAM_SIZE = 3 * BINS + 1.
+%
+%   See also VL_HOG
 
 % Author: Paolo D'Apice
 
-    if nargin < 2, cellsize = 8; end
-    if nargin < 3, bins = 9; end
-
+    opts.cellsize = 8;
+    opts.bins = 9;
+    opts.edges = false;
+    opts.display = true;
+    [opts, ~] = vl_argparse(opts, varargin);
+    
     % use grayscale
-    img = im2single(rgb2gray(image));
-    hog = vl_hog(img, cellsize, 'NumOrientations', bins);
+    sz = size(image);
+    if numel(sz) == 3 && sz(3) == 3
+        img = rgb2gray(image);
+    else
+        img = image;
+    end
+    
+    % edges
+    if opts.edges
+        img = edge(img, 'Canny');
+    end
+    
+    % descriptors
+    hog = vl_hog(im2single(img), opts.cellsize, 'NumOrientations', opts.bins);
 
     [m,n,d] = size(hog);
-    hog_matrix = reshape(hog, m*n, d);
+    hog_matrix = reshape(hog, m*n, d)';
     
-    display = true;
-    if display
+    if opts.display
         figure(1)
         subplot(121), drawimage(image, 'Original image')
-        subplot(122), drawhog(hog, cellsize, bins)
+        subplot(122), drawhog(hog, opts.cellsize, opts.bins)
     end
 end
 
@@ -32,5 +57,7 @@ function drawhog(hog, cellsize, bins)
     hog_image = vl_hog('render', hog, 'NumOrientations', bins);
     imagesc(hog_image)
     colormap(gray)
-    title(sprintf('HOG cellsize=%d', cellsize))
+    axis image
+    axis off
+    title(sprintf('HOG cellsize=%d orientations=%d', cellsize, bins))
 end

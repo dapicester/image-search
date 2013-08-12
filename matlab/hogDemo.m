@@ -12,7 +12,7 @@ images = { ... %'peppers.png', 'saturn.png', 'pears.png', ...
 for str = images
     name = char(str);
     image = load_image(name);
-    hogDescriptors(image);
+    hogDescriptors(image, 'cellsize', 8, 'bins', 8);
     %print(sprintf('%s-hog.eps', name), '-depsc2', '-f1')
     %print(sprintf('%s-hog.png', name), '-dpng', '-f1')
     pause
