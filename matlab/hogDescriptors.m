@@ -23,7 +23,7 @@ function [hog_matrix] = hogDescriptors(image, varargin)
     opts.cellsize = 8;
     opts.bins = 9;
     opts.edges = false;
-    opts.display = true;
+    opts.display = false;
     [opts, ~] = vl_argparse(opts, varargin);
     
     % use grayscale
