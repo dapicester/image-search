@@ -1,4 +1,4 @@
-function [topk,fk] = topk_colors(colors, freqs, k)
+function [idx,topk,fk] = topk_colors(colors, freqs, k)
 % TOPK_COLORS  Retrieves the top-k colors according to their occurence.
 %
 %  TOPK = TOPK_COLORS(COLORS, FREQS, K)

@@ -1,5 +1,6 @@
-function [colors, freqs] = count_colors(image, map)
-% COUNT_COLORS  Gets unique colors and their occurrence frequency.
+function [indices, freqs] = count_colors(image)
+% COUNT_COLORS  Gets unique color indices and their occurrence
+% normalized frequency.
 %
 %   [COLORS, FREQS] = COUNT_COLORS(IMAGE, MAP)
 
@@ -8,7 +9,6 @@ function [colors, freqs] = count_colors(image, map)
 words = sort(image(:));
 
 [~, first] = unique(words, 'first');
-[col, last]  = unique(words, 'last');
-
-colors = map(col + 1, :); % index 1-based
+[indices, last]  = unique(words, 'last');
 freqs = last - first + 1;
+freqs = freqs./sum(freqs); % normalize

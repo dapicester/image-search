@@ -1,28 +1,14 @@
-function [image, map] = reduce_colors(image, num_colors, dither)
+function reduced = reduce_colors(image, colormap, dither)
 % REDUCE_COLORS  Reduces the number of colors of the image.
 %
-%   IMAGE = REDUCE_COLORS(IMAGE, NUM_COLORS)  Returns the RGB image reduced
-%   to NUM_COLORS.
+%   IMAGE = REDUCE_COLORS(IMAGE, COLORMAP)  Returns the indexed image with 
+%   colors specified in COLORMAP.
 %
-%   [X, MAP] = REDUCE_COLORS(...)  returns the indexed image.
-%
-%   [...] = REDUCE_COLORS(__, DITHER)  enables or disables dithering.
+%   ... = REDUCE_COLORS(..., DITHER)  Enables or disables dithering.
 %   DITHER can be either 'dither' or 'nodither' (default).
 
 % Author: Paolo D'Apice
 
-isint = @(x) round(x) == x;
-if ~isint(num_colors), error('num_color must be integer: %g', num_colors); end
-
 if nargin < 3, dither = 'nodither'; end
 
-% uniform RGB colorspace
-map = colorcube(num_colors);
-
-indexed = rgb2ind(image, map, dither);
-
-if nargout == 1
-    image = ind2rgb(indexed, map);
-else
-    image = indexed;
-end
+reduced = rgb2ind(image, colormap, dither);
