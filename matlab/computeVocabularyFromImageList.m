@@ -24,7 +24,7 @@ for i = 1:len % parfor
     fullPath = names{i};
     fprintf('  Extracting features from %s (%d/%d)\n', fullPath, i, len);
     im = imread(fullPath);
-    d = hog(im, varargin{:}); % XXX use fhandle?
+    d = computeHog(im, varargin{:}); % XXX use fhandle?
     descriptors{i} = vl_colsubset(d, numFeatures, 'uniform');
 end
 
@@ -37,8 +37,3 @@ descriptors = single([descriptors{:}]);
 vocabulary.words = vl_kmeans(descriptors, numWords, 'algorithm', 'elkan', 'verbose');
 vocabulary.kdtree = vl_kdtreebuild(vocabulary.words, 'verbose');
 vocabulary.class = category;
-
-
-function d = hog(im, varargin)
-im = standardizeImage(im);
-d = hogDescriptors(im, 'cellsize', 8, 'bins', 8);

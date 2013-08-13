@@ -1,5 +1,5 @@
 function histograms = computeHistogramsFromImageList(vocabulary, names, varargin)
-% COMPUTEHISTOGRAMSFROMIMAGELIST  Compute historams for multiple images.
+% COMPUTEHISTOGRAMSFROMIMAGELIST  Computes histograms for multiple images.
 %
 %   HISTOGRAMS = COMPUTEHISTOGRAMSFROMIMAGELIST(VOCABULARY, NAMES)
 %   computes the histograms of visual words for the list of image
@@ -17,16 +17,8 @@ function histograms = computeHistogramsFromImageList(vocabulary, names, varargin
 % Author: Andrea Vedaldi
 % Author: Paolo D'Apice
 
-conf.descriptors = 'both';
 conf.cache = [];
 [conf, varargin] = vl_argparse(conf, varargin);
-
-switch conf.descriptors
-    case 'phog', opts = { 'phow', false };
-    case 'phow', opts = { 'phog', false };
-    otherwise,   opts = {}; % use defaults
-end
-opts = [opts, varargin];
 
 useCache = ~isempty(conf.cache);
 if useCache, fprintf('Using cache %s\n', conf.cache); end
@@ -37,13 +29,13 @@ for i = 1:len
     fullPath = names{i};
     if useCache
         % try to retrieve from cache
-        histograms{i} = getFromCache(fullPath, conf.cache); %#ok<PFBNS>
+        histograms{i} = getFromCache(fullPath, conf.cache);
         if ~isempty(histograms{i})
             continue
         end
     end
     fprintf('  Extracting histograms from %s (%d/%d)\n', fullPath, i, len);
-    histograms{i} = computeHistogramFromImage(vocabulary, fullPath, opts{:}); %#ok<PFBNS>
+    histograms{i} = computeHistogramFromImage(vocabulary, fullPath, varargin{:});
     if useCache
         % save to cache
         storeToCache(fullPath, conf.cache, histograms{i});

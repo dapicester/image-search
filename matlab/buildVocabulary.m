@@ -13,7 +13,7 @@ function vocabulary = buildVocabulary(category, varargin)
 %   SaveDir:: [global DATA_DIR]
 %     The directory where to save the dictionary.
 %
-%   Force:: [true]
+%   Force:: [false]
 %     Overwrite existing vocabulary.
 %
 %   NumImages:: [100]
@@ -29,7 +29,7 @@ global DATA_DIR
 
 conf.dataDir = DATA_DIR;
 conf.saveDir = DATA_DIR;
-conf.force = true;
+conf.force = false;
 conf.numImages = 100;
 conf.numWords = 300;
 [conf, varargin] = vl_argparse(conf, varargin);

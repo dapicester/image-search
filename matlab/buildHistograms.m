@@ -1,8 +1,9 @@
-function histograms = buildHistograms(classes, vocabulary, varargin)
-% BUILDHISTOGRAMS  Compute training histograms.
+function [histograms, names] = buildHistograms(classes, vocabulary, varargin)
+% BUILDHISTOGRAMS  Computes image histograms.
 %
-%   BUILDHISTOGRAMS(CLASSES, VOCABULARY) Compute histograms 
-%   for images in given CLASSES using the given VOCABULARY.
+%   [HISTOGRAMS, NAMES] = BUILDHISTOGRAMS(CLASSES, VOCABULARY) Computes
+%   histograms for images in given CLASSES using the given VOCABULARY.
+%   It returns also the file names.
 %
 %   The function accepts the following options:
 %
@@ -12,8 +13,8 @@ function histograms = buildHistograms(classes, vocabulary, varargin)
 %   SaveDir:: [global DATA_DIR]
 %     The directory where to save histograms.
 %
-%   Force:: [true]
-%     Compute the histograms if they already exist.
+%   Force:: [false]
+%     Overwrite existing histograms.
 %
 %   The function forwards any other unknown option.
 %
@@ -37,12 +38,14 @@ for c = classes
     if conf.force || ~exist(filename, 'file')
         fprintf('Processing images in class %s ...\n', class);
         names = readFileNames(class, conf.dataDir);
-        histograms = computeHistogramsFromImageList(vocabulary, names, varargin{:}); %#ok<NASGU>
-        save(filename, 'names', 'histograms');
+        histograms = computeHistogramsFromImageList(vocabulary, names, varargin{:});
+        save(filename, 'histograms', 'names');
         fprintf('Histograms for class %s saved to %s.\n', class, filename);
     else
         % no need to compute
         fprintf('Histograms for class %s already computed in %s.\n', class, filename);
-        histograms = load(filename);
+        temp = load(filename);
+        histograms = temp.histograms;
+        names = temp.names;
     end
 end

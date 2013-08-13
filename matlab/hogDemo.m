@@ -17,6 +17,7 @@ for str = images
     hogDescriptors(image, 'cellsize', 8, 'bins', 8);
     %print(sprintf('%s-hog.eps', name), '-depsc2', '-f1')
     %print(sprintf('%s-hog.png', name), '-dpng', '-f1')
+    disp('Press a key to continue or CTRL-C to stop.')
     pause
 end
 close
