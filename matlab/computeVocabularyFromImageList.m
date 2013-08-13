@@ -1,13 +1,14 @@
-function vocabulary = computeVocabularyFromImageList(class, names, numWords, varargin)
-% COMPUTEVOCABULARYFROMIMAGELIST  Compute a visual word vocabulary.
-%   VOCABULARY = COMPUTEVOCABULARYFROMIMAGELIST('CLASS', NAMES, NUMWORDS) 
+function vocabulary = computeVocabularyFromImageList(category, names, numWords, varargin)
+% COMPUTEVOCABULARYFROMIMAGELIST  Computes a visual word vocabulary.
+%
+%   VOCABULARY = COMPUTEVOCABULARYFROMIMAGELIST(CATEGORY, NAMES, NUMWORDS) 
 %   computes a visual word vocabulary from the list of image names (paths)
-%   NAMES belonging to the class CLASS.
+%   NAMES belonging to the given image CATEGORY.
 %
 %   VOCABULARY is a structure with fields:
-%     WORDS:: 128 x K matrix of visual word centers.
+%     WORDS:: N x K matrix of K visual word centers of dimension N.
 %     KDTREE:: KD-tree indexing the visual word for fast quantization.
-%     CLASS:: the class name.
+%     CLASS:: the image category.
 
 % Author: Andrea Vedaldi
 % Author: Paolo D'Apice
@@ -16,14 +17,14 @@ function vocabulary = computeVocabularyFromImageList(class, names, numWords, var
 % Only NUMFEATURES overall descriptors are retrieved as more do not really
 % improve the estimation of the visual dictionary but slow down computation.
 
-len = numel(names);
+len = length(names);
 descriptors = cell(1, len);
 numFeatures = round(numWords * 100 / len);
-for i = 1:len
+for i = 1:len % parfor
     fullPath = names{i};
     fprintf('  Extracting features from %s (%d/%d)\n', fullPath, i, len);
     im = imread(fullPath);
-    d = computeFeatures(im, varargin{:});
+    d = hog(im, varargin{:}); % XXX use fhandle?
     descriptors{i} = vl_colsubset(d, numFeatures, 'uniform');
 end
 
@@ -35,4 +36,9 @@ fprintf('Computing visual words and kdtree ...\n');
 descriptors = single([descriptors{:}]);
 vocabulary.words = vl_kmeans(descriptors, numWords, 'algorithm', 'elkan', 'verbose');
 vocabulary.kdtree = vl_kdtreebuild(vocabulary.words, 'verbose');
-vocabulary.class = class;
+vocabulary.class = category;
+
+
+function d = hog(im, varargin)
+im = standardizeImage(im);
+d = hogDescriptors(im, 'cellsize', 8, 'bins', 8);

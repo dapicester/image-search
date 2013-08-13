@@ -1,14 +1,16 @@
 clc
 clear all
 
+setup()
+environment()
+
 global DATA_DIR
-DATA_DIR = fullfile(fileparts(pwd), 'data');
 
 category = 'bag';
 
-vocabulary = buildVocabulary(category);
+vocabulary = buildVocabulary(category, 'force', false);
 histograms = buildHistograms(category, vocabulary);
-
+ 
 [index, data] = build_index(category, histograms);
 
 %image = imread(fullfile(DATA_DIR, 'test', 'T11oxTBsDT1RCvBVdK.jpg'));
