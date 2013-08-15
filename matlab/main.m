@@ -203,12 +203,15 @@ index = get_index(category, query_type, data);
 image = imread(get_query_filename(handles.query_list));
 query = computeHistogramFromImage(vocabulary, image);
 
-query_data = get_histograms(query_type, query);
-[indices,rank] = query_index(index, data, query_data, 16);
+try
+    query_data = get_histograms(query_type, query);
+    [indices,rank] = query_index(index, data, query_data, 16);
 
-matches = names(indices(indices~=0)); % discard any 0
-show_results(matches, rank, handles);
-
+    matches = names(indices(indices~=0)); % discard any 0
+    show_results(matches, rank, handles);
+catch err
+    uiwait(msgbox('Index need to be rebuilt!', 'Index', 'warn', 'modal'));
+end
 
 % --- Executes on button press in show_all_button.
 function show_all_button_Callback(~, ~, handles) %#ok<DEFNU>
