@@ -1,4 +1,4 @@
-function [hog_matrix] = hogDescriptors(image, varargin)
+function [hog_matrix, hog] = hogDescriptors(image, varargin)
 % HOGDESCRIPTORS  Extract histogram of oriented gradients from the image.
 %
 %   HOG = HOGDESCRIPTORS(IMAGE) extracts HOG
@@ -48,16 +48,6 @@ function [hog_matrix] = hogDescriptors(image, varargin)
     if opts.display
         figure(1)
         subplot(121), drawimage(image, 'Original image')
-        subplot(122), drawhog(hog, opts.cellsize, opts.bins)
+        subplot(122), drawhog(hog, opts.cellsize, opts.bins, opts.edges)
     end
-end
-
-
-function drawhog(hog, cellsize, bins)
-    hog_image = vl_hog('render', hog, 'NumOrientations', bins);
-    imagesc(hog_image)
-    colormap(gray)
-    axis image
-    axis off
-    title(sprintf('HOG cellsize=%d orientations=%d', cellsize, bins))
 end
