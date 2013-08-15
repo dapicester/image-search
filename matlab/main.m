@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 14-Aug-2013 15:39:40
+% Last Modified by GUIDE v2.5 14-Aug-2013 16:48:32
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -52,6 +52,10 @@ function main_OpeningFcn(hObject, ~, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to main (see VARARGIN)
 
+% dependencies and global variables
+setup;
+environment;
+
 % Choose default command line output for main
 handles.output = hObject;
 
@@ -61,8 +65,7 @@ handles.query_names = load_query_names;
 % Update handles structure
 guidata(hObject, handles);
 
-setup;
-environment;
+% initializations
 init_gui(handles)
 
 
@@ -155,38 +158,52 @@ switch query_type
 end
 
 
-% --- gets the indesx according to the query_type.
-function index = get_index(category, query_type, data)
-index = build_index(category, data, query_type, 'force', false);
-
-
-% --- display results
-function show_results(names, handles)
+% --- displays query results.
+function show_results(names, ranks, handles) %#ok<INUSL>
 for i = 1:16
     handle = handles.(['axes' num2str(i)]);
     imshow(names{i}, 'Parent', handle);
+    %text(5, 20, num2str(ranks(i)), 'Parent', handle)
 end
+
+
+% -- loads or computes vocabulary and histograms.
+function [vocabulary, histograms, names] = get_data(category, fv, fh, h)
+if nargin < 2, fv = false; end
+if nargin < 3, fh = false; end
+if nargin < 4, h = []; end
+vocabulary = buildVocabulary(category, 'force', fv);
+if ~isempty(h), waitbar(.6, h, 'Computing histograms ...'); end
+[histograms, names] = buildHistograms(category, vocabulary, 'force', fh);
+
+
+% --- gets the index according to the query_type.
+function index = get_index(category, query_type, data, force)
+if nargin < 4, force = false; end
+index = build_index(category, data, query_type, 'force', force);
+
 
 % === My functions end ===
 
 
 % --- Executes on button press in search_button.
 function search_button_Callback(~, ~, handles) %#ok<DEFNU>
-% corpus
 category = get_category(handles);
-vocabulary = buildVocabulary(category, 'force', false);
-[histograms, names] = buildHistograms(category, vocabulary, 'force', false);
 query_type = get_query_type(handles);
+
+[vocabulary, histograms, names] = get_data(category);
 data = get_histograms(query_type, histograms);
 index = get_index(category, query_type, data);
 
-% query image
+% query
 image = imread(get_query_filename(handles.query_list));
 query = computeHistogramFromImage(vocabulary, image);
+
 query_data = get_histograms(query_type, query);
 [indices,rank] = query_index(index, data, query_data, 16);
+
 matches = names(indices(indices~=0)); % discard any 0
-show_results(matches, handles);
+show_results(matches, rank, handles);
 
 
 % --- Executes on button press in show_all_button.
@@ -212,9 +229,36 @@ function category_panel_SelectionChangeFcn(~, ~, handles) %#ok<DEFNU>
 set_query_names(handles);
 
 
-% --- Executes on button press in build_index_button.
-function build_index_button_Callback(~, ~, handles) %#ok<DEFNU>
+% --- Executes on button press in index_button.
+function index_button_Callback(~, ~, handles) %#ok<DEFNU>
+category = get_category(handles);
+query_type = get_query_type(handles);
+
+h = waitbar(.25, 'Indexing ...');
+[~, histograms] = get_data(category);
+
+waitbar(.5, h);
+data = get_histograms(query_type, histograms);
+
+waitbar(.75, h);
+get_index(category, query_type, data, true);
+
+close(h);
 
 
 % --- Executes on button press in histogram_button.
 function histogram_button_Callback(~, ~, handles) %#ok<DEFNU>
+category = get_category(handles);
+h = waitbar(.3, 'Computing Histograms ...');
+t = tic;
+get_data(category, false, true, h);
+waitbar(1, h, sprintf('Done in %.2f sec', toc(t)));
+
+
+% --- Executes on button press in vocabulary_button.
+function vocabulary_button_Callback(~, ~, handles) %#ok<DEFNU>
+category = get_category(handles);
+h = waitbar(.3, 'Building vocabulary ...');
+t = tic;
+get_data(category, true, true, h);
+waitbar(1, h, sprintf('Done in %.2f sec', toc(t)));
