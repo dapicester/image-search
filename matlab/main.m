@@ -250,22 +250,28 @@ data = get_histograms(query_type, histograms);
 waitbar(.75, h);
 get_index(category, query_type, data, true);
 
-close(h);
+delete(h);
 
 
 % --- Executes on button press in histogram_button.
 function histogram_button_Callback(~, ~, handles) %#ok<DEFNU>
 category = get_category(handles);
 h = waitbar(.3, 'Computing Histograms ...');
+set(h, 'WindowStyle','modal', 'CloseRequestFcn','');
 t = tic;
 get_data(category, false, true, h);
 waitbar(1, h, sprintf('Done in %.2f sec', toc(t)));
+set(h, 'CloseRequestFcn', @(hObject, eventdata, handles) delete(hObject));
+waitfor(h)
 
 
 % --- Executes on button press in vocabulary_button.
 function vocabulary_button_Callback(~, ~, handles) %#ok<DEFNU>
 category = get_category(handles);
 h = waitbar(.3, 'Building vocabulary ...');
+set(h, 'WindowStyle','modal', 'CloseRequestFcn','');
 t = tic;
 get_data(category, true, true, h);
 waitbar(1, h, sprintf('Done in %.2f sec', toc(t)));
+set(h, 'CloseRequestFcn', @(hObject, eventdata, handles) delete(hObject));
+waitfor(h)
