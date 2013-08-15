@@ -14,7 +14,7 @@ images = { ... %'peppers.png', 'saturn.png', 'pears.png', ...
 for str = images
     name = char(str);
     image = load_image(fullfile(image_dir, name));
-    hogDescriptors(image, 'cellsize', 8, 'bins', 8);
+    hogDescriptors(image, 'cellsize', 8, 'bins', 8, 'edges', false, 'display', true);
     %print(sprintf('%s-hog.eps', name), '-depsc2', '-f1')
     %print(sprintf('%s-hog.png', name), '-dpng', '-f1')
     disp('Press a key to continue or CTRL-C to stop.')
