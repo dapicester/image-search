@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 14-Aug-2013 16:48:32
+% Last Modified by GUIDE v2.5 15-Aug-2013 10:00:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -95,7 +95,10 @@ set_query_names(handles);
 function names = load_query_names()
 global DATA_DIR
 filename = fullfile(DATA_DIR, 'test.txt');
-names = textread(filename, '%s');
+fid = fopen(filename);
+names = textscan(fid, '%s');
+names = names{:};
+fclose(fid);
 
 
 % --- gets the currently selected category.
@@ -128,8 +131,9 @@ show_query_image(handles.query_list, handles);
 function show_all(category)
 global DATA_DIR
 names = readFileNames(category, DATA_DIR);
-figure(2), imdisp(names, 'Size', 4);
-
+figure(2), imdisp(names, 'Size', 6);
+set(2, 'Name', sprintf('Category: %s (%d)', category, length(names)), ...
+       'NumberTitle', 'off', 'MenuBar', 'none');
 
 % --- gets the query image filename.
 function name = get_query_filename(handle)
