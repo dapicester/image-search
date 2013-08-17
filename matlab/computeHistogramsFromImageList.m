@@ -25,7 +25,7 @@ if useCache, fprintf('Using cache %s\n', conf.cache); end
 
 len = numel(names);
 histograms = cell(1, len);
-for i = 1:len
+parfor i = 1:len % parfor
     fullPath = names{i};
     if useCache
         % try to retrieve from cache

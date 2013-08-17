@@ -20,7 +20,7 @@ function vocabulary = computeVocabularyFromImageList(category, names, numWords, 
 len = length(names);
 descriptors = cell(1, len);
 numFeatures = round(numWords * 100 / len);
-for i = 1:len % parfor
+parfor i = 1:len % parfor
     fullPath = names{i};
     fprintf('  Extracting features from %s (%d/%d)\n', fullPath, i, len);
     im = imread(fullPath);
