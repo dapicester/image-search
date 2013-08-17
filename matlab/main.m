@@ -257,11 +257,10 @@ delete(h);
 function histogram_button_Callback(~, ~, handles) %#ok<DEFNU>
 category = get_category(handles);
 h = waitbar(.3, 'Computing Histograms ...');
-set(h, 'WindowStyle','modal', 'CloseRequestFcn','');
+set(h, 'WindowStyle','modal');
 t = tic;
 get_data(category, false, true, h);
 waitbar(1, h, sprintf('Done in %.2f sec', toc(t)));
-set(h, 'CloseRequestFcn', @(hObject, eventdata, handles) delete(hObject));
 waitfor(h)
 
 
@@ -269,9 +268,8 @@ waitfor(h)
 function vocabulary_button_Callback(~, ~, handles) %#ok<DEFNU>
 category = get_category(handles);
 h = waitbar(.3, 'Building vocabulary ...');
-set(h, 'WindowStyle','modal', 'CloseRequestFcn','');
+set(h, 'WindowStyle','modal');
 t = tic;
 get_data(category, true, true, h);
 waitbar(1, h, sprintf('Done in %.2f sec', toc(t)));
-set(h, 'CloseRequestFcn', @(hObject, eventdata, handles) delete(hObject));
 waitfor(h)
