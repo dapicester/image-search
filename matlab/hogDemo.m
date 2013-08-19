@@ -1,11 +1,15 @@
-function hogDemo()
+function hogDemo(varargin)
 % HOGDEMO Extract HOG from sample images.
 
 % Author: Paolo D'Apice
 
 clc
-clear all
 setup;
+
+opts.cellsize = 8;
+opts.bins = 8;
+opts.save = 'no';
+opts = vl_argparse(opts, varargin);
 
 image_dir = fullfile(fileparts(pwd), 'images');
 
@@ -17,19 +21,43 @@ images = { ... 'peppers.png', 'saturn.png', 'pears.png', ...
 for str = images
     name = char(str);
     image = load_image(fullfile(image_dir, name));
-    cellsize = 8;
-    bins = 8;
-    [~,hog] = hogDescriptors(image, 'cellsize', cellsize, 'bins', bins, 'edges', false);
-    [~,ehog] = hogDescriptors(image, 'cellsize', cellsize, 'bins', bins, 'edges', true);
+    
+    [~,hog] = hogDescriptors(image, 'cellsize', opts.cellsize, 'bins', opts.bins, 'edges', false);
+    [~,ehog] = hogDescriptors(image, 'cellsize', opts.cellsize, 'bins', opts.bins, 'edges', true);
  
-    figure(1)
-    set(1, 'units', 'normalized', 'outerposition', [0 0 1 1])
-    subplot(131), drawimage(image, 'Original image')
-    subplot(132), drawhog(hog, cellsize, bins, false);
-    subplot(133), drawhog(ehog, cellsize, bins, true);
-    %print(sprintf('%s-hog.eps', name), '-depsc2', '-f1')
-    %print(sprintf('%s-hog.png', name), '-dpng', '-f1')
+    display_results
+        
     disp('Press a key to continue or CTRL-C to stop.')
     pause
 end
 close
+
+
+function display_results
+% DISPLAY_RESULTS  Nested function to display results.
+    figure(1)
+    set(1, 'units', 'normalized', 'outerposition', [0 0 1 1])
+    subplot(131), drawimage(image, 'Original image')
+    subplot(132), drawhog(hog,  opts.cellsize, opts.bins, false);
+    subplot(133), drawhog(ehog, opts.cellsize, opts.bins, true);
+    
+    switch opts.save
+        case 'eps'
+            print(sprintf('%s-hog.eps', name), '-depsc2', '-f1')
+        case 'png'
+            print(sprintf('%s-hog.png', name), '-dpng', '-f1')
+    end
+end
+end % hogDemo
+
+
+function drawhog(hog, cellsize, bins, edges)
+% DRAWHOG  Render HOGs in for display.
+    hog_image = vl_hog('render', hog, 'NumOrientations', bins);
+    imagesc(hog_image)
+    colormap bone
+    axis image
+    axis off
+    title(sprintf('HOG cellsize=%d\norientations=%d edges=%s', ...
+                  cellsize, bins, tif(edges, 'true', 'false')))
+end
