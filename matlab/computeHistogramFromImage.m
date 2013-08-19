@@ -16,7 +16,8 @@ histogram.hog = bowHistogram(vocabulary, descriptors);
 % rgb colors
 persistent colors
 colors = colorcube(256);
-histogram.colors = colorHistogram(im, colors);
+temp = colorHistogram(im, colors, 'level', 1);
+histogram.colors = cat(2, temp{:});
 
 % hsv colors
 histogram.hsvcolors = hsvHistogram(im);

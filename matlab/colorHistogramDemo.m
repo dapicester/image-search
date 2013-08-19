@@ -6,6 +6,9 @@ function colorHistogramDemo(varargin)
 %   Colors:: [256]
 %     The number of colors on which compute the histogram.
 %
+%   Level:: [1]
+%     Pyramidal level, set to 0 to disable.
+%
 %   TopK:: [10]
 %     The top-K colors, set to 0 to disable.
 %
@@ -18,6 +21,7 @@ clc
 setup('all');
 
 opts.colors = 256;
+opts.level = 1;
 opts.topk = 10;
 opts.save = 'no';
 opts = vl_argparse(opts, varargin);
@@ -35,10 +39,8 @@ colormap = colorcube(opts.colors);
 for str = images
     name = char(str);
     image = load_image(fullfile(image_dir, name));
-    
     image = standardizeImage(image, 'height', 128);
-    [~, colors, freqs, quant] = colorHistogram(image, colormap);
-    [topk, fk] = topk_colors(colors, freqs, opts.topk);
+    [~, colors, freqs, quant] = colorHistogram(image, colormap, 'level', opts.level);
     
     display_results
     
@@ -54,18 +56,49 @@ function display_results
     set(gcf, 'Units', 'Normalized', ...
              'Position', [0 0 1 1], ...
              'PaperPositionMode', 'auto')
-    subplot(221), drawimage(image, 'Original')
-    subplot(222), drawimage(quant, colormap, 'Quantized')
+    rows = opts.level + 2;
+    subplot(rows,2,1), drawimage(image, 'Original')
+    subplot(rows,2,2), drawimage(quant, colormap, 'Quantized')
     
     ind2col = @(idx) colormap(idx + 1, :); % index 1-based
-
-    if opts.topk > 0
-        subplot(223), coloredbar(ind2col(colors), freqs)
-        subplot(224), drawtopk(ind2col(topk), fk);
-    else
-        subplot(2,2,[3 4]), coloredbar(ind2col(colormap, colors), freqs)
-    end
     
+    % TODO refactor code
+    
+    if opts.topk > 0
+        % level 0
+        [topk, fk] = topk_colors(colors{1}, freqs{1}, opts.topk);
+        subplot(rows,2,3), coloredbar(ind2col(colors{1}), freqs{1})
+        subplot(rows,2,4), drawtopk(ind2col(topk), fk);
+   
+        if opts.level > 0
+            % show only level 1
+            subplot(6,4,17), coloredbar(ind2col(colors{2}), freqs{2})
+            subplot(6,4,18), coloredbar(ind2col(colors{3}), freqs{3})
+            subplot(6,4,21), coloredbar(ind2col(colors{4}), freqs{4})
+            subplot(6,4,22), coloredbar(ind2col(colors{5}), freqs{5})
+
+            [topk, fk] = topk_colors(colors{2}, freqs{2}, opts.topk);
+            subplot(6,4,19), drawtopk(ind2col(topk), fk);
+            [topk, fk] = topk_colors(colors{3}, freqs{3}, opts.topk);
+            subplot(6,4,20), drawtopk(ind2col(topk), fk);
+            [topk, fk] = topk_colors(colors{4}, freqs{4}, opts.topk);
+            subplot(6,4,23), drawtopk(ind2col(topk), fk);
+            [topk, fk] = topk_colors(colors{5}, freqs{5}, opts.topk);
+            subplot(6,4,24), drawtopk(ind2col(topk), fk);
+        end
+    else
+        % level 0
+        subplot(rows,2,[3 4]), coloredbar(ind2col(colors{1}), freqs{1})
+        
+        if opts.level > 0
+            % show only level 1
+            subplot(6,4,[17 18]), coloredbar(ind2col(colors{2}), freqs{2})
+            subplot(6,4,[19 20]), coloredbar(ind2col(colors{3}), freqs{3})
+            subplot(6,4,[21 22]), coloredbar(ind2col(colors{4}), freqs{4})
+            subplot(6,4,[23 24]), coloredbar(ind2col(colors{5}), freqs{5})
+        end
+    end
+     
     switch opts.save
         case 'eps'
             print(sprintf('%s-chist.eps', name), '-depsc2', '-f1')
@@ -102,6 +135,7 @@ function [topk,fk] = topk_colors(colors, freqs, k)
     topk = colors(idx,:);
     fk = freqs(idx,:)./sum(freqs);
 end
+
 
 function drawtopk(colors, fk)
 % DRAWTOPK  Shows the top-k colors and their frequency.

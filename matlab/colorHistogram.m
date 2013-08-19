@@ -6,10 +6,40 @@ function [histogram, colors, freqs, quant] = colorHistogram(image, colormap, var
 %   frequency and the quantized indexed image.
 
 % Author: Paolo D'Apice
-    
+
+opts.level = 0;
+opts = vl_argparse(opts, varargin);
+
 quant = rgb2ind(image, colormap, 'nodither');
+
+[width, height] = size(quant);
+fhandle = @(x) do_color_histogram(x, length(colormap));
+
+histogram = [];
+colors = [];
+freqs = [];
+
+for i = 0:opts.level
+    % number of blocks
+    l = 2^i;
+    % block size
+    w = floor(width/l) .* ones(1, l);
+    h = floor(height/l) .* ones(1, l);
+    
+    blocks = mat2cell(quant(1:sum(w), 1:sum(h)), w, h);
+    [h,c,f] = cellfun(fhandle, blocks, 'UniformOutput', false);
+    
+    histogram = cat(1, histogram, h(:));
+    colors = cat(1, colors, c(:));
+    freqs = cat(1, freqs, f(:));
+end
+
+
+function [histogram, colors, freqs] = do_color_histogram(quant, num_colors)
+% DO_COLOR_HISTOGRAM  Actually compute color histogram.
+
 [colors, freqs] = count_colors(quant);
-histogram = make_histogram(colors, freqs, length(colormap));
+histogram = make_histogram(colors, freqs, num_colors);
 
 
 function [indices, freqs] = count_colors(image)
