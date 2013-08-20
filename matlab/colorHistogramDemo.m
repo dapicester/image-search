@@ -53,9 +53,8 @@ close
 function display_results
 % DISPLAY_RESULTS  Nested function to display results.
     figure(1)
-    set(gcf, 'Units', 'Normalized', ...
-             'Position', [0 0 1 1], ...
-             'PaperPositionMode', 'auto')
+    set(1, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);
+
     rows = opts.level + 2;
     subplot(rows,2,1), drawimage(image, 'Original')
     subplot(rows,2,2), drawimage(quant, colormap, 'Quantized')

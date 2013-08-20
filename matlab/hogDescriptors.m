@@ -18,19 +18,22 @@ function [hog_matrix, hog] = hogDescriptors(image, varargin)
 %
 %   Edges:: [false]
 %
-%   See also VL_HOG
+%   Level:: [0]
+%     Pyramid decomposition level, 0 for none.
+%
+%   See also VL_HOG.
 
 % Author: Paolo D'Apice
 
 opts.cellsize = 8;
 opts.bins = 8;
 opts.edges = false;
-opts.display = false;
+opts.level = 0;
 opts = vl_argparse(opts, varargin);
 
 % use grayscale
-[~,~,ch] = size(image);
-if ch == 3
+[width, height, cols] = size(image);
+if cols == 3
     image = rgb2gray(image);
 end
 
@@ -38,9 +41,26 @@ end
 if opts.edges
     image = edge(image, 'Canny');
 end
-    
-% descriptors
-hog = vl_hog(im2single(image), opts.cellsize, 'NumOrientations', opts.bins);
 
-[m,n,d] = size(hog);
-hog_matrix = reshape(hog, m*n, d)';
+fhandle = @(x) vl_hog(im2single(x), opts.cellsize, 'NumOrientations', opts.bins);
+
+hog = [];
+hog_matrix = [];
+
+for i = 0:opts.level
+    % number of blocks
+    l = 2^i;
+    % block size
+    w = floor(width/l) .* ones(1, l);
+    h = floor(height/l) .* ones(1, l);
+    
+    blocks = mat2cell(image(1:sum(w), 1:sum(h)), w, h);
+    h = cellfun(fhandle, blocks, 'UniformOutput', false); 
+    h = h(:);
+    
+    [m,n,d] = size(h{1});
+    hm = cellfun(@(x) reshape(x, m*n, d)', h, 'UniformOutput', false); 
+    
+    hog = cat(1, hog, h);
+    hog_matrix = cat(1, hog_matrix, hm);
+ end

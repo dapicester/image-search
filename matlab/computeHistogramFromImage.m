@@ -10,7 +10,8 @@ end
 im = standardizeImage(im);
 
 % hog
-descriptors = hogDescriptors(im);
+descriptors = hogDescriptors(im, 'level', 1);
+descriptors = cat(2, descriptors{:});
 histogram.hog = bowHistogram(vocabulary, descriptors);
 
 % rgb colors

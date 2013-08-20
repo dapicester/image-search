@@ -26,6 +26,7 @@ parfor i = 1:len % parfor
     im = imread(fullPath);
     im = standardizeImage(im);
     d = hogDescriptors(im);
+    d = cat(2, d{:});
     descriptors{i} = vl_colsubset(d, numFeatures, 'uniform');
 end
 
