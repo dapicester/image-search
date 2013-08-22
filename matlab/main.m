@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 15-Aug-2013 10:00:52
+% Last Modified by GUIDE v2.5 22-Aug-2013 11:38:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -111,6 +111,10 @@ category = get(selected, 'String');
 function type = get_query_type(handles)
 selected = get(handles.query_panel, 'SelectedObject');
 type = get(selected, 'String');
+if strcmp('color', type)
+    hsv = get(handles.hsv_checkbox, 'Value');
+    if hsv, type = 'hsv'; end
+end
     
 
 % --- filters query image names for the selected category.
@@ -157,6 +161,8 @@ switch query_type
         data = cat(1, histograms.colors)';
     case 'shape'
         data = cat(1, histograms.hog)';
+    case 'hsv'
+        data = cat(1, histograms.hsvcolors)';
     case 'combined'
         data = [cat(1, histograms.hog)'; cat(1, histograms.colors)'];
 end

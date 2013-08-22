@@ -15,3 +15,6 @@ histogram.hog = hist(words, numWords);
 
 % colors
 histogram.colors = colorHistogram(im, colorcube(256));
+
+% hsv colors
+histogram.hsvcolors = hsvHistogram(im);
