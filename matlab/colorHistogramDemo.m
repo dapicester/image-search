@@ -36,6 +36,7 @@ for str = images
     name = char(str);
     image = load_image(fullfile(image_dir, name));
     
+    image = standardizeImage(image, 'height', 128);
     [~, colors, freqs, quant] = colorHistogram(image, colormap);
     [topk, fk] = topk_colors(colors, freqs, opts.topk);
     

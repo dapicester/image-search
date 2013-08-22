@@ -22,6 +22,7 @@ for str = images
     name = char(str);
     image = load_image(fullfile(image_dir, name));
     
+    image = standardizeImage(image, 'height', 128);
     [~,hog] = hogDescriptors(image, 'cellsize', opts.cellsize, 'bins', opts.bins, 'edges', false);
     [~,ehog] = hogDescriptors(image, 'cellsize', opts.cellsize, 'bins', opts.bins, 'edges', true);
  
