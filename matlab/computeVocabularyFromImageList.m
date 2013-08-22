@@ -24,7 +24,8 @@ parfor i = 1:len % parfor
     fullPath = names{i};
     fprintf('  Extracting features from %s (%d/%d)\n', fullPath, i, len);
     im = imread(fullPath);
-    d = computeHog(im, varargin{:}); % XXX use fhandle?
+    % no standardize image when computing vocabulary
+    d = hogDescriptors(im);
     descriptors{i} = vl_colsubset(d, numFeatures, 'uniform');
 end
 

@@ -7,8 +7,10 @@ if ischar(im)
     im = imread(im);
 end
 
+im = standardizeImage(im, 'height', 128);
+
 % hog
-descriptors = computeHog(im, varargin{:});
+descriptors = hogDescriptors(im);
 words = quantizeDescriptors(vocabulary, descriptors);
 numWords = size(vocabulary.words, 2);
 histogram.hog = hist(words, numWords);

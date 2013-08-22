@@ -14,7 +14,7 @@ function [hog_matrix, hog] = hogDescriptors(image, varargin)
 %
 %   Cellsize:: [8]
 %
-%   Bins:: [9]
+%   Bins:: [8]
 %
 %   Edges:: [false]
 %
@@ -23,26 +23,24 @@ function [hog_matrix, hog] = hogDescriptors(image, varargin)
 % Author: Paolo D'Apice
 
 opts.cellsize = 8;
-opts.bins = 9;
+opts.bins = 8;
 opts.edges = false;
 opts.display = false;
 opts = vl_argparse(opts, varargin);
 
 % use grayscale
-sz = size(image);
-if numel(sz) == 3 && sz(3) == 3
-    img = rgb2gray(image);
-else
-    img = image;
+[~,~,ch] = size(image);
+if ch == 3
+    image = rgb2gray(image);
 end
 
 % edges
 if opts.edges
-    img = edge(img, 'Canny');
+    image = edge(image, 'Canny');
 end
     
 % descriptors
-hog = vl_hog(im2single(img), opts.cellsize, 'NumOrientations', opts.bins);
+hog = vl_hog(im2single(image), opts.cellsize, 'NumOrientations', opts.bins);
 
 [m,n,d] = size(hog);
 hog_matrix = reshape(hog, m*n, d)';

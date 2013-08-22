@@ -1,8 +1,12 @@
 function im = standardizeImage(im, varargin)
 % STANDARDIZEIMAGE  Rescale an image to a standard size
 %
-%   IM = STANDARDIZEIMAGE(IM) rescale IM to have a height of at most
-%   480 pixels.
+%   IM = STANDARDIZEIMAGE(IM) rescale IM to have a maximum height.
+%
+%   The function accepts the following options:
+%
+%   Height:: [480]
+%     Maximum height.
 
 % Author: Andrea Vedaldi
 % Author: Paolo D'Apice
