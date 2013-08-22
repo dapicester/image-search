@@ -1,4 +1,4 @@
-function im = standardizeImage(im)
+function im = standardizeImage(im, varargin)
 % STANDARDIZEIMAGE  Rescale an image to a standard size
 %
 %   IM = STANDARDIZEIMAGE(IM) rescale IM to have a height of at most
@@ -7,7 +7,8 @@ function im = standardizeImage(im)
 % Author: Andrea Vedaldi
 % Author: Paolo D'Apice
 
-HEIGHT = 480;
+opts.height = 480;
+opts = vl_argparse(opts, varargin);
 
 % TODO: ensure it is a JPEG in RGB colorspace
 
@@ -17,6 +18,8 @@ if ~isa(im, 'single')
 end
 
 % max size
-if size(im,1) > HEIGHT
-    im = imresize(im, [HEIGHT NaN]);
+if size(im,1) > opts.height
+    im = imresize(im, [opts.height NaN], 'bilinear');
+    % when using the default 'bicubic' one must ensure that values are in
+    % the correct range [0,1] or [0,255].
 end
