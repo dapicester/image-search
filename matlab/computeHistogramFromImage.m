@@ -11,9 +11,7 @@ im = standardizeImage(im, 'height', 128);
 
 % hog
 descriptors = hogDescriptors(im);
-words = quantizeDescriptors(vocabulary, descriptors);
-numWords = size(vocabulary.words, 2);
-histogram.hog = hist(words, numWords);
+histogram.hog = bowHistogram(vocabulary, descriptors);
 
 % colors
 histogram.colors = colorHistogram(im, colorcube(256));
