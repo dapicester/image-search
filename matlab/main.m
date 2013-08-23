@@ -169,11 +169,13 @@ end
 
 
 % --- displays query results.
-function show_results(names, ranks, handles) %#ok<INUSL>
+function show_results(names, ranks, handles)
 for i = 1:16
     handle = handles.(['axes' num2str(i)]);
     imshow(names{i}, 'Parent', handle);
-    %text(5, 20, num2str(ranks(i)), 'Parent', handle)
+    if get(handles.rank_checkbox, 'Value') > 0
+        text(5, 20, num2str(ranks(i)), 'Parent', handle)
+    end
 end
 
 
@@ -216,6 +218,7 @@ try
     matches = names(indices(indices~=0)); % discard any 0
     show_results(matches, rank, handles);
 catch err
+    disp(err)
     uiwait(msgbox('Index need to be rebuilt!', 'Index', 'warn', 'modal'));
 end
 
