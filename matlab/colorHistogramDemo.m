@@ -142,7 +142,7 @@ function drawtopk(colors, fk)
     k = length(colors);
     for i = 1:k
         patch([i-1 i-1 i i], [0 1 1 0], colors(i,:))
-        text(i-1 + 0.2, 0.5, sprintf('%.2f%%', fk(i)*100))
+        %text(i-1 + 0.2, 0.5, sprintf('%.2f%%', fk(i)*100))
     end
     set(gca, 'xticklabel', '', 'yticklabel', '')
     title(sprintf('Top-%d Colors',k))
