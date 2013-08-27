@@ -164,7 +164,7 @@ switch query_type
     case 'hsv'
         data = cat(1, histograms.hsvcolors)';
     case 'combined'
-        data = [cat(1, histograms.hog)'; cat(1, histograms.colors)'];
+        data = [cat(1, histograms.hog)'; cat(1, histograms.hsvcolors)']/2;
 end
 
 

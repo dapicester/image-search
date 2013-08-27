@@ -35,7 +35,7 @@ hsv = cat(1, histograms.hsvcolors)';
 hsv_index = build_index(category, hsv, 'hsv', 'force', force_index);
 
 % both
-combined = [hog; colors];
+combined = [hog; hsv]/2;
 combined_index = build_index(category, combined, 'combined', 'force', force_index);
 
 % query image
