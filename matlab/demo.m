@@ -59,8 +59,15 @@ figure(3), display_matches(image, names, color_indices, color_rank);
 figure(4), display_matches(image, names, hsv_indices, hsv_rank);
 
 % query by shape and color
-[combined_indices,combined_rank] = query_index(combined_index, combined, [query.hog query.colors]', num_query);
+[combined_indices,combined_rank] = query_index(combined_index, combined, [query.hog query.hsvcolors]'/2, num_query);
 figure(5), display_matches(image, names, combined_indices, combined_rank);
 
-% cleanup
-clear force_vocab force_hist force_index num_query 
+% weighted (weights must sum to 1)
+weight_color = 0.5;
+weight_shape = 1.0 - weight_color;
+
+[w1_indices, w1_rank] = query_index(hsv_index, hsv, query.hsvcolors', 4*num_query);
+[w2_indices, w2_rank] = query_index(hog_index, hog, query.hog', 4*num_query);
+[weighted_indices, weighted_rank] = composed_distance({w1_indices; w2_indices}, ...
+    {w1_rank; w2_rank}, [weight_color, weight_shape], num_query);
+figure(6), display_matches(image, names, weighted_indices, weighted_rank);

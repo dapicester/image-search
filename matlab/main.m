@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 22-Aug-2013 11:38:55
+% Last Modified by GUIDE v2.5 23-Aug-2013 14:32:15
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -165,6 +165,8 @@ switch query_type
         data = cat(1, histograms.hsvcolors)';
     case 'combined'
         data = [cat(1, histograms.hog)'; cat(1, histograms.hsvcolors)']/2;
+    otherwise
+        uiwait(msgbox('Not supported yet', 'Query', 'warn', 'modal'));
 end
 
 
@@ -195,6 +197,22 @@ if nargin < 4, force = false; end
 index = build_index(category, data, query_type, 'force', force);
 
 
+function [data, index] = get_index_data(category, query_type, histograms)
+data = get_histograms(query_type, histograms);
+index = get_index(category, query_type, data);
+
+
+function [indices,rank,names] = do_search(category, query_type, num_query, handles)
+[vocabulary, histograms, names] = get_data(category);
+[data, index] = get_index_data(category, query_type, histograms);
+
+% query
+image = imread(get_query_filename(handles.query_list));
+query = computeHistogramFromImage(vocabulary, image);
+
+query_data = get_histograms(query_type, query);
+[indices,rank] = query_index(index, data, query_data, num_query);
+
 % === My functions end ===
 
 
@@ -202,25 +220,35 @@ index = build_index(category, data, query_type, 'force', force);
 function search_button_Callback(~, ~, handles) %#ok<DEFNU>
 category = get_category(handles);
 query_type = get_query_type(handles);
-
-[vocabulary, histograms, names] = get_data(category);
-data = get_histograms(query_type, histograms);
-index = get_index(category, query_type, data);
-
-% query
-image = imread(get_query_filename(handles.query_list));
-query = computeHistogramFromImage(vocabulary, image);
-
+num_query = 16;
 try
-    query_data = get_histograms(query_type, query);
-    [indices,rank] = query_index(index, data, query_data, 16);
+    if ~strcmp(query_type, 'weighted')
+        [indices,rank,names] = do_search(category, query_type, num_query, handles);
+    else
+        k = 10;
+        [indices_c, rank_c] = do_search(category, 'hsv', k*num_query, handles);
+        [indices_s, rank_s, names] = do_search(category, 'shape', k*num_query, handles);
+    
+        % weights
+        val = get(handles.weighted_slider, 'Value');
+        max = get(handles.weighted_slider, 'Max');
+        weight_c = val;
+        weight_s = max - val;
 
+        [indices,rank] = composed_distance(...
+                {indices_c; indices_s}, {rank_c; rank_s}, ...
+                [weight_c, weight_s], num_query);
+    end
+    
+    % show matches
     matches = names(indices(indices~=0)); % discard any 0
     show_results(matches, rank, handles);
+
 catch err
     disp(err)
     uiwait(msgbox('Index need to be rebuilt!', 'Index', 'warn', 'modal'));
 end
+
 
 % --- Executes on button press in show_all_button.
 function show_all_button_Callback(~, ~, handles) %#ok<DEFNU>
@@ -282,3 +310,10 @@ t = tic;
 get_data(category, true, true, h);
 waitbar(1, h, sprintf('Done in %.2f sec', toc(t)));
 waitfor(h)
+
+
+% --- Executes when selected object is changed in query_panel.
+function query_panel_SelectionChangeFcn(~, eventdata, handles) %#ok<DEFNU>
+new = eventdata.NewValue;
+set(handles.hsv_checkbox, 'Enable', tif(new == handles.color_button, 'on', 'off'));
+set(handles.weighted_slider, 'Enable', tif(new == handles.weighted_button, 'on', 'off'));
