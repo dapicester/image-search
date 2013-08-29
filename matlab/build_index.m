@@ -5,8 +5,6 @@ function index = build_index(category, data, name, varargin)
 %   DATA for images in CATEGORY
 %
 
-
-
 % Author: Paolo D'Apice
 
 global DATA_DIR
