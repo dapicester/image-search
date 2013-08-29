@@ -15,7 +15,7 @@ function colorHistogramDemo(varargin)
 % Author: Paolo D'Apice
 
 clc
-setup;
+setup('all');
 
 opts.colors = 256;
 opts.topk = 10;

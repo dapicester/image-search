@@ -15,7 +15,7 @@ function hsvHistogramDemo(varargin)
 % Author: Paolo D'Apice
 
 clc
-setup;
+setup('all');
 
 opts.levels = [18 3 3];
 opts.topk = 10;

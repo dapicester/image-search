@@ -53,7 +53,7 @@ function main_OpeningFcn(hObject, ~, handles, varargin)
 % varargin   command line arguments to main (see VARARGIN)
 
 % dependencies and global variables
-setup;
+setup('all');
 environment;
 
 % Choose default command line output for main

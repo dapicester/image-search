@@ -5,7 +5,7 @@
 clc
 clear all
 
-setup()
+setup('all')
 environment()
 
 global DATA_DIR

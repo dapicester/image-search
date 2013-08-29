@@ -4,7 +4,7 @@ function hogDemo(varargin)
 % Author: Paolo D'Apice
 
 clc
-setup;
+setup('all');
 
 opts.cellsize = 8;
 opts.bins = 8;
