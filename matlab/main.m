@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 23-Aug-2013 14:32:15
+% Last Modified by GUIDE v2.5 30-Aug-2013 12:19:46
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -109,11 +109,13 @@ category = get(selected, 'String');
 
 % --- get the currently selected query_type.
 function type = get_query_type(handles)
-selected = get(handles.query_panel, 'SelectedObject');
-type = get(selected, 'String');
-if strcmp('color', type)
-    hsv = get(handles.hsv_checkbox, 'Value');
-    if hsv, type = 'hsv'; end
+switch get(handles.query_menu, 'Value')
+    case 1, type = 'rgb';
+    case 2, type = 'hsv';
+    case 3, type = 'shape';
+    case 4, type = 'rgb_shape';
+    case 5, type = 'hsv_shape';
+    case 6, type = 'weighted';
 end
     
 
@@ -139,6 +141,7 @@ figure(2), imdisp(names, 'Size', 6);
 set(2, 'Name', sprintf('Category: %s (%d)', category, length(names)), ...
        'NumberTitle', 'off', 'MenuBar', 'none');
 
+   
 % --- gets the query image filename.
 function name = get_query_filename(handle)
 global DATA_DIR
@@ -157,16 +160,19 @@ subimage(image), set(handles.query_axes, 'Visible', 'off')
 % --- selects histograms according to the query_type.
 function data = get_histograms(query_type, histograms)
 switch query_type
-    case 'color'
+    case 'rgb'
         data = cat(1, histograms.colors)';
     case 'shape'
         data = cat(1, histograms.hog)';
     case 'hsv'
         data = cat(1, histograms.hsvcolors)';
-    case 'combined'
+    case 'rgb_shape'
+        data = [cat(1, histograms.hog)'; cat(1, histograms.colors)']/2;
+    case 'hsv_shape'
         data = [cat(1, histograms.hog)'; cat(1, histograms.hsvcolors)']/2;
     otherwise
-        uiwait(msgbox('Not supported yet', 'Query', 'warn', 'modal'));
+        % TODO
+        data = [];
 end
 
 
@@ -225,6 +231,9 @@ try
     if ~strcmp(query_type, 'weighted')
         [indices,rank,names] = do_search(category, query_type, num_query, handles);
     else
+        % XXX work in progress
+        msgbox('Not supported yet', 'Query', 'warn', 'modal');
+        
         k = 10;
         [indices_c, rank_c] = do_search(category, 'hsv', k*num_query, handles);
         [indices_s, rank_s, names] = do_search(category, 'shape', k*num_query, handles);
@@ -263,6 +272,14 @@ show_query_image(hObject, handles)
 % --- Executes during object creation, after setting all properties.
 function query_list_CreateFcn(hObject, ~, ~) %#ok<DEFNU>
 % listbox controls usually have a white background on Windows.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function query_menu_CreateFcn(hObject, ~, ~) %#ok<DEFNU>
+% popupmenu controls usually have a white background on Windows.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -312,8 +329,7 @@ waitbar(1, h, sprintf('Done in %.2f sec', toc(t)));
 waitfor(h)
 
 
-% --- Executes when selected object is changed in query_panel.
-function query_panel_SelectionChangeFcn(~, eventdata, handles) %#ok<DEFNU>
-new = eventdata.NewValue;
-set(handles.hsv_checkbox, 'Enable', tif(new == handles.color_button, 'on', 'off'));
-set(handles.weighted_slider, 'Enable', tif(new == handles.weighted_button, 'on', 'off'));
+% --- Executes on selection change in query_menu.
+function query_menu_Callback(hObject, ~, handles) %#ok<DEFNU>
+value = get(hObject, 'Value');
+set(handles.weighted_slider, 'Enable', tif(value == 6, 'on', 'off'))
