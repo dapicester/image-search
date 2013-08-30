@@ -107,17 +107,12 @@ selected = get(handles.category_panel, 'SelectedObject');
 category = get(selected, 'String');
 
 
-% --- get the currently selected query_type.
+% --- gets the currently selected query_type.
 function type = get_query_type(handles)
-switch get(handles.query_menu, 'Value')
-    case 1, type = 'rgb';
-    case 2, type = 'hsv';
-    case 3, type = 'shape';
-    case 4, type = 'rgb_shape';
-    case 5, type = 'hsv_shape';
-    case 6, type = 'weighted';
-end
-    
+persistent query_types
+query_types = { 'rgb', 'hsv', 'shape', 'rgb_shape', 'hsv_shape', 'weighted' };
+type = query_types{get(handles.query_menu, 'Value')};
+
 
 % --- filters query image names for the selected category.
 function names = get_query_names(category, handles)
@@ -133,7 +128,7 @@ set(handles.query_list, 'String', names);
 show_query_image(handles.query_list, handles);
 
 
-% --- Displays all images beloging to the given category.
+% --- displays all images beloging to the given category.
 function show_all(category)
 global DATA_DIR
 names = readFileNames(category, DATA_DIR);
@@ -155,25 +150,6 @@ function show_query_image(handle, handles)
 image = imread(get_query_filename(handle));
 axes(handles.query_axes)
 subimage(image), set(handles.query_axes, 'Visible', 'off')
-
-
-% --- selects histograms according to the query_type.
-function data = get_histograms(query_type, histograms)
-switch query_type
-    case 'rgb'
-        data = cat(1, histograms.colors)';
-    case 'shape'
-        data = cat(1, histograms.hog)';
-    case 'hsv'
-        data = cat(1, histograms.hsvcolors)';
-    case 'rgb_shape'
-        data = [cat(1, histograms.hog)'; cat(1, histograms.colors)']/2;
-    case 'hsv_shape'
-        data = [cat(1, histograms.hog)'; cat(1, histograms.hsvcolors)']/2;
-    otherwise
-        % TODO
-        data = [];
-end
 
 
 % --- displays query results.
@@ -203,11 +179,13 @@ if nargin < 4, force = false; end
 index = build_index(category, data, query_type, 'force', force);
 
 
+% --- loads index data.
 function [data, index] = get_index_data(category, query_type, histograms)
 data = get_histograms(query_type, histograms);
 index = get_index(category, query_type, data);
 
 
+% --- performs search.
 function [indices,rank,names] = do_search(category, query_type, num_query, handles)
 [vocabulary, histograms, names] = get_data(category);
 [data, index] = get_index_data(category, query_type, histograms);
