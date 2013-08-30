@@ -14,6 +14,9 @@ function demo(varargin)
 %
 %   Query:: [1]
 %     Index of the image to used as a query. Ranges from 1 to 5.
+%
+%   NumResults:: [25]
+%     Number of images to be retrieved from the query.
 
 % Author: Paolo D'Apice
 
@@ -23,6 +26,8 @@ environment();
 opts.type = 'hsv';
 opts.category = 'bag';
 opts.query = 1;
+opts.numResults = 25;
+
 opts = vl_argparse(opts, varargin);
 
 global DATA_DIR
@@ -30,7 +35,7 @@ global DATA_DIR
 force_vocab = false;
 force_hist = false || force_vocab;
 force_index = false || force_hist;
-num_query = 25;
+
 
 vocabulary = buildVocabulary(opts.category, 'force', force_vocab);
 [histograms, names] = buildHistograms(opts.category, vocabulary, 'force', force_hist);
@@ -47,7 +52,7 @@ figure(1), imshow(image), title('Query image')
 % do query
 data = get_histograms(opts.type, histograms);
 index = build_index(opts.category, data, opts.type, 'force', force_index);
-[indices, rank] = query_index(index, data, query_data, num_query);
+[indices, rank] = query_index(index, data, query_data, opts.numResults);
 figure(2), display_matches(image, names, indices, rank);
 set(2, 'Name', sprintf('Query %s by %s', opts.category, opts.type), ...
        'NumberTitle', 'off', 'MenuBar', 'none');

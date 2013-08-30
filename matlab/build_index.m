@@ -11,12 +11,13 @@ global DATA_DIR
 
 opts.saveDir = DATA_DIR;
 opts.force = false;
+opts.numtrees = 1;
 [opts, ~] = vl_argparse(opts, varargin);
 
 filename = fullfile(opts.saveDir, sprintf('%s_%s_index.mat', category, name));
 
 if opts.force || ~exist(filename, 'file')
-    index = vl_kdtreebuild(data, 'numtrees', 1, 'verbose');
+    index = vl_kdtreebuild(data, 'numtrees', opts.numtrees, 'verbose');
     index.category = category;
     index.name = name;
     save(filename, '-struct', 'index');

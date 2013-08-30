@@ -232,7 +232,8 @@ try
     show_results(matches, rank, handles);
 
 catch err
-    disp(err)
+    disp(err.message)
+    getReport(err)
     uiwait(msgbox('Index need to be rebuilt!', 'Index', 'warn', 'modal'));
 end
 
