@@ -7,7 +7,7 @@ if ischar(im)
     im = imread(im);
 end
 
-im = standardizeImage(im, 'height', 128);
+im = standardizeImage(im);
 
 % hog
 descriptors = hogDescriptors(im);
