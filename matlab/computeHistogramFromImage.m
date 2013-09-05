@@ -13,8 +13,10 @@ im = standardizeImage(im);
 descriptors = hogDescriptors(im);
 histogram.hog = bowHistogram(vocabulary, descriptors);
 
-% colors
-histogram.colors = colorHistogram(im, colorcube(256));
+% rgb colors
+persistent colors
+colors = colorcube(256);
+histogram.colors = colorHistogram(im, colors);
 
 % hsv colors
 histogram.hsvcolors = hsvHistogram(im);
