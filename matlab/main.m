@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 30-Aug-2013 12:19:46
+% Last Modified by GUIDE v2.5 05-Sep-2013 11:50:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -114,6 +114,12 @@ query_types = { 'rgb', 'hsv', 'shape', 'rgb_shape', 'hsv_shape', 'weighted' };
 type = query_types{get(handles.query_menu, 'Value')};
 
 
+% --- gets the currently selected distance.
+function distance = get_index_distance(handles)
+values = get(handles.distance_menu, 'String');
+distance = values{get(handles.distance_menu, 'Value')};
+
+
 % --- filters query image names for the selected category.
 function names = get_query_names(category, handles)
 names = handles.query_names;
@@ -174,21 +180,21 @@ if ~isempty(h), waitbar(.6, h, 'Computing histograms ...'); end
 
 
 % --- gets the index according to the query_type.
-function index = get_index(category, query_type, data, force)
-if nargin < 4, force = false; end
-index = build_index(category, data, query_type, 'force', force);
+function index = get_index(category, query_type, data, distance, force)
+if nargin < 5, force = false; end
+index = build_index(category, data, query_type, 'distance', distance, 'force', force);
 
 
 % --- loads index data.
-function [data, index] = get_index_data(category, query_type, histograms)
+function [data, index] = get_index_data(category, query_type, histograms, distance)
 data = get_histograms(query_type, histograms);
-index = get_index(category, query_type, data);
+index = get_index(category, query_type, data, distance);
 
 
 % --- performs search.
-function [indices,rank,names] = do_search(category, query_type, num_query, handles)
+function [indices,rank,names] = do_search(category, query_type, num_query, distance, handles)
 [vocabulary, histograms, names] = get_data(category);
-[data, index] = get_index_data(category, query_type, histograms);
+[data, index] = get_index_data(category, query_type, histograms, distance);
 
 % query
 image = imread(get_query_filename(handles.query_list));
@@ -204,10 +210,11 @@ query_data = get_histograms(query_type, query);
 function search_button_Callback(~, ~, handles) %#ok<DEFNU>
 category = get_category(handles);
 query_type = get_query_type(handles);
+distance = get_index_distance(handles);
 num_query = 16;
 try
     if ~strcmp(query_type, 'weighted')
-        [indices,rank,names] = do_search(category, query_type, num_query, handles);
+        [indices,rank,names] = do_search(category, query_type, num_query, distance, handles);
     else
         % XXX work in progress
         msgbox('Not supported yet', 'Query', 'warn', 'modal');
@@ -264,6 +271,14 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
+% --- Executes during object creation, after setting all properties.
+function distance_menu_CreateFcn(hObject, ~, ~) %#ok<DEFNU>
+% popupmenu controls usually have a white background on Windows.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
 % --- Executes when selected object is changed in category_panel.
 function category_panel_SelectionChangeFcn(~, ~, handles) %#ok<DEFNU>
 set_query_names(handles);
@@ -273,6 +288,7 @@ set_query_names(handles);
 function index_button_Callback(~, ~, handles) %#ok<DEFNU>
 category = get_category(handles);
 query_type = get_query_type(handles);
+distance = get_index_distance(handles);
 
 h = waitbar(.25, 'Indexing ...');
 [~, histograms] = get_data(category);
@@ -281,7 +297,7 @@ waitbar(.5, h);
 data = get_histograms(query_type, histograms);
 
 waitbar(.75, h);
-get_index(category, query_type, data, true);
+get_index(category, query_type, data, distance, true);
 
 delete(h);
 

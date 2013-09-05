@@ -24,6 +24,7 @@ setup('all');
 environment();
 
 opts.type = 'hsv';
+opts.distance = 'l2';
 opts.category = 'bag';
 opts.query = 1;
 opts.numResults = 25;
@@ -51,7 +52,7 @@ figure(1), imshow(image), title('Query image')
 
 % do query
 data = get_histograms(opts.type, histograms);
-index = build_index(opts.category, data, opts.type, 'force', force_index);
+index = build_index(opts.category, data, opts.type, 'distance', opts.distance, 'force', force_index);
 [indices, rank] = query_index(index, data, query_data, opts.numResults);
 figure(2), display_matches(image, names, indices, rank);
 set(2, 'Name', sprintf('Query %s by %s', opts.category, opts.type), ...
