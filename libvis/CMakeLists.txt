@@ -30,4 +30,11 @@ else()
 endif()
 target_link_libraries(vis ${libraries})
 
+if(ENABLE_CTAGS)
+    add_ctags_target(vis)
+endif()
+
+if(ENABLE_TESTING)
+    add_subdirectory(test)
+endif()
 
