@@ -1,10 +1,11 @@
-# usage: add_unit_test(NAME name 
+# usage: add_unit_test(NAME name
 #                      SOURCES source1 source2 ...
 #                      [LINK_LIBRARIES lib1 lib2 ...]
+#                      [ARGS arg1 arg2 ...]
 #                      [TAG tag])
 include(MacroParseArguments)
 macro(add_unit_test)
-    parse_arguments(UNIT_TEST "NAME;SOURCES;LINK_LIBRARIES;TAG" ${ARGN})
+    parse_arguments(UNIT_TEST "NAME;SOURCES;LINK_LIBRARIES;ARGS;TAG" ${ARGN})
     list(GET UNIT_TEST_DEFAULT_ARGS 0 UNIT_TEST_NAME)
 
     if(NOT UNIT_TEST_NAME)
@@ -20,6 +21,6 @@ macro(add_unit_test)
     else()
         set(testName "${UNIT_TEST_NAME}")
     endif()
-    add_test(NAME ${testName} COMMAND ${UNIT_TEST_NAME})
+    add_test(NAME ${testName} COMMAND ${UNIT_TEST_NAME} ${UNIT_TEST_ARGS})
     message(STATUS "  added test: ${testName}")
 endmacro()
