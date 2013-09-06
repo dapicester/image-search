@@ -1,16 +1,33 @@
 cmake_minimum_required(VERSION 2.8)
 project(libvis)
 
-set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(libvis_VERSION_MAJOR 0)
+set(libvis_VERSION_MINOR 1)
+set(libvis_VERSION_PATCH 0)
 
-set(imsearch_SRCS
-    src/imsearch.cpp
-)
+message(STATUS "Building libvis")
+macro_build_info()
 
-include_directories("${PROJECT_BINARY_DIR}")
-include_directories("${PROJECT_INCLUDE_DIR}")
+list(APPEND includes ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_library(vis SHARED ${imsearch_SRCS})
-#add_library(vis-static STATIC ${imsearch_SRCS})
+find_package(OpenCV COMPONENTS core imgproc highgui REQUIRED)
+list(APPEND libraries ${OpenCV_LIBS})
+list(APPEND includes ${OpenCV_INCLUDE_DIRS})
+
+find_package(VLFeat REQUIRED)
+list(APPEND libraries ${VLFEAT_LIBRARIES})
+list(APPEND includes ${VLFEAT_INCLUDE_DIRS})
+
+file(GLOB imsearch_SRCS src/*.c src/*.cpp)
+
+list(REMOVE_DUPLICATES includes)
+include_directories(${includes})
+
+if(BUILD_STATIC_LIBRARIES)
+    add_library(vis STATIC ${imsearch_SRCS})
+else()
+    add_library(vis SHARED ${imsearch_SRCS})
+endif()
+target_link_libraries(vis ${libraries})
+
 
