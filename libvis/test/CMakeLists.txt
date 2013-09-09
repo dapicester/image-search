@@ -11,3 +11,7 @@ add_unit_test(NAME kmeans
     SOURCES kmeans.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS})
 
+add_unit_test(NAME standardizeImage
+    SOURCES standardize.cpp
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS}
+    ARGS ${CMAKE_CURRENT_SOURCE_DIR}/lena.png)
