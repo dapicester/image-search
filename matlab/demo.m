@@ -61,7 +61,7 @@ set(2, 'Name', sprintf('Query %s by %s', opts.category, opts.type), ...
 % TODO weighted (weights must sum to 1)
 % weight_color = 0.5;
 % weight_shape = 1.0 - weight_color;
-% 
+%
 % [w1_indices, w1_rank] = query_index(hsv_index, hsv, query.hsvcolors', 4*num_query);
 % [w2_indices, w2_rank] = query_index(hog_index, hog, query.hog', 4*num_query);
 % [weighted_indices, weighted_rank] = composed_distance({w1_indices; w2_indices}, ...

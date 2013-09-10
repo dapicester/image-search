@@ -1,7 +1,7 @@
 function vocabulary = buildVocabulary(category, varargin)
 % BUILD_VOCABULARY  Builds a visual word vocabulary.
 %
-%   VOCABULARY = BUILD_VOCABULARY(CATEGORY)  Computes vocabulary of visual 
+%   VOCABULARY = BUILD_VOCABULARY(CATEGORY)  Computes vocabulary of visual
 %   words for images in the given category. Image files are stored in
 %   DATA_DIR/CATEGORY directory.
 %
@@ -44,10 +44,10 @@ if conf.force || ~exist(vocabularyFile, 'file')
         % Use only a (not small) subset of training images
         names = vl_colsubset(names', conf.numImages, 'uniform');
     end
-                        
+
     vocabulary = computeVocabularyFromImageList(category, names, ...
                         conf.numWords, varargin{:});
-                    
+
     % save to file
     save(vocabularyFile, '-struct', 'vocabulary');
     fprintf('Vocabulary saved to %s.\n', vocabularyFile);
