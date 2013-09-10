@@ -26,7 +26,9 @@ struct HogDescriptors {
     /// Convert to OpenCV Mat.
     cv::Mat toMat() const;
 
+#ifndef BOOST_TEST_MODULE
 private:
+#endif
     const vl_size width;
     const vl_size height;
     const vl_size dimension;
