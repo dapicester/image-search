@@ -11,11 +11,14 @@
 
 namespace vis {
 
-static const double HEIGHT = 480.0;
+void standardizeImage(const cv::Mat& in, cv::Mat& out, int height = 480) {
+    // single precision
+    cv::Mat temp;
+    in.convertTo(temp, CV_32F);
 
-void standardizeImage(const cv::Mat& in, cv::Mat& out, double height = HEIGHT) {
-    double scale = height/in.size().height;
-    cv::resize(in, out, cv::Size(), scale, scale);
+    // resize
+    double scale = static_cast<double>(height)/temp.size().height;
+    cv::resize(temp, out, cv::Size(), scale, scale);
     // TODO check values are within range with saturate_cast<>
 }
 

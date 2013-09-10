@@ -22,9 +22,9 @@ int main(int argc, char** argv) {
         return 2;
     }
 
-    imshow("Display image", image);
-
     if (argc > 2) {
+        imshow("Display image", image);
+
         cout << "Press a key to continue" << endl;
         waitKey(0);
     }

@@ -17,11 +17,13 @@ int main(int argc, char** argv) {
     Mat standard;
 
     standardizeImage(image, standard, 128);
-
-    imshow("Input", image);
-    imshow("Output", standard);
+    assert(standard.depth() == CV_32F);
+    assert(standard.size().height == 128);
 
     if (argc > 2) {
+        imshow("Input", image);
+        imshow("Output", standard);
+
         cout << "Press a key to continue" << endl;
         waitKey(0);
     }
