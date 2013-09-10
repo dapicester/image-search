@@ -13,13 +13,18 @@ namespace vis {
 
 void standardizeImage(const cv::Mat& in, cv::Mat& out, int height = 480) {
     // single precision
-    cv::Mat temp;
-    in.convertTo(temp, CV_32F);
+    cv::Mat single;
+    in.convertTo(single, CV_32F);
+
+    // check size
+    if (single.size().height <= height) {
+        single.copyTo(out);
+        return;
+    }
 
     // resize
-    double scale = static_cast<double>(height)/temp.size().height;
-    cv::resize(temp, out, cv::Size(), scale, scale);
-    // TODO check values are within range with saturate_cast<>
+    double scale = static_cast<double>(height)/single.size().height;
+    cv::resize(single, out, cv::Size(), scale, scale);
 }
 
 } /* namespace vis */

@@ -18,13 +18,22 @@ using namespace std;
 #define argc boost::unit_test::framework::master_test_suite().argc
 #define argv boost::unit_test::framework::master_test_suite().argv
 
-BOOST_AUTO_TEST_CASE(standardize) {
-    Mat image = imread(argv[1]);
+struct Fixture {
+    Fixture() { image = imread(argv[1]); }
+    ~Fixture() {}
+    Mat image;
     Mat standard;
+};
 
-    standardizeImage(image, standard, 128);
-    assert(standard.depth() == CV_32F);
-    assert(standard.size().height == 128);
+BOOST_FIXTURE_TEST_SUITE(suite, Fixture)
+
+BOOST_AUTO_TEST_CASE(standardize) {
+    const static int STD_HEIGHT = 128;
+    BOOST_CHECK(image.size().height > STD_HEIGHT);
+
+    standardizeImage(image, standard, STD_HEIGHT);
+    BOOST_CHECK(standard.depth() == CV_32F);
+    BOOST_CHECK(standard.size().height == STD_HEIGHT);
 
     if (argc > 2) {
         imshow("Input", image);
@@ -34,4 +43,16 @@ BOOST_AUTO_TEST_CASE(standardize) {
         waitKey(0);
     }
 }
+
+BOOST_AUTO_TEST_CASE(no_resize) {
+    const static int STD_HEIGHT = 1024;
+    BOOST_CHECK(image.size().height < STD_HEIGHT);
+
+    standardizeImage(image, standard, STD_HEIGHT);
+    BOOST_CHECK(standard.depth() == CV_32F);
+    BOOST_CHECK(standard.size().height != STD_HEIGHT);
+    BOOST_CHECK(standard.size() == image.size());
+}
+
+BOOST_AUTO_TEST_SUITE_END()
 
