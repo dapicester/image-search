@@ -4,30 +4,24 @@
  * @author Paolo D'Apice
  */
 
+#define BOOST_TEST_MODULE sanity
+#include <boost/test/unit_test.hpp>
+
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-using namespace cv;
-using namespace std;
+#define argc boost::unit_test::framework::master_test_suite().argc
+#define argv boost::unit_test::framework::master_test_suite().argv
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
-        cout << "No image" << endl;
-        return 1;
-    }
-
-    Mat image = imread(argv[1]);
-    if (!image.data) {
-        cout << "No image data" << endl;
-        return 2;
-    }
+BOOST_AUTO_TEST_CASE(sanity) {
+    cv::Mat image = cv::imread(argv[1]);
+    BOOST_WARN_MESSAGE(!image.data, "No image data");
 
     if (argc > 2) {
-        imshow("Display image", image);
+        cv::imshow("Display image", image);
 
-        cout << "Press a key to continue" << endl;
-        waitKey(0);
+        std::cout << "Press a key to continue" << std::endl;
+        cv::waitKey(0);
     }
-
-    return 0;
 }
+

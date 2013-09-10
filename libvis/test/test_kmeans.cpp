@@ -4,6 +4,9 @@
  * @author Paolo D'Apice
  */
 
+#define BOOST_TEST_MODULE kmeans
+#include <boost/test/unit_test.hpp>
+
 #include "kmeans.hpp"
 
 using namespace cv;
@@ -23,10 +26,9 @@ Mat getTestData(int dimension, int numData) {
     return data;
 }
 
-int main(int, char**) {
+BOOST_AUTO_TEST_CASE(clusters) {
     Mat data = getTestData(256, 10000);
     VlKMeans* centers = vis::kmeans(data, 40);
     vl_kmeans_delete(centers);
-    return 0;
 }
 
