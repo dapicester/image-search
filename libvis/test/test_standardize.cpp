@@ -1,5 +1,5 @@
 /**
- * @file standardize.cpp
+ * @file test_standardize.cpp
  * @brief Test for function standardizeImage
  * @author Paolo D'Apice
  */

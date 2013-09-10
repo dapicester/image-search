@@ -1,5 +1,5 @@
 /**
- * @file kmeans.cpp
+ * @file test_kmeans.cpp
  * @brief K-means test
  * @author Paolo D'Apice
  */
