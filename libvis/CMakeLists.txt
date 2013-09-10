@@ -18,6 +18,9 @@ find_package(VLFeat REQUIRED)
 list(APPEND libraries ${VLFEAT_LIBRARIES})
 list(APPEND includes ${VLFEAT_INCLUDE_DIRS})
 
+find_package(Boost REQUIRED)
+list(APPEND includes ${Boost_INCLUDE_DIRS})
+
 file(GLOB imsearch_SRCS src/*.c src/*.cpp)
 
 list(REMOVE_DUPLICATES includes)
