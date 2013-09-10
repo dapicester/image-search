@@ -5,6 +5,7 @@
  */
 
 #include "hog.hpp"
+#include <boost/assert.hpp>
 
 using namespace cv;
 
@@ -21,15 +22,16 @@ HogDescriptors::~HogDescriptors() {
 
 Mat
 HogDescriptors::toMat() const {
-    // FIXME check for memory leaks
     return Mat(width * height, dimension, CV_32F, (void*) data).clone();
 }
 
-static const VlHogVariant VARIANT = VlHogVariantDalalTriggs;
+static const VlHogVariant VARIANT = VlHogVariantUoctti;
 static const vl_bool TRANSPOSED = VL_FALSE;
+static const vl_bool BILINEAR = VL_FALSE;
 
 HogExtractor::HogExtractor(int cs, int num) : cellSize(cs), numOrientations(num) {
     hog = vl_hog_new(VARIANT, numOrientations, TRANSPOSED);
+    vl_hog_set_use_bilinear_orientation_assignments(hog, BILINEAR);
 }
 
 HogExtractor::~HogExtractor() {
@@ -40,11 +42,14 @@ HogDescriptors
 HogExtractor::extract(const Mat& image) {
     const Size& size = image.size();
     const float* ptr = image.ptr<float>(0);
+
     vl_hog_put_image(hog, ptr, size.width, size.height, image.channels(), cellSize);
 
     vl_size hogWidth = vl_hog_get_width(hog);
     vl_size hogHeight = vl_hog_get_height(hog);
     vl_size hogDimension = vl_hog_get_dimension(hog);
+
+    BOOST_ASSERT_MSG(hogDimension == 3*numOrientations + 4, "Wrong HOG dimension");
 
     HogDescriptors descriptors(hogWidth, hogHeight, hogDimension);
     vl_hog_extract(hog, descriptors.data);
@@ -57,10 +62,14 @@ HogExtractor::render(const HogDescriptors& descriptors) const {
     vl_size glyphSize = vl_hog_get_glyph_size(hog);
     vl_size imageHeight = glyphSize * descriptors.height;
     vl_size imageWidth = glyphSize * descriptors.width;
+
     float* image = (float*) vl_malloc(sizeof(float) * imageWidth * imageHeight);
     vl_hog_render(hog, image, descriptors.data, descriptors.width, descriptors.height);
-    // FIXME check for memory leaks
-    return Mat(imageHeight, imageWidth, CV_32F, (void*) image).clone();
+
+    Mat hogImage = Mat(imageHeight, imageWidth, CV_32F, (void*) image).clone();
+    vl_free(image);
+
+    return hogImage;
 }
 
 } /* namespace vis */

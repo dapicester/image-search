@@ -17,9 +17,8 @@ namespace vis {
 
 class HogExtractor;
 
-/// @brief HOG descriptors.
-class HogDescriptors {
-public:
+/// @brief HOG descriptors data structure.
+struct HogDescriptors {
     HogDescriptors(vl_size width, vl_size height, vl_size dimension);
 
     ~HogDescriptors();
@@ -28,10 +27,10 @@ public:
     cv::Mat toMat() const;
 
 private:
+    const vl_size width;
+    const vl_size height;
+    const vl_size dimension;
     float* data;
-    vl_size width;
-    vl_size height;
-    vl_size dimension;
 
     friend class HogExtractor;
 };
