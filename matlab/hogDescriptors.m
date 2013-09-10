@@ -2,7 +2,7 @@ function [hog_matrix, hog] = hogDescriptors(image, varargin)
 % HOGDESCRIPTORS  Extract histogram of oriented gradients from the image.
 %
 %   MATRIX = HOGDESCRIPTORS(IMAGE) extracts HOG and return a matrix containing
-%   HOG_SIZE x NUM_HISTOGRAMS values, where HOGR_SIZE = 3 * BINS + 1 and 
+%   HOG_SIZE x NUM_HISTOGRAMS values, where HOGR_SIZE = 3 * BINS + 4 and 
 %   NUM_HISTOGRAMS is the number of blocks on which HOGs are computed.
 %   The returned a matrix 
 %
