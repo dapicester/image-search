@@ -9,6 +9,7 @@
 
 #include "hog.hpp"
 #include "standardize.hpp"
+#include "test_utils.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 
@@ -68,8 +69,7 @@ BOOST_AUTO_TEST_CASE(compute_hog_matrix) {
 
     // direct conversion to Mat
     Mat hogMatrix2 = extractor.extract(image).toMat();
-    Mat diff = hogMatrix != hogMatrix2;
-    BOOST_CHECK_EQUAL(0, countNonZero(diff));
+    BOOST_CHECK(equals(hogMatrix, hogMatrix2));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
