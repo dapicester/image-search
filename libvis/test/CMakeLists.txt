@@ -28,3 +28,7 @@ add_unit_test(NAME test_hog
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
     ARGS ${CMAKE_CURRENT_SOURCE_DIR}/lena.png)
 
+add_unit_test(NAME test_linspace
+    SOURCES test_linspace.cpp
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
