@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(test_colon) {
                                    5, 7,
                                    9, 11);
     indices = (Mat_<int>(1,2) << 0, 2);
-    actual = colon(input, indices, COLUMNS);
+    actual = colon<int>(input, indices, COLUMNS);
 #if PRINT
     cout << "input" << endl << input << endl;
     cout << "indices" << endl << indices << endl;
@@ -31,13 +31,13 @@ BOOST_AUTO_TEST_CASE(test_colon) {
     cout << "actual" << endl << actual << endl;
 #endif
     BOOST_CHECK(equals(expected, actual));
-    BOOST_CHECK(equals(expected, colon(input, indices.t(), COLUMNS)));
+    BOOST_CHECK(equals(expected, colon<int>(input, indices.t(), COLUMNS)));
 
     /* row subset */
     expected = (Mat_<int>(2, 4) << 1, 2, 3, 4,
                                    5, 6, 7, 8);
     indices = (Mat_<int>(1, 2) << 0, 1);
-    actual = colon(input, indices.t(), ROWS);
+    actual = colon<int>(input, indices.t(), ROWS);
 #if PRINT
     cout << "input" << endl << input << endl;
     cout << "indices" << endl << indices << endl;
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(test_colon) {
     cout << "actual" << endl << actual << endl;
 #endif
     BOOST_CHECK(equals(expected, actual));
-    BOOST_CHECK(equals(expected, colon(input, indices.t(), ROWS)));
+    BOOST_CHECK(equals(expected, colon<int>(input, indices.t(), ROWS)));
 }
 
 BOOST_AUTO_TEST_CASE(test_linspace) {
@@ -86,6 +86,16 @@ BOOST_AUTO_TEST_CASE(test_round) {
     BOOST_CHECK_EQUAL(2.0, vis::round(1.5));
     BOOST_CHECK_EQUAL(2.0, vis::round(1.8));
     BOOST_CHECK_EQUAL(2.0, vis::round(2.0));
+
+    Mat input = (Mat_<double>(1, 5) << 1.0, 1.5, 2.7, 3.0, 4.99);
+    Mat expected = (Mat_<double>(1, 5) << 1, 2, 3, 3, 5);
+    Mat actual = vis::round<double>(input);
+#if PRINT
+    cout << "input" << endl << input << endl;
+    cout << "expected" << endl << expected << endl;
+    cout << "actual" << endl << actual << endl;
+#endif
+    BOOST_CHECK(equals(expected, actual));
 }
 
 

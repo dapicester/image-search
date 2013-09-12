@@ -22,31 +22,36 @@ enum ColonDimension {
 
 /**
  * @brief Matlab colon operator used to pick out selected columns.
+ * @tparam T Input data type
  * @param in Input data
  * @param indices Row or column vector of indices
  * @return A new matrix containing only rows/columns subset of in
  */
-cv::Mat colon(const cv::Mat& in, const cv::Mat& indices, ColonDimension dim) {
+template <typename T>
+cv::Mat
+colon(const cv::Mat& in, const cv::Mat& indices, ColonDimension dim) {
     BOOST_ASSERT_MSG((indices.rows == 1 && indices.cols > 1)
                  xor (indices.cols == 1 && indices.rows > 1),
                  "indices is not a column vector");
 
-    const int sz = std::max(indices.rows, indices.cols);
+    const int length = std::max(indices.rows, indices.cols);
     cv::Mat out;
 
+    cv::MatConstIterator_<T> it = indices.begin<T>(), end = indices.end<T>();
+    // TODO: switch on channels too
     switch (dim) {
     case COLUMNS:
-        out = cv::Mat(in.rows, sz, in.type());
-        for (int i = 0; i < sz; ++i) {
-            int index = indices.at<int>(i);
+        out = cv::Mat(in.rows, length, in.type());
+        for (int i = 0; it != end; ++i, ++it) {
+            int index = static_cast<int>(*it);
             cv::Mat col = in.col(index);
             col.copyTo(out.col(i));
         }
         break;
     case ROWS:
-        out = cv::Mat(sz, in.cols, in.type());
-        for (int i = 0; i < sz; ++i) {
-            int index = indices.at<int>(i);
+        out = cv::Mat(length, in.cols, in.type());
+        for (int i = 0; it != end; ++i, ++it) {
+            int index = static_cast<int>(*it);
             cv::Mat row = in.row(index);
             row.copyTo(out.row(i));
         }
@@ -61,7 +66,8 @@ cv::Mat colon(const cv::Mat& in, const cv::Mat& indices, ColonDimension dim) {
  * http://dsj23.wordpress.com/2013/02/13/matlab-linspace-function-written-in-c/
  */
 template <typename T>
-cv::Mat linspace(T min, T max, size_t n) {
+cv::Mat
+linspace(T min, T max, size_t n) {
     cv::Mat result = cv::Mat_<T>(1,n);
     T* ptr = result.ptr<T>(0);
     const T range = max - min;
@@ -82,16 +88,18 @@ int iround(double in) {
 }
 
 /**
- * @file round.hpp
  * @brief Equivalent of the Matlab round function
- * @author Paolo D'Apice
  */
-cv::Mat round(const cv::Mat& in) {
-    cv::Mat out = cv::Mat::zeros(in.size(), CV_8U);
-
-    for (int i = 0; i < out.rows * out.cols; i++) {
-        out.at<int>(i) = iround(out.at<double>(i));
+template <typename T>
+cv::Mat
+round(const cv::Mat& in) {
+    cv::Mat out = in.clone();
+    cv::MatIterator_<T> it = out.begin<T>(), end = out.end<T>();
+    for (; it != end; ++it) {
+        *it = round(*it);
     }
+    return out;
+}
 
     return out;
 }
