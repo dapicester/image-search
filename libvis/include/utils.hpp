@@ -8,8 +8,8 @@
 #define VIS_UTILS_HPP
 
 #include "kmeans.hpp"
-#include "linspace.hpp"
 #include "standardize.hpp"
+#include "utils/ported.hpp"
 
 #endif /* VIS_UTILS_HPP */
 
