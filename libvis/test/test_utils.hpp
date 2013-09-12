@@ -17,25 +17,36 @@ extern "C" {
 #include <vector>
 
 /// @return true if equals
-bool equals(const cv::Mat& a, const cv::Mat& b) {
+bool
+equals(const cv::Mat& a, const cv::Mat& b) {
     if (a.size() != b.size()) return false;
     cv::Mat diff = (a != b);
     return cv::countNonZero(diff) == 0 ? true : false;
 }
 
+/// @return A matrix with rows x columns random data
 template <typename T>
-cv::Mat getTestData(int dimension, int numData) {
+cv::Mat
+getTestData(int rows, int columns) {
     VlRand rand;
     vl_rand_init(&rand);
     vl_rand_seed(&rand, 1000);
 
-    cv::Mat data = cv::Mat_<T>(dimension, numData);
-    for(int i = 0; i < dimension; i++) {
-        for(int j = 0; j < numData; j++) {
-            T randomNum = (T) vl_rand_real3(&rand) + 1;
-            data.at<T>(i,j) = randomNum;
+    cv::Mat data = cv::Mat::ones(rows, columns, cv::DataType<T>::type);
+    if (data.isContinuous()) {
+        columns *= rows;
+        rows = 1;
+    }
+
+    T* p;
+    for(int i = 0; i < rows; i++) {
+        p = data.ptr<T>(i);
+        for(int j = 0; j < columns; j++) {
+            T randomNum = (T) vl_rand_real3(&rand);
+            p[j] += randomNum;
         }
     }
+
     return data;
 }
 
