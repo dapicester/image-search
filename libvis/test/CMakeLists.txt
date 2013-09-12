@@ -18,6 +18,10 @@ add_unit_test(NAME test_kmeans
     SOURCES test_kmeans.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_kdtree
+    SOURCES test_kdtree.cpp ${SRC_DIR}/kdtree.cpp
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_standardize
     SOURCES test_standardize.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
