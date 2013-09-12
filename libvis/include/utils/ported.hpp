@@ -101,6 +101,36 @@ round(const cv::Mat& in) {
     return out;
 }
 
+enum SubsetMode {
+    BEGINNING,
+    ENDING,
+    RANDOM,
+    UNIFORM,
+    LARGEST,
+    SMALLEST
+};
+
+/**
+ * @brief Select a given number of columns
+ */
+template <typename T>
+cv::Mat
+colsubset(const cv::Mat& in, size_t num, SubsetMode mode) {
+    size_t m = in.size().width;
+    size_t n = std::min(m, num);
+
+    cv::Mat out;
+    switch (mode) {
+    case UNIFORM: {
+        cv::Mat ind = linspace<T>(0, m-1, n);
+        ind = round<T>(ind);
+        out = colon<T>(in, ind, COLUMNS);
+        }
+        break;
+    default:
+        // FIXME
+        throw "not implemented!";
+    }
     return out;
 }
 

@@ -98,4 +98,16 @@ BOOST_AUTO_TEST_CASE(test_round) {
     BOOST_CHECK(equals(expected, actual));
 }
 
+BOOST_AUTO_TEST_CASE(test_colsubset) {
+    Mat input = (Mat_<double>(1,10) << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    Mat expected = (Mat_<double>(1,5) << 1, 3, 6, 8, 10);
+
+    Mat actual = colsubset<double>(input, 5, UNIFORM);
+#if PRINT
+    cout << "input" << endl << input << endl;
+    cout << "expected" << endl << expected << endl;
+    cout << "actual" << endl << actual << endl;
+#endif
+    BOOST_CHECK(equals(expected, actual));
+}
 
