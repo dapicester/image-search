@@ -74,4 +74,18 @@ BOOST_AUTO_TEST_CASE(test_linspace) {
     }
 }
 
+BOOST_AUTO_TEST_CASE(test_round) {
+    BOOST_CHECK_EQUAL(1, vis::iround(1.0));
+    BOOST_CHECK_EQUAL(1, vis::iround(1.1));
+    BOOST_CHECK_EQUAL(2, vis::iround(1.5));
+    BOOST_CHECK_EQUAL(2, vis::iround(1.8));
+    BOOST_CHECK_EQUAL(2, vis::iround(2.0));
+
+    BOOST_CHECK_EQUAL(1.0, vis::round(1.0));
+    BOOST_CHECK_EQUAL(1.0, vis::round(1.1));
+    BOOST_CHECK_EQUAL(2.0, vis::round(1.5));
+    BOOST_CHECK_EQUAL(2.0, vis::round(1.8));
+    BOOST_CHECK_EQUAL(2.0, vis::round(2.0));
+}
+
 

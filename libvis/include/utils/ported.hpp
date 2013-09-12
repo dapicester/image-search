@@ -8,6 +8,7 @@
 #define VIS_UTILS_PORTED_HPP
 
 #include <boost/assert.hpp>
+#include <boost/math/special_functions/round.hpp>
 #include <opencv2/core/core.hpp>
 
 namespace vis {
@@ -70,6 +71,29 @@ cv::Mat linspace(T min, T max, size_t n) {
     ptr[n-1] = max;
 
     return result;
+}
+
+// TODO template these two
+double round(double in) {
+    return boost::math::round(in);
+}
+int iround(double in) {
+    return boost::math::iround(in);
+}
+
+/**
+ * @file round.hpp
+ * @brief Equivalent of the Matlab round function
+ * @author Paolo D'Apice
+ */
+cv::Mat round(const cv::Mat& in) {
+    cv::Mat out = cv::Mat::zeros(in.size(), CV_8U);
+
+    for (int i = 0; i < out.rows * out.cols; i++) {
+        out.at<int>(i) = iround(out.at<double>(i));
+    }
+
+    return out;
 }
 
 } /* namespace vis */
