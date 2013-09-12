@@ -12,7 +12,7 @@ using namespace std;
 // TODO refactor
 #define PRINT 0
 
-BOOST_AUTO_TEST_CASE(test_colon) {
+BOOST_AUTO_TEST_CASE(test_colon_indices) {
     Mat expected, actual, indices;
     Mat input = (Mat_<int>(3, 4) << 1, 2, 3, 4,
                                     5, 6, 7, 8,
@@ -46,6 +46,24 @@ BOOST_AUTO_TEST_CASE(test_colon) {
 #endif
     BOOST_CHECK(equals(expected, actual));
     BOOST_CHECK(equals(expected, colon<int>(input, indices.t(), ROWS)));
+}
+
+BOOST_AUTO_TEST_CASE(test_colon) {
+    Mat expected, actual;
+    Mat input = (Mat_<int>(3, 4) << 1, 2, 3, 4,
+                                    5, 6, 7, 8,
+                                    9, 10, 11, 12);
+
+    expected = (Mat_<int>(1, 3*4) << 1, 2, 3, 4,
+                                     5, 6, 7, 8,
+                                     9, 10, 11, 12);
+    actual = colon<int>(input);
+#if PRINT
+    cout << "input" << endl << input << endl;
+    cout << "expected" << endl << expected << endl;
+    cout << "actual" << endl << actual << endl;
+#endif
+    BOOST_CHECK(equals(expected, actual));
 }
 
 BOOST_AUTO_TEST_CASE(test_linspace) {

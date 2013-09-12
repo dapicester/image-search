@@ -61,6 +61,17 @@ colon(const cv::Mat& in, const cv::Mat& indices, ColonDimension dim) {
 }
 
 /**
+ * @brief Matlab colon operator returningall elements as a single column.
+ * @tparam T Input data type
+ * @param in Input data
+ */
+template <typename T>
+cv::Mat
+colon(const cv::Mat& in) {
+    return in.reshape(0, 1);
+}
+
+/**
  * @brief Equivalent of the Matlab linspace function
  * Original code taken from:
  * http://dsj23.wordpress.com/2013/02/13/matlab-linspace-function-written-in-c/
