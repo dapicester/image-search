@@ -32,3 +32,7 @@ add_unit_test(NAME test_linspace
     SOURCES test_linspace.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_utils_ported
+    SOURCES test_utils_ported.cpp
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
