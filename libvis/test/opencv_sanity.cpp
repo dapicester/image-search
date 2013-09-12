@@ -13,15 +13,34 @@
 #define argc boost::unit_test::framework::master_test_suite().argc
 #define argv boost::unit_test::framework::master_test_suite().argv
 
-BOOST_AUTO_TEST_CASE(sanity) {
-    cv::Mat image = cv::imread(argv[1]);
+using namespace cv;
+using namespace std;
+
+BOOST_AUTO_TEST_CASE(lena) {
+    Mat image = imread(argv[1]);
     BOOST_WARN_MESSAGE(!image.data, "No image data");
 
-    if (argc > 2) {
-        cv::imshow("Display image", image);
+    BOOST_CHECK_EQUAL(Size(512, 512), image.size());
+    BOOST_CHECK_EQUAL(512, image.rows);
+    BOOST_CHECK_EQUAL(512, image.cols);
+    BOOST_CHECK_EQUAL(2, image.dims);
+    BOOST_CHECK_EQUAL(3, image.channels());
 
-        std::cout << "Press a key to continue" << std::endl;
-        cv::waitKey(0);
+    if (argc > 2) {
+        imshow("Display image", image);
+
+        cout << "Press a key to continue" << endl;
+        waitKey(0);
     }
+}
+
+#define print(X) cout << #X << ": " << X << endl;
+
+BOOST_AUTO_TEST_CASE(opencv_traits) {
+    float data[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    Mat mat(3,3, CV_32F, data);
+
+    BOOST_CHECK(CV_32F == DataType<float>::type);
+    BOOST_CHECK(mat.depth() == DataType<float>::type);
 }
 

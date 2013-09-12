@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE(standardize) {
 
     standardizeImage(image, standard, STD_HEIGHT);
     BOOST_CHECK(standard.depth() == CV_32F);
+    BOOST_CHECK(standard.depth() == DataType<float>::type);
     BOOST_CHECK(standard.size().height == STD_HEIGHT);
 
     if (argc > 2) {
