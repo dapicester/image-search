@@ -7,7 +7,6 @@
 #ifndef VIS_KMEANS_HPP
 #define VIS_KMEANS_HPP
 
-#include "traits.hpp"
 extern "C" {
 #include <vl/kmeans.h>
 }
@@ -15,39 +14,27 @@ extern "C" {
 
 namespace vis {
 
-// defaults
-static const VlVectorComparisonType distance = VlDistanceL2 ;
-static const int verbosity = 1;
-static const vl_size maxiter = 10;
-static const vl_size maxComp = 100;
-static const vl_size maxrep = 1;
-static const vl_size ntrees = 3;
-static const VlKMeansAlgorithm algorithm = VlKMeansElkan;
-
-// TODO wrap into a class
-
-/// @brief Compute K-means.
 template <typename T>
-VlKMeans* kmeans(const cv::Mat& data, size_t numCenters) {
-    vl_size numDimensions = data.rows;
-    vl_size numData = data.cols;
-    const T* ptr = data.ptr<T>(0);
+class KMeans {
+public:
+    KMeans();
+    ~KMeans();
 
-    VlKMeans* kmeans = vl_kmeans_new(VlType<T>::type, distance);
+    /**
+     * @brief Cluster data
+     * @param data Input data of size RxC containing C samples with dimension R
+     * @param numCenters Number of centers
+     * @return Cluster matrix of size numCenters x C
+     */
+    cv::Mat cluster(const cv::Mat& data, vl_size numCenters);
 
-    vl_kmeans_set_verbosity(kmeans, verbosity);
-    vl_kmeans_set_max_num_iterations(kmeans, maxiter);
-    vl_kmeans_set_max_num_comparisons(kmeans, maxComp);
-    vl_kmeans_set_num_repetitions(kmeans, maxrep);
-    vl_kmeans_set_num_trees(kmeans, ntrees);
-    vl_kmeans_set_algorithm(kmeans, algorithm);
-
-    vl_kmeans_cluster(kmeans, ptr, numDimensions, numData, numCenters);
-
-    return kmeans;
-}
+private:
+    VlKMeans* kmeans;
+};
 
 } /* namespace vis */
+
+#include "detail/kmeans_impl.hpp"
 
 #endif /* VIS_KMEANS_HPP */
 
