@@ -7,6 +7,7 @@
 #ifndef VIS_TEST_UTILS_HPP
 #define VIS_TEST_UTILS_HPP
 
+#include "traits.hpp"
 #include <opencv2/core/core.hpp>
 extern "C" {
 #include <vl/random.h>
@@ -24,15 +25,34 @@ equals(const cv::Mat& a, const cv::Mat& b) {
     return cv::countNonZero(diff) == 0 ? true : false;
 }
 
+template <typename T>
+class Random {
+public:
+    Random() {
+        rand = vl_get_rand();
+    }
+
+    T next() {
+        switch (vis::VlType<T>::type) {
+        case VL_TYPE_FLOAT:
+        case VL_TYPE_DOUBLE:
+            return static_cast<T>(vl_rand_real1(rand));
+        case VL_TYPE_INT32:
+            return static_cast<T>(vl_rand_int31(rand));
+        }
+    }
+
+private:
+    VlRand* rand;
+};
+
 /// @return A matrix with rows x columns random data
 template <typename T>
 cv::Mat
 getTestData(int rows, int columns) {
-    VlRand rand;
-    vl_rand_init(&rand);
-    vl_rand_seed(&rand, 1000);
+    static Random<T> rand;
 
-    cv::Mat data = cv::Mat::ones(rows, columns, cv::DataType<T>::type);
+    cv::Mat data = cv::Mat::zeros(rows, columns, cv::DataType<T>::type);
     if (data.isContinuous()) {
         columns *= rows;
         rows = 1;
@@ -42,7 +62,7 @@ getTestData(int rows, int columns) {
     for(int i = 0; i < rows; i++) {
         p = data.ptr<T>(i);
         for(int j = 0; j < columns; j++) {
-            T randomNum = (T) vl_rand_real3(&rand);
+            T randomNum = rand.next();
             p[j] += randomNum;
         }
     }
