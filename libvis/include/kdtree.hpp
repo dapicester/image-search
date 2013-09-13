@@ -16,22 +16,33 @@ extern "C" {
 namespace vis {
 
 struct KDTreeNeighbor {
-    KDTreeNeighbor(VlKDForestNeighbor* n)
-        : index(n->index), distance(n->distance) {}
-
+    // TODO do not fill distance if not explicitely requested
     vl_uindex index;
     double distance;
 };
 
 template <typename T>
-struct KDTree {
+class KDTree {
+public:
+    /// Build a new KD-Tree on the external supplied data.
+    KDTree(const T* data, vl_size dimension, vl_size numSamples, vl_size numTrees = 1);
+
+    /// Build a new KD-Tree retaining a copy of the input matrix.
     KDTree(const cv::Mat& data, vl_size numTrees = 1);
+
     ~KDTree();
 
-    std::vector<KDTreeNeighbor> search(const cv::Mat& query, vl_size numNeighbors = 1);
+    std::vector<KDTreeNeighbor> search(const T* query,
+                                       vl_size numNeighbors = 1,
+                                       vl_size maxNumComparisons = 0);
+
+    std::vector<KDTreeNeighbor> search(const cv::Mat& query,
+                                       vl_size numNeighbors = 1,
+                                       vl_size maxNumComparisons = 0);
 
 private:
-    VlKDForest* forest ;
+    VlKDForest* forest;
+    T* dataPtr;
 };
 
 } /* namespace vis */

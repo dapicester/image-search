@@ -59,28 +59,38 @@ private:
     VlRand* rand;
 };
 
+/// @return A pointer to rows x columns random data
+template <typename T>
+T*
+getTestDataPtr(int rows, int columns) {
+    static Random<T> rand;
+    T* data = new T[rows*columns];
+    for (int i = 0; i < rows*columns; ++i) {
+        data[i] = rand.next();
+    }
+
+    return data;
+}
+
+/// @return A vector to rows x columns random data
+template <typename T>
+std::vector<T>
+getTestDataVec(int rows, int columns) {
+    T* data = getTestDataPtr<T>(rows, columns);
+    std::vector<T> vec(data, data + rows*columns);
+    delete[] data;
+    return vec;
+}
+
+
 /// @return A matrix with rows x columns random data
 template <typename T>
 cv::Mat
 getTestData(int rows, int columns) {
-    static Random<T> rand;
-
-    cv::Mat data = cv::Mat::zeros(rows, columns, cv::DataType<T>::type);
-    if (data.isContinuous()) {
-        columns *= rows;
-        rows = 1;
-    }
-
-    T* p;
-    for(int i = 0; i < rows; i++) {
-        p = data.ptr<T>(i);
-        for(int j = 0; j < columns; j++) {
-            T randomNum = rand.next();
-            p[j] += randomNum;
-        }
-    }
-
-    return data;
+    T* data = getTestDataPtr<T>(rows, columns);
+    cv::Mat mat = cv::Mat(rows, columns, cv::DataType<T>::type, data).clone();
+    delete[] data;
+    return mat;
 }
 
 #endif /* VIS_TEST_UTILS_HPP */

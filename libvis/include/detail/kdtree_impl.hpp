@@ -15,49 +15,102 @@ namespace vis {
 namespace kdtree {
     static const VlVectorComparisonType distance = VlDistanceL2;
     static const VlKDTreeThresholdingMethod thresholdingMethod = VL_KDTREE_MEDIAN;
-    static const vl_size maxNumComparisons = 0;
 }
 
 template <typename T>
-KDTree<T>::KDTree(const cv::Mat& data, vl_size numTrees) {
-    BOOST_ASSERT_MSG(data.depth() == cv::DataType<T>::type, "data is not of type float");
-
-    vl_size numDimensions = data.cols;
-    vl_size numSamples = data.rows;
-    const T* ptr = data.ptr<T>(0);
+KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples, vl_size numTrees) {
+    dataPtr = NULL;
     forest = vl_kdforest_new(VlType<T>::type, numDimensions, numTrees, kdtree::distance) ;
     vl_kdforest_set_thresholding_method(forest, kdtree::thresholdingMethod);
-    vl_kdforest_build(forest, numSamples, ptr);
+    vl_kdforest_build(forest, numSamples, data);
 }
+
+#if 1
+template <typename T>
+KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees) {
+    BOOST_ASSERT_MSG(d.depth() == cv::DataType<T>::type, "Data is not of type T");
+    BOOST_ASSERT_MSG(d.isContinuous(), "Data is not continuous");
+
+    vl_size numDimensions = d.rows;
+    vl_size numSamples = d.cols;
+    dataPtr = (T*) vl_calloc(sizeof(T), numDimensions * numSamples);
+    cv::Mat dt = d.t();
+    std::copy(dt.begin<T>(), dt.end<T>(), dataPtr);
+
+    forest = vl_kdforest_new(VlType<T>::type, numDimensions, numTrees, kdtree::distance) ;
+    vl_kdforest_set_thresholding_method(forest, kdtree::thresholdingMethod);
+    vl_kdforest_build(forest, numSamples, dataPtr);
+}
+#endif
 
 template <typename T>
 KDTree<T>::~KDTree() {
     vl_kdforest_delete(forest);
+    if (dataPtr != NULL) vl_free(dataPtr);
 }
 
 template <typename T>
 std::vector<KDTreeNeighbor>
-KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors) {
-    BOOST_ASSERT_MSG(query.depth() == cv::DataType<T>::type, "query is not of type float");
-    const T* ptr = query.ptr<T>(0);
+KDTree<T>::search(const T* query, vl_size numNeighbors, vl_size maxNumComparisons) {
+    vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);
 
-    // TODO make this a method
-    vl_kdforest_set_max_num_comparisons(forest, kdtree::maxNumComparisons);
+    vl_size numQueries = 1;
+    vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
+    double* distances = (double*) vl_calloc(sizeof(double), numNeighbors * numQueries);
 
-    VlKDForestNeighbor* neighbors = (VlKDForestNeighbor*) vl_malloc(sizeof(VlKDForestNeighbor) * numNeighbors);
-    vl_kdforest_query(forest, neighbors, numNeighbors, ptr);
+    vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, distances, query);
 
     std::vector<KDTreeNeighbor> results;
     for (int i = 0; i < numNeighbors; ++i) {
-        VlKDForestNeighbor* curr = neighbors + i;
-        BOOST_ASSERT(curr);
-        results.push_back(KDTreeNeighbor(curr));
+        KDTreeNeighbor item;
+        item.index = indexes[i];
+        item.distance = distances[i]; // TODO do not set if not requested
+
+        results.push_back(item);
     }
 
-    vl_free(neighbors); // automatically freed with the forest
+    vl_free(indexes);
+    vl_free(distances);
 
     return results;
 }
+
+#if 1
+template <typename T>
+std::vector<KDTreeNeighbor>
+KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComparisons) {
+    BOOST_ASSERT_MSG(query.depth() == cv::DataType<T>::type, "Query is not of type T");
+    BOOST_ASSERT_MSG(query.isContinuous(), "Query is not continuous");
+    BOOST_ASSERT_MSG(query.cols == 1, "Multiple queries not yet supported");
+
+    //vl_size numQueries = query.cols;
+    vl_size numQueries = 1;
+    T* queryPtr = (T*) vl_calloc(sizeof(T), vl_kdforest_get_data_dimension(forest));
+    std::copy(query.begin<T>(), query.end<T>(), queryPtr);
+
+    vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);
+
+    vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
+    double* distances = (double*) vl_calloc(sizeof(double), numNeighbors * numQueries);
+
+    vl_size numComparisons = vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, distances, queryPtr);
+
+    // TODO get results from multiple queries
+    std::vector<KDTreeNeighbor> results;
+    for (int i = 0; i < numNeighbors; ++i) {
+        KDTreeNeighbor item;
+        item.index = indexes[i];
+        item.distance = distances[i]; // TODO do not set if not requested
+
+        results.push_back(item);
+    }
+
+    vl_free(queryPtr);
+    vl_free(indexes);
+    vl_free(distances);
+    return results;
+}
+#endif
 
 } /* namespace vis */
 
