@@ -22,7 +22,7 @@ HogDescriptors::~HogDescriptors() {
 
 Mat
 HogDescriptors::toMat() const {
-    return Mat(width * height, dimension, CV_32F, (void*) data).clone();
+    return Mat(width * height, dimension, CV_32F, data).clone();
 }
 
 static const VlHogVariant VARIANT = VlHogVariantUoctti;
@@ -66,7 +66,7 @@ HogExtractor::render(const HogDescriptors& descriptors) const {
     float* image = (float*) vl_malloc(sizeof(float) * imageWidth * imageHeight);
     vl_hog_render(hog, image, descriptors.data, descriptors.width, descriptors.height);
 
-    Mat hogImage = Mat(imageHeight, imageWidth, CV_32F, (void*) image).clone();
+    Mat hogImage = Mat(imageHeight, imageWidth, CV_32F, image).clone();
     vl_free(image);
 
     return hogImage;

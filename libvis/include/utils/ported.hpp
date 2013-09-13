@@ -90,11 +90,15 @@ linspace(T min, T max, size_t n) {
     return result;
 }
 
-// TODO template these two
-double round(double in) {
+/// @brief Round to the nearest integer
+template <typename T>
+double round(T in) {
     return boost::math::round(in);
 }
-int iround(double in) {
+
+/// @brief Round to the nearest integer
+template <typename T>
+int iround(T in) {
     return boost::math::iround(in);
 }
 
@@ -140,7 +144,7 @@ colsubset(const cv::Mat& in, size_t num, SubsetMode mode) {
         break;
     default:
         // FIXME
-        throw "not implemented!";
+        throw "not yet implemented!";
     }
     return out;
 }
