@@ -23,6 +23,7 @@ struct KDTreeNeighbor {
     double distance;
 };
 
+template <typename T>
 struct KDTree {
     KDTree(const cv::Mat& data, vl_size numTrees = 1);
     ~KDTree();
@@ -34,6 +35,8 @@ private:
 };
 
 } /* namespace vis */
+
+#include "detail/kdtree_impl.hpp"
 
 #endif /* VIS_KDTREE_HPP */
 

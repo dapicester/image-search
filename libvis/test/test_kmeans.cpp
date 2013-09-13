@@ -10,11 +10,12 @@
 #include "kmeans.hpp"
 #include "test_utils.hpp"
 
-using namespace cv;
+using cv::Mat;
+using namespace vis;
 
 BOOST_AUTO_TEST_CASE(clusters) {
     Mat data = getTestData<float>(256, 10000);
-    VlKMeans* centers = vis::kmeans(data, 40);
+    VlKMeans* centers = kmeans<float>(data, 40);
     vl_kmeans_delete(centers);
 }
 

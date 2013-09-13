@@ -7,6 +7,7 @@
 #ifndef VIS_KMEANS_HPP
 #define VIS_KMEANS_HPP
 
+#include "traits.hpp"
 extern "C" {
 #include <vl/kmeans.h>
 }
@@ -23,13 +24,16 @@ static const vl_size maxrep = 1;
 static const vl_size ntrees = 3;
 static const VlKMeansAlgorithm algorithm = VlKMeansElkan;
 
+// TODO wrap into a class
+
 /// @brief Compute K-means.
+template <typename T>
 VlKMeans* kmeans(const cv::Mat& data, size_t numCenters) {
     vl_size numDimensions = data.rows;
     vl_size numData = data.cols;
-    const float* ptr = data.ptr<float>(0);
+    const T* ptr = data.ptr<T>(0);
 
-    VlKMeans* kmeans = vl_kmeans_new(VL_TYPE_FLOAT, distance);
+    VlKMeans* kmeans = vl_kmeans_new(VlType<T>::type, distance);
 
     vl_kmeans_set_verbosity(kmeans, verbosity);
     vl_kmeans_set_max_num_iterations(kmeans, maxiter);

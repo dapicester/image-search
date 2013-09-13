@@ -10,13 +10,13 @@
 #include "kdtree.hpp"
 #include "test_utils.hpp"
 
+using cv::Mat;
+using std::vector;
 using namespace vis;
-using namespace cv;
-using namespace std;
 
 BOOST_AUTO_TEST_CASE(test_kdtree) {
     Mat data = getTestData<float>(1000, 2000);
-    vis::KDTree tree(data);
+    KDTree<float> tree(data);
 
     Mat query = data.row(0);
     vector<KDTreeNeighbor> results = tree.search(data);
