@@ -17,6 +17,19 @@ extern "C" {
 #include <iterator>
 #include <vector>
 
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
+    os << "[";
+    typename std::vector<T>::const_iterator it = v.begin(), end = v.end();
+    while (it != end) {
+        os << *it;
+        it++;
+        if (it != end) os << ", ";
+    }
+    os << "]";
+    return os;
+}
+
 /// @return true if equals
 bool
 equals(const cv::Mat& a, const cv::Mat& b) {
