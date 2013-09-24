@@ -9,6 +9,7 @@
 
 #include "kdtree.hpp"
 #include "test_utils.hpp"
+#include "utils/print.hpp"
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>

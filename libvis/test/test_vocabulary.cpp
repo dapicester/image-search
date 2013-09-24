@@ -9,7 +9,7 @@
 
 #include "vocabulary.hpp"
 #include "utils/filesystem.hpp"
-#include <iostream>
+#include "utils/print.hpp"
 
 using namespace boost::filesystem;
 using namespace std;
@@ -22,7 +22,7 @@ const static path IMAGE_DIR = current_path() / "images";
 BOOST_AUTO_TEST_CASE(test_vocabulary) {
     vector<path> files = getImageFiles(IMAGE_DIR);
 #if PRINT
-    copy(files.begin(), files.end(), ostream_iterator<path>(cout, "\n"));
+    print(files);
 #endif
 
     // boost fs and load image paths in ROOT/images
