@@ -17,7 +17,7 @@ namespace vis {
 template <typename T>
 class KMeans {
 public:
-    KMeans();
+    KMeans(bool verbose = true);
     ~KMeans();
 
     /**
@@ -29,6 +29,7 @@ public:
     cv::Mat cluster(const cv::Mat& data, vl_size numCenters);
 
 private:
+    bool verbose;
     VlKMeans* kmeans;
 };
 

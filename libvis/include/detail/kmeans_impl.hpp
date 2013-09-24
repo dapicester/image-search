@@ -9,6 +9,7 @@
 
 #include "traits.hpp"
 #include <boost/assert.hpp>
+#include <cstdio>
 
 namespace vis {
 
@@ -20,11 +21,10 @@ namespace kmeans {
     static const vl_size maxNumComparisons = 100;
     static const vl_size numRepetitions = 1;
     static const vl_size numTrees = 3;
-    static const int verbosity = 1;
 }
 
 template <typename T>
-KMeans<T>::KMeans() {
+KMeans<T>::KMeans(bool verb) : verbose(verb) {
     kmeans = vl_kmeans_new(VlType<T>::type, kmeans::distance);
     vl_kmeans_set_algorithm(kmeans, kmeans::algorithm);
     vl_kmeans_set_initialization (kmeans, kmeans::initialization) ;
@@ -32,12 +32,28 @@ KMeans<T>::KMeans() {
     vl_kmeans_set_max_num_comparisons(kmeans, kmeans::maxNumComparisons);
     vl_kmeans_set_num_repetitions(kmeans, kmeans::numRepetitions);
     vl_kmeans_set_num_trees(kmeans, kmeans::numTrees);
-    vl_kmeans_set_verbosity(kmeans, kmeans::verbosity);
+    vl_kmeans_set_verbosity(kmeans, verbose);
 }
 
 template <typename T>
 KMeans<T>::~KMeans() {
     vl_kmeans_delete(kmeans);
+}
+
+void
+printInfo(const VlKMeans* kmeans, vl_size dimension, vl_size numData, vl_size numCenters) {
+    printf("kmeans: Initialization = plusplus\n");
+    printf("kmeans: Algorithm = Elkan\n");
+    printf("kmeans: MaxNumIterations = %llu\n", vl_kmeans_get_max_num_iterations(kmeans));
+    printf("kmeans: NumRepetitions = %llu\n", vl_kmeans_get_num_repetitions(kmeans));
+    printf("kmeans: data type = %s\n", vl_get_type_name(vl_kmeans_get_data_type(kmeans)));
+    printf("kmeans: distance = %s\n", vl_get_vector_comparison_type_name(vl_kmeans_get_distance(kmeans)));
+    printf("kmeans: data dimension = %llu\n", dimension);
+    printf("kmeans: num. data points = %llu\n", numData) ;
+    printf("kmeans: num. centers = %llu\n", numCenters) ;
+    printf("kmeans: max num. comparisons = %llu\n", vl_kmeans_get_max_num_comparisons(kmeans));
+    printf("kmeans: num. trees = %llu\n", vl_kmeans_get_num_trees(kmeans));
+    printf("\n") ;
 }
 
 template <typename T>
@@ -47,9 +63,13 @@ KMeans<T>::cluster(const cv::Mat& data, vl_size numCenters) {
     vl_size numData = data.cols;
     const T* ptr = data.ptr<T>(0);
 
+    if (verbose) printInfo(kmeans, dimension, numData, numCenters);
+
     vl_kmeans_cluster(kmeans, ptr, dimension, numData, numCenters) ;
     T* centers = (T*) vl_kmeans_get_centers(kmeans);
+
     BOOST_ASSERT(numCenters == vl_kmeans_get_num_centers(kmeans));
+    BOOST_ASSERT(dimension == vl_kmeans_get_dimension(kmeans));
 
     return cv::Mat(dimension, numCenters, cv::DataType<T>::type, centers).clone();
 }
