@@ -22,9 +22,6 @@ namespace vocabulary {
 
 class Vocabulary : private boost::noncopyable {
 public:
-    Vocabulary(const std::string category, const cv::Mat& data, size_t numWords);
-    ~Vocabulary();
-
     static Vocabulary* fromImageList(
         const std::string& category,
         const std::vector<std::string>& names,
@@ -34,6 +31,11 @@ public:
         const std::string& category,
         const std::vector<boost::filesystem::path>& names,
         size_t numWords = vocabulary::NUM_WORDS);
+
+    ~Vocabulary();
+
+private:
+    Vocabulary(const std::string category, const cv::Mat& data, size_t numWords);
 
 private:
     std::string category;

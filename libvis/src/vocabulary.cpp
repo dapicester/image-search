@@ -9,8 +9,8 @@
 #include "utils.hpp"
 #include "utils/filesystem.hpp"
 #include <opencv2/opencv.hpp>
-#include <iostream>
 #include <vector>
+#include <cstdio>
 
 namespace vis {
 
@@ -42,8 +42,7 @@ Vocabulary::fromImageList(
     size_t i = 0;
     for(vector<string>::const_iterator it = names.begin(); it != names.end(); ++it) {
         const string& name = *it;
-        cout << "  Extracting features from " << name
-             << "(" << i << "/" << len << ")" << endl;
+        printf("  Extracting features from %s (%lu/%lu)\n", name.c_str(), i+1, len);
 
         Mat input = imread(name, CV_LOAD_IMAGE_GRAYSCALE); // hog needs only grayscale
         Mat image; // TODO change standardize signature to allow return?
@@ -63,7 +62,7 @@ Vocabulary::fromImageList(
     }
     descriptors_array = descriptors_array.reshape(0, 1);
 
-    cout << "Computing visual words and kdtree ..." << endl;
+    printf("Computing visual words and kdtree ...\n");
     Vocabulary* vocabulary = new Vocabulary(category, descriptors_array, numWords);
 
     return vocabulary;

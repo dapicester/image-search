@@ -10,23 +10,27 @@
 #include "vocabulary.hpp"
 #include "utils/filesystem.hpp"
 #include "utils/print.hpp"
+#include <boost/scoped_ptr.hpp>
 
 using namespace boost::filesystem;
+using boost::scoped_ptr;
 using namespace std;
 using namespace vis;
 
-const static path IMAGE_DIR = current_path() / "images";
-
-#define PRINT 1
+//const static path IMAGE_DIR = current_path() / "images";
+const static path IMAGE_DIR = current_path() / "data" / "test";
 
 BOOST_AUTO_TEST_CASE(test_vocabulary) {
     vector<path> files = getImageFiles(IMAGE_DIR);
-#if PRINT
-    print(files);
-#endif
 
-    // boost fs and load image paths in ROOT/images
+    // arrange as matlab
+    std::reverse(files.begin(), files.end());
+    std::sort(files.begin(), files.end());
+
     // compute vocabulary
+    scoped_ptr<Vocabulary> vocabulary(Vocabulary::fromImageList("test", files));
+    BOOST_CHECK(vocabulary.get());
+
     // check it's the same as matlab
 }
 
