@@ -7,6 +7,7 @@
 #include "vocabulary.hpp"
 #include "hog.hpp"
 #include "utils.hpp"
+#include "utils/filesystem.hpp"
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <vector>
@@ -66,6 +67,16 @@ Vocabulary::fromImageList(
     Vocabulary* vocabulary = new Vocabulary(category, descriptors_array, numWords);
 
     return vocabulary;
+}
+
+Vocabulary*
+Vocabulary::fromImageList(
+        const string& category,
+        const vector<fs::path>& names,
+        size_t numWords) {
+    vector<string> files;
+    path2string(names, files);
+    return fromImageList(category, files, numWords);
 }
 
 } /* namespace vis */

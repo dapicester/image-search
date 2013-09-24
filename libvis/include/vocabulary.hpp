@@ -10,6 +10,7 @@
 #include "kdtree.hpp"
 #include <boost/scoped_ptr.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/filesystem.hpp>
 #include <string>
 #include <vector>
 
@@ -27,6 +28,11 @@ public:
     static Vocabulary* fromImageList(
         const std::string& category,
         const std::vector<std::string>& names,
+        size_t numWords = vocabulary::NUM_WORDS);
+
+    static Vocabulary* fromImageList(
+        const std::string& category,
+        const std::vector<boost::filesystem::path>& names,
         size_t numWords = vocabulary::NUM_WORDS);
 
 private:

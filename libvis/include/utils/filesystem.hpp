@@ -9,6 +9,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/iterator/filter_iterator.hpp>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -37,6 +38,12 @@ getImageFiles(const fs::path& dir) {
               std::back_inserter(files));
 
     return files;
+}
+
+// TODO unit test for this
+void path2string(const std::vector<fs::path>& paths, std::vector<std::string>& names) {
+    std::transform(paths.begin(), paths.end(), std::back_inserter(names),
+                   std::mem_fun_ref<std::string,fs::path>(&fs::path::string));
 }
 
 } /* namespace vis */
