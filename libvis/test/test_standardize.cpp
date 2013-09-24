@@ -15,26 +15,34 @@ using namespace vis;
 using namespace cv;
 using namespace std;
 
+#define BOOST_CHECK_EQ(X,Y) BOOST_CHECK_EQUAL(X,Y)
 #define argc boost::unit_test::framework::master_test_suite().argc
 #define argv boost::unit_test::framework::master_test_suite().argv
 
-struct Fixture {
-    Fixture() { image = imread(argv[1]); }
-    ~Fixture() {}
-    Mat image;
+BOOST_AUTO_TEST_CASE(color_resize) {
+    BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
+
+    Mat image = imread(argv[1]);
+    BOOST_CHECK_GT(image.size().height, IMG_HEIGHT);                // need to be resized
+    BOOST_CHECK_EQ(image.type(), CV_8UC3);                          // 3 channels stored as unsigned bytes
+    BOOST_CHECK_EQ(image.depth(), CV_8U);
+    BOOST_CHECK(image.depth() == DataType<uchar>::type);            // the same but using templates
+    BOOST_CHECK_EQ(image.channels(), 3);
+    BOOST_CHECK_EQ(Vec3b(74, 111, 193), image.at<Vec3b>(0,0));      // REMIND: format is BGR not RGB!
+
     Mat standard;
-};
-
-BOOST_FIXTURE_TEST_SUITE(suite, Fixture)
-
-BOOST_AUTO_TEST_CASE(standardize) {
-    const static int STD_HEIGHT = 128;
-    BOOST_CHECK(image.size().height > STD_HEIGHT);
-
-    standardizeImage(image, standard, STD_HEIGHT);
-    BOOST_CHECK(standard.depth() == CV_32F);
+    standardizeImage(image, standard);
+    BOOST_CHECK_EQ(standard.size().height, IMG_HEIGHT);             // resized
+    BOOST_CHECK_EQ(standard.type(), CV_32FC3);                      // 3 channels stored as floats
+    BOOST_CHECK_EQ(standard.depth(), CV_32F);
     BOOST_CHECK(standard.depth() == DataType<float>::type);
-    BOOST_CHECK(standard.size().height == STD_HEIGHT);
+    BOOST_CHECK_EQ(standard.channels(), 3);
+
+    Vec3f expected(0.292769909, 0.437867939, 0.759436607);
+    Vec3f actual = standard.at<Vec3f>(0,0);
+    for (int i = 0; i < 3; i++) {
+        BOOST_CHECK_CLOSE_FRACTION(expected[i], actual[i], 1e-5);
+    }
 
     if (argc > 2) {
         imshow("Input", image);
@@ -45,15 +53,21 @@ BOOST_AUTO_TEST_CASE(standardize) {
     }
 }
 
-BOOST_AUTO_TEST_CASE(no_resize) {
-    const static int STD_HEIGHT = 1024;
-    BOOST_CHECK(image.size().height < STD_HEIGHT);
+BOOST_AUTO_TEST_CASE(grayscale_noresize) {
+    BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
 
-    standardizeImage(image, standard, STD_HEIGHT);
-    BOOST_CHECK(standard.depth() == CV_32F);
-    BOOST_CHECK(standard.size().height != STD_HEIGHT);
-    BOOST_CHECK(standard.size() == image.size());
+    const static int height = 1024;
+
+    Mat image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+    BOOST_CHECK_LT(image.size().height, height);                    // do not need to be resized
+    BOOST_CHECK_EQ(image.channels(), 1);
+
+    Mat standard;
+    standardizeImage(image, standard, height);
+    BOOST_CHECK_NE(standard.size().height, height);                 // has not been resized
+    BOOST_CHECK_EQ(standard.size(), image.size());
+    BOOST_CHECK_EQ(standard.type(), CV_32FC1);
+    BOOST_CHECK_EQ(standard.depth(), CV_32F);
+    BOOST_CHECK_EQ(standard.channels(), 1);
 }
-
-BOOST_AUTO_TEST_SUITE_END()
 

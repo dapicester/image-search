@@ -1,6 +1,6 @@
 /**
  * @file standardize.hpp
- * @brief Rescale an image to a standard size
+ * @brief Convert an image to a standard size and format
  * @author Paolo D'Apice
  */
 
@@ -11,6 +11,10 @@
 
 namespace vis {
 
+static const unsigned short IMG_HEIGHT = 480; ///< Standard image height
+static const float IMG_SCALE = 1./255;        ///< Scaling factor
+static const float IMG_DELTA = 0.001546;      ///< Delta added to scaled values
+
 /**
  * @brief Convert image into a standard format.
  * @param in Input image
@@ -18,10 +22,10 @@ namespace vis {
  * @param height Maximum height
  */
 void
-standardizeImage(const cv::Mat& in, cv::Mat& out, int height = 480) {
+standardizeImage(const cv::Mat& in, cv::Mat& out, int height = IMG_HEIGHT) {
     // single precision
     cv::Mat single;
-    in.convertTo(single, CV_32F);
+    in.convertTo(single, CV_32F, IMG_SCALE, IMG_DELTA);
 
     // check size
     if (single.size().height <= height) {
