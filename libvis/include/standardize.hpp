@@ -11,7 +11,14 @@
 
 namespace vis {
 
-void standardizeImage(const cv::Mat& in, cv::Mat& out, int height = 480) {
+/**
+ * @brief Convert image into a standard format.
+ * @param in Input image
+ * @param[out] out A single-precision image with maximum size of @a height.
+ * @param height Maximum height
+ */
+void
+standardizeImage(const cv::Mat& in, cv::Mat& out, int height = 480) {
     // single precision
     cv::Mat single;
     in.convertTo(single, CV_32F);
