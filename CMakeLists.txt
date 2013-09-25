@@ -7,6 +7,7 @@ include(MacroBuildInfo)
 include(MacroOutOfSourceBuild)
 macro_ensure_out_of_source_build("Project ${PROJECT_NAME} requires an out of source build.")
 include(MacroAddUnitTest)
+include(MacroNotesTarget)
 
 option(ENABLE_TESTING "Enables tests" ON)
 if(ENABLE_TESTING)

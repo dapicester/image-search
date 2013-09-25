@@ -42,3 +42,5 @@ if(ENABLE_TESTING)
     add_subdirectory(test)
 endif()
 
+add_notes_target()
+
