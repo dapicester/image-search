@@ -9,7 +9,6 @@
 
 #include "vocabulary.hpp"
 #include "utils/filesystem.hpp"
-#include "utils/print.hpp"
 #include <boost/scoped_ptr.hpp>
 
 using namespace boost::filesystem;

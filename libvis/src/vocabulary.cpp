@@ -35,12 +35,12 @@ Vocabulary::fromImageList(
     const size_t len = names.size();
     const size_t numFeatures = iround(numWords*100.0/len);
 
-    vector<Mat> descriptors(len);
     HogExtractor hog;
+    Mat descriptors;
 
     // TODO openmp parfor
     size_t i = 0;
-    for(vector<string>::const_iterator it = names.begin(); it != names.end(); ++it) {
+    for (vector<string>::const_iterator it = names.begin(); it != names.end(); ++it) {
         const string& name = *it;
         printf("  Extracting features from %s (%lu/%lu)\n", name.c_str(), i+1, len);
 
@@ -49,21 +49,16 @@ Vocabulary::fromImageList(
         standardizeImage(input, image);
 
         Mat d = hog.extract(image).toMat();
-        descriptors[i] = colsubset<float>(d, numFeatures, UNIFORM);
+        d = colsubset<float>(d, numFeatures, UNIFORM);
+        d = d.t();
 
+        descriptors.push_back(d);
         ++i;
     }
-
-    // TODO [descriptors{:}]
-    Mat descriptors_array;
-    vector<Mat>::const_iterator it = descriptors.begin(), end = descriptors.end();
-    for (; it != end; ++it) {
-        descriptors_array.push_back(*it);
-    }
-    descriptors_array = descriptors_array.reshape(0, 1);
+    descriptors = descriptors.t();
 
     printf("Computing visual words and kdtree ...\n");
-    Vocabulary* vocabulary = new Vocabulary(category, descriptors_array, numWords);
+    Vocabulary* vocabulary = new Vocabulary(category, descriptors, numWords);
 
     return vocabulary;
 }
