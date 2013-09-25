@@ -7,6 +7,7 @@
 #define BOOST_TEST_MODULE sanity
 #include <boost/test/unit_test.hpp>
 
+#include "utils/matrix.hpp"
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
@@ -42,5 +43,21 @@ BOOST_AUTO_TEST_CASE(opencv_traits) {
 
     BOOST_CHECK(CV_32F == DataType<float>::type);
     BOOST_CHECK(mat.depth() == DataType<float>::type);
+}
+
+BOOST_AUTO_TEST_CASE(matrix_push_back) {
+    Mat row = Mat::ones(2, 3, CV_32F);
+
+    Mat mat;
+    for (int i = 1; i <= 3; i++) {
+        mat.push_back( Mat(row*i) );
+    }
+    Mat expected = (Mat_<float>(6, 3) << 1, 1, 1,
+                                         1, 1, 1,
+                                         2, 2, 2,
+                                         2, 2, 2,
+                                         3, 3, 3,
+                                         3, 3, 3);
+    BOOST_CHECK(vis::equals(expected, mat));
 }
 
