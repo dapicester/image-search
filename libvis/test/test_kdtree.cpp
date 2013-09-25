@@ -8,7 +8,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "kdtree.hpp"
-#include "test_utils.hpp"
+#include "utils/data.hpp"
 #include "utils/print.hpp"
 #include <iostream>
 #include <cstdlib>

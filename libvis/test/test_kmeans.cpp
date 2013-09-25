@@ -8,7 +8,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "kmeans.hpp"
-#include "test_utils.hpp"
+#include "utils/data.hpp"
 
 using cv::Mat;
 using cv::Mat_;

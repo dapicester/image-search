@@ -2,7 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "utils/ported.hpp"
-#include "test_utils.hpp"
+#include "utils/data.hpp"
 #include "utils/matrix.hpp"
 #include <iostream>
 

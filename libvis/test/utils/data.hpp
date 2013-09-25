@@ -1,19 +1,17 @@
 /**
- * @file test_utils.hpp
- * @brief Test utilities
+ * @file utils/data.hpp
+ * @brief Test sample data
  * @author Paolo D'Apice
  */
 
-#ifndef VIS_TEST_UTILS_HPP
-#define VIS_TEST_UTILS_HPP
+#ifndef VIS_TEST_UTILS_DATA_HPP
+#define VIS_TEST_UTILS_DATA_HPP
 
-#include "traits.hpp"
-#include "utils/random.hpp"
+#include "random.hpp"
 #include <opencv2/core/core.hpp>
 
 namespace vis {
 
-// TODO move to test/datva
 /// @return A pointer to rows x columns random data
 template <typename T>
 T*
@@ -23,7 +21,6 @@ getTestDataPtr(int rows, int columns) {
     for (int i = 0; i < rows*columns; ++i) {
         data[i] = rand.next();
     }
-
     return data;
 }
 
@@ -37,7 +34,6 @@ getTestDataVec(int rows, int columns) {
     return vec;
 }
 
-
 /// @return A matrix with rows x columns random data
 template <typename T>
 cv::Mat
@@ -48,7 +44,7 @@ getTestData(int rows, int columns) {
     return mat;
 }
 
-}
+} /* namespace vis */
 
-#endif /* VIS_TEST_UTILS_HPP */
+#endif /* VIS_TEST_UTILS_DATA_HPP */
 
