@@ -40,9 +40,12 @@ private:
 /// @brief Extracts HOG.
 class HogExtractor : private boost::noncopyable {
 public:
-    HogExtractor(int cellSize = 8, int numOrientations = 9);
+    // TODO numOrientations = 9
+    HogExtractor(int cellSize = 8, int numOrientations = 8);
 
     ~HogExtractor();
+
+    vl_size dimension() const;
 
     /// Extracts HOG from a gray-scale single-precision image.
     HogDescriptors extract(const cv::Mat& image);

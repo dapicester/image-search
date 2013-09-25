@@ -5,7 +5,6 @@
  */
 
 #include "hog.hpp"
-#include <boost/assert.hpp>
 
 using namespace cv;
 
@@ -22,7 +21,10 @@ HogDescriptors::~HogDescriptors() {
 
 Mat
 HogDescriptors::toMat() const {
-    return Mat(width * height, dimension, CV_32F, data).clone();
+    Mat hog(dimension, width * height, CV_32F, data);
+    Mat hogMatrix;
+    flip(hog, hogMatrix, 1);
+    return hogMatrix.clone();
 }
 
 static const VlHogVariant VARIANT = VlHogVariantUoctti;
@@ -38,6 +40,11 @@ HogExtractor::~HogExtractor() {
     vl_hog_delete(hog);
 }
 
+vl_size
+HogExtractor::dimension() const {
+    return vl_hog_get_dimension(hog);
+}
+
 HogDescriptors
 HogExtractor::extract(const Mat& image) {
     const Size& size = image.size();
@@ -48,8 +55,6 @@ HogExtractor::extract(const Mat& image) {
     vl_size hogWidth = vl_hog_get_width(hog);
     vl_size hogHeight = vl_hog_get_height(hog);
     vl_size hogDimension = vl_hog_get_dimension(hog);
-
-    BOOST_ASSERT_MSG(hogDimension == 3*numOrientations + 4, "Wrong HOG dimension");
 
     HogDescriptors descriptors(hogWidth, hogHeight, hogDimension);
     vl_hog_extract(hog, descriptors.data);

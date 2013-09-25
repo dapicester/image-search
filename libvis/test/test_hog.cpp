@@ -4,7 +4,7 @@
  * @author Paolo D'Apice
  */
 
-#define BOOST_TEST_MODULE sanity
+#define BOOST_TEST_MODULE hog
 #include <boost/test/unit_test.hpp>
 
 #include "hog.hpp"
@@ -26,7 +26,7 @@ struct Fixture {
         BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
 
         input = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
-        standardizeImage(input, image);
+        standardizeImage(input, image, 128);
     }
     ~Fixture() {}
     Mat input, image;
@@ -36,14 +36,18 @@ BOOST_FIXTURE_TEST_SUITE(suite, Fixture)
 
 BOOST_AUTO_TEST_CASE(compute_hog) {
     HogExtractor extractor;
+    BOOST_CHECK_EQUAL(3*8+4, extractor.dimension());
+
     HogDescriptors descriptors = extractor.extract(image);
-    BOOST_CHECK_EQUAL(descriptors.width, 60);
-    BOOST_CHECK_EQUAL(descriptors.height, 60);
+    BOOST_CHECK_EQUAL(descriptors.width, 16);
+    BOOST_CHECK_EQUAL(descriptors.height, 16);
     BOOST_CHECK_EQUAL(descriptors.dimension, 28);
 
     Mat hogMatrix = descriptors.toMat();
     Size size = hogMatrix.size();
-    BOOST_CHECK_EQUAL(size, Size(28, 60*60));
+    BOOST_CHECK_EQUAL(Size(16*16, 28), size); // XXX size is (cols, rows)
+    BOOST_CHECK_EQUAL(28, hogMatrix.rows);
+    BOOST_CHECK_EQUAL(16*16, hogMatrix.cols);
 
     // direct conversion to Mat
     Mat hogMatrix2 = extractor.extract(image).toMat();
@@ -76,4 +80,56 @@ BOOST_AUTO_TEST_CASE(compute_hog_matrix) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+#define PRINT 0
+
+BOOST_AUTO_TEST_CASE(hog_values) {
+    HogExtractor extractor;
+
+    Mat hog = extractor.extract(Mat::eye(16, 16, CV_32F)).toMat();
+    BOOST_CHECK_EQUAL(Size(4, 28), hog.size()); // XXX size is (cols, rows)
+#if PRINT
+    cout << "hog:\n" << hog << endl;
+#endif
+
+    // from Matlab
+    Mat expected = (Mat_<float>(28,4) <<
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.400000006, 0.185182467, 0.319459617, 0.400000006,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.400000006, 0.319459617, 0.185182467, 0.400000006,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.400000006, 0.400000006, 0.400000006, 0.400000006,
+            0.0, 0.0, 0.0, 0.0,
+            0.047140457, 0.047140457, 0.047140457, 0.047140457,
+            0.047140457, 0.047140457, 0.047140457, 0.047140457,
+            0.047140457, 0.047140457, 0.047140457, 0.047140457,
+            0.047140457, 0.047140457, 0.047140457, 0.047140457
+        );
+#if PRINT
+    cout << "expected:\n" << expected << endl;
+#endif
+
+    BOOST_REQUIRE_EQUAL(expected.size(), hog.size());
+    for (int i = 0; i < expected.rows ; i++)
+        for (int j = 0; j < expected.cols; j++)
+            BOOST_REQUIRE_CLOSE_FRACTION(expected.at<float>(i, j), hog.at<float>(i,j), 1e-6);
+}
 
