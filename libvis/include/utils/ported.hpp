@@ -134,18 +134,18 @@ colsubset(const cv::Mat& in, size_t num, SubsetMode mode) {
     size_t m = in.size().width;
     size_t n = std::min(m, num);
 
-    cv::Mat out;
+    cv::Mat out, idx;
     switch (mode) {
-    case UNIFORM: {
-        cv::Mat ind = linspace<T>(0, m-1, n);
-        ind = round<T>(ind);
-        out = colon<T>(in, ind, COLUMNS);
-        }
+    case UNIFORM:
+        idx = linspace<T>(0, m-1, n);
+        idx = round<T>(idx);
+        out = colon<T>(in, idx, COLUMNS);
         break;
     default:
         // FIXME
         throw "not yet implemented!";
     }
+    BOOST_ASSERT(out.cols == n);
     return out;
 }
 

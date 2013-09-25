@@ -25,7 +25,6 @@ KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples, vl_s
     vl_kdforest_build(forest, numSamples, data);
 }
 
-#if 1
 template <typename T>
 KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees) {
     BOOST_ASSERT_MSG(d.depth() == cv::DataType<T>::type, "Data is not of type T");
@@ -41,7 +40,6 @@ KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees) {
     vl_kdforest_set_thresholding_method(forest, kdtree::thresholdingMethod);
     vl_kdforest_build(forest, numSamples, dataPtr);
 }
-#endif
 
 template <typename T>
 KDTree<T>::~KDTree() {
@@ -75,7 +73,6 @@ KDTree<T>::search(const T* query, vl_size numNeighbors, vl_size maxNumComparison
     return results;
 }
 
-#if 1
 template <typename T>
 std::vector<KDTreeNeighbor>
 KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComparisons) {
@@ -110,7 +107,6 @@ KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComp
     vl_free(distances);
     return results;
 }
-#endif
 
 } /* namespace vis */
 

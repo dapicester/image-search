@@ -16,7 +16,6 @@ extern "C" {
 namespace vis {
 
 struct KDTreeNeighbor {
-    // TODO do not fill distance if not explicitely requested
     vl_uindex index;
     double distance;
 };

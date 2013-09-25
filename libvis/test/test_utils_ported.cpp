@@ -10,7 +10,6 @@ using namespace vis;
 using namespace cv;
 using namespace std;
 
-// TODO refactor
 #define PRINT 0
 
 BOOST_AUTO_TEST_CASE(test_colon_indices) {
