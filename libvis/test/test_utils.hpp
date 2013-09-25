@@ -8,11 +8,12 @@
 #define VIS_TEST_UTILS_HPP
 
 #include "traits.hpp"
+#include "utils/random.hpp"
 #include <opencv2/core/core.hpp>
-extern "C" {
-#include <vl/random.h>
-}
 
+namespace vis {
+
+// TODO move to matrix.hpp
 /// @return true if equals
 bool
 equals(const cv::Mat& a, const cv::Mat& b) {
@@ -21,27 +22,7 @@ equals(const cv::Mat& a, const cv::Mat& b) {
     return cv::countNonZero(diff) == 0 ? true : false;
 }
 
-template <typename T>
-class Random {
-public:
-    Random() {
-        rand = vl_get_rand();
-    }
-
-    T next() {
-        switch (vis::VlType<T>::type) {
-        case VL_TYPE_FLOAT:
-        case VL_TYPE_DOUBLE:
-            return static_cast<T>(vl_rand_real1(rand));
-        case VL_TYPE_INT32:
-            return static_cast<T>(vl_rand_int31(rand));
-        }
-    }
-
-private:
-    VlRand* rand;
-};
-
+// TODO move to test/datva
 /// @return A pointer to rows x columns random data
 template <typename T>
 T*
@@ -74,6 +55,8 @@ getTestData(int rows, int columns) {
     cv::Mat mat = cv::Mat(rows, columns, cv::DataType<T>::type, data).clone();
     delete[] data;
     return mat;
+}
+
 }
 
 #endif /* VIS_TEST_UTILS_HPP */

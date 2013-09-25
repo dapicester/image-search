@@ -9,6 +9,7 @@
 
 #include "hog.hpp"
 #include "standardize.hpp"
+#include "utils/random.hpp"
 #include "test_utils.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
@@ -22,6 +23,8 @@ using namespace std;
 
 struct Fixture {
     Fixture() {
+        BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
+
         input = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
         standardizeImage(input, image);
     }
@@ -36,11 +39,11 @@ BOOST_AUTO_TEST_CASE(compute_hog) {
     HogDescriptors descriptors = extractor.extract(image);
     BOOST_CHECK_EQUAL(descriptors.width, 60);
     BOOST_CHECK_EQUAL(descriptors.height, 60);
-    BOOST_CHECK_EQUAL(descriptors.dimension, 31);
+    BOOST_CHECK_EQUAL(descriptors.dimension, 28);
 
     Mat hogMatrix = descriptors.toMat();
     Size size = hogMatrix.size();
-    BOOST_CHECK_EQUAL(size, Size(31, 60*60));
+    BOOST_CHECK_EQUAL(size, Size(28, 60*60));
 
     // direct conversion to Mat
     Mat hogMatrix2 = extractor.extract(image).toMat();
