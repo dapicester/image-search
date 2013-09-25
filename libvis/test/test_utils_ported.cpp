@@ -3,6 +3,7 @@
 
 #include "utils/ported.hpp"
 #include "test_utils.hpp"
+#include "utils/matrix.hpp"
 #include <iostream>
 
 using namespace vis;

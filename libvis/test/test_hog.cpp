@@ -9,6 +9,7 @@
 
 #include "hog.hpp"
 #include "standardize.hpp"
+#include "utils/matrix.hpp"
 #include "utils/random.hpp"
 #include "test_utils.hpp"
 #include <opencv2/highgui/highgui.hpp>

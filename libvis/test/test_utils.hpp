@@ -13,15 +13,6 @@
 
 namespace vis {
 
-// TODO move to matrix.hpp
-/// @return true if equals
-bool
-equals(const cv::Mat& a, const cv::Mat& b) {
-    if (a.size() != b.size()) return false;
-    cv::Mat diff = (a != b);
-    return cv::countNonZero(diff) == 0 ? true : false;
-}
-
 // TODO move to test/datva
 /// @return A pointer to rows x columns random data
 template <typename T>
