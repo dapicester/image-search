@@ -24,10 +24,11 @@ template <typename T>
 class KDTree {
 public:
     /// Build a new KD-Tree on the external supplied data.
-    KDTree(const T* data, vl_size dimension, vl_size numSamples, vl_size numTrees = 1);
+    KDTree(const T* data, vl_size dimension, vl_size numSamples,
+           vl_size numTrees = 1, bool verbose = true);
 
     /// Build a new KD-Tree retaining a copy of the input matrix.
-    KDTree(const cv::Mat& data, vl_size numTrees = 1);
+    KDTree(const cv::Mat& data, vl_size numTrees = 1, bool verbose = true);
 
     ~KDTree();
 

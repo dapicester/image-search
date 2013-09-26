@@ -9,6 +9,7 @@
 
 #include "traits.hpp"
 #include <boost/assert.hpp>
+#include <cstdio>
 
 namespace vis {
 
@@ -18,15 +19,33 @@ namespace kdtree {
 }
 
 template <typename T>
-KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples, vl_size numTrees) {
+void
+printInfo(const VlKDForest* forest, vl_size numSamples) {
+    printf("vl_kdforestbuild: data %s [%llu x %llu]\n",
+            vl_get_type_name(VlType<T>::type),
+            vl_kdforest_get_data_dimension(forest),
+            numSamples);
+    printf("vl_kdforestbuild: threshold selection method: %s\n", "median") ;
+    printf("vl_kdforestbuild: number of trees: %llu\n",
+            vl_kdforest_get_num_trees(forest));
+    printf("vl_kdforestbuild: distance: %s\n",
+            vl_get_vector_comparison_type_name(kdtree::distance));
+}
+
+template <typename T>
+KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples, vl_size numTrees, bool verbose) {
     dataPtr = NULL;
     forest = vl_kdforest_new(VlType<T>::type, numDimensions, numTrees, kdtree::distance) ;
     vl_kdforest_set_thresholding_method(forest, kdtree::thresholdingMethod);
+
+    if (verbose) printInfo<T>(forest, numSamples);
+    BOOST_ASSERT(numDimensions == vl_kdforest_get_data_dimension(forest));
+
     vl_kdforest_build(forest, numSamples, data);
 }
 
 template <typename T>
-KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees) {
+KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees, bool verbose) {
     BOOST_ASSERT_MSG(d.depth() == cv::DataType<T>::type, "Data is not of type T");
     BOOST_ASSERT_MSG(d.isContinuous(), "Data is not continuous");
 
@@ -38,6 +57,10 @@ KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees) {
 
     forest = vl_kdforest_new(VlType<T>::type, numDimensions, numTrees, kdtree::distance) ;
     vl_kdforest_set_thresholding_method(forest, kdtree::thresholdingMethod);
+
+    if (verbose) printInfo<T>(forest, numSamples);
+    BOOST_ASSERT(numDimensions == vl_kdforest_get_data_dimension(forest));
+
     vl_kdforest_build(forest, numSamples, dataPtr);
 }
 
