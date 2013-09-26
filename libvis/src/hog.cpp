@@ -27,26 +27,17 @@ HogDescriptors::toMat() const {
     return hogMatrix.clone();
 }
 
-static const VlHogVariant VARIANT = VlHogVariantUoctti;
-static const vl_bool TRANSPOSED = VL_FALSE;
-static const vl_bool BILINEAR = VL_FALSE;
-
 HogExtractor::HogExtractor(int cs, int num) : cellSize(cs), numOrientations(num) {
-    hog = vl_hog_new(VARIANT, numOrientations, TRANSPOSED);
-    vl_hog_set_use_bilinear_orientation_assignments(hog, BILINEAR);
+    hog = vl_hog_new(VlHogVariantUoctti, numOrientations, VL_FALSE);
+    vl_hog_set_use_bilinear_orientation_assignments(hog, VL_FALSE);
 }
 
 HogExtractor::~HogExtractor() {
     vl_hog_delete(hog);
 }
 
-vl_size
-HogExtractor::dimension() const {
-    return vl_hog_get_dimension(hog);
-}
-
 HogDescriptors
-HogExtractor::extract(const Mat& image) {
+HogExtractor::extract(const Mat& image) const {
     const Size& size = image.size();
     const float* ptr = image.ptr<float>(0);
 

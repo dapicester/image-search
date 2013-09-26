@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree_ptr) {
     printf("query: [%f, %f]\n", query[0], query[1]);
 #endif
 
-    vector<KDTreeNeighbor> results = tree.search(query);
+    vector<KDTreeNeighbor> results = tree.search(query, 1);
     BOOST_REQUIRE_EQUAL(1, results.size());
 
     KDTreeNeighbor record = results.front();
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree_vec) {
     cout << "query: " << query << endl;
 #endif
 
-    vector<KDTreeNeighbor> results = tree.search(&query[0]);
+    vector<KDTreeNeighbor> results = tree.search(&query[0], 1);
     BOOST_REQUIRE_EQUAL(1, results.size());
 
     KDTreeNeighbor record = results.front();

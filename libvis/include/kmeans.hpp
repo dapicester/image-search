@@ -14,6 +14,7 @@ extern "C" {
 
 namespace vis {
 
+/// @brief K-means object.
 template <typename T>
 class KMeans {
 public:
@@ -21,10 +22,10 @@ public:
     ~KMeans();
 
     /**
-     * @brief Cluster data
+     * @brief Cluster data.
      * @param data Input data of size RxC containing C samples with dimension R
      * @param numCenters Number of centers
-     * @return Cluster matrix of size numCenters x C
+     * @return Matrix of cluster centers with size numCenters x C
      */
     cv::Mat cluster(const cv::Mat& data, vl_size numCenters);
 

@@ -1,6 +1,6 @@
 /**
  * @file hog.hpp
- * @brief HOG wrapper
+ * @brief VlFeat HOG wrapper
  * @author Paolo D'Apice
  */
 
@@ -20,15 +20,16 @@ class HogExtractor;
 /// @brief HOG descriptors data structure.
 struct HogDescriptors {
     HogDescriptors(vl_size width, vl_size height, vl_size dimension);
-
     ~HogDescriptors();
 
-    /// Convert to OpenCV Mat.
+    vl_size getWidth() const { return width; }
+    vl_size getHeight() const { return height; }
+    vl_size getDimension() const { return dimension; }
+
+    /// @brief Convert to OpenCV Mat.
     cv::Mat toMat() const;
 
-#ifndef BOOST_TEST_MODULE
 private:
-#endif
     const vl_size width;
     const vl_size height;
     const vl_size dimension;
@@ -40,17 +41,13 @@ private:
 /// @brief Extracts HOG.
 class HogExtractor : private boost::noncopyable {
 public:
-    // TODO numOrientations = 9
-    HogExtractor(int cellSize = 8, int numOrientations = 8);
-
+    HogExtractor(int cellSize = 8, int numOrientations = 8); // TODO numOrientations = 9
     ~HogExtractor();
 
-    vl_size dimension() const;
+    /// @brief Extracts HOG from a gray-scale single-precision image.
+    HogDescriptors extract(const cv::Mat& image) const;
 
-    /// Extracts HOG from a gray-scale single-precision image.
-    HogDescriptors extract(const cv::Mat& image);
-
-    /// Render HOG descriptors to a glyph image.
+    /// @brief Renders HOG descriptors to a glyph image.
     cv::Mat render(const HogDescriptors& descriptors) const;
 
 private:

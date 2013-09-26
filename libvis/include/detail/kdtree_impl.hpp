@@ -33,7 +33,8 @@ printInfo(const VlKDForest* forest, vl_size numSamples) {
 }
 
 template <typename T>
-KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples, vl_size numTrees, bool verbose) {
+KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples,
+        vl_size numTrees, bool verbose) {
     dataPtr = NULL;
     forest = vl_kdforest_new(VlType<T>::type, numDimensions, numTrees, kdtree::distance) ;
     vl_kdforest_set_thresholding_method(forest, kdtree::thresholdingMethod);
@@ -72,10 +73,11 @@ KDTree<T>::~KDTree() {
 
 template <typename T>
 std::vector<KDTreeNeighbor>
-KDTree<T>::search(const T* query, vl_size numNeighbors, vl_size maxNumComparisons) {
+KDTree<T>::search(const T* query, vl_size numQueries, vl_size numNeighbors, vl_size maxNumComparisons) {
     vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);
 
-    vl_size numQueries = 1;
+    BOOST_ASSERT_MSG(numQueries == 1, "Multiple queries not yet supported");
+
     vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
     double* distances = (double*) vl_calloc(sizeof(double), numNeighbors * numQueries);
 
@@ -94,7 +96,7 @@ KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComp
     BOOST_ASSERT_MSG(query.isContinuous(), "Query is not continuous");
     BOOST_ASSERT_MSG(query.cols == 1, "Multiple queries not yet supported");
 
-    vl_size numQueries = 1; // TODO numQueries = query.cols;
+    vl_size numQueries = query.cols;
     T* queryPtr = (T*) vl_calloc(sizeof(T), vl_kdforest_get_data_dimension(forest));
     std::copy(query.begin<T>(), query.end<T>(), queryPtr);
 
