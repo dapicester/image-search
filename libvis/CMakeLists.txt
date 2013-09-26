@@ -18,7 +18,7 @@ find_package(VLFeat REQUIRED)
 list(APPEND libraries ${VLFEAT_LIBRARIES})
 list(APPEND includes ${VLFEAT_INCLUDE_DIRS})
 
-find_package(Boost COMPONENTS filesystem system REQUIRED)
+find_package(Boost COMPONENTS filesystem iostreams serialization system REQUIRED)
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 

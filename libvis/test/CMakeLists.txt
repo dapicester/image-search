@@ -45,3 +45,7 @@ add_unit_test(NAME test_vocabulary
     LINK_LIBRARIES vis ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+add_unit_test(NAME test_serialization
+    SOURCES test_serialization.cpp
+    LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
