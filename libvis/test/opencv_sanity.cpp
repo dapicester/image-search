@@ -61,3 +61,33 @@ BOOST_AUTO_TEST_CASE(matrix_push_back) {
     BOOST_CHECK(vis::equals(expected, mat));
 }
 
+BOOST_AUTO_TEST_CASE(serialization) {
+    Mat mat(4, 4, CV_32F);
+    randu(mat, Scalar(0), Scalar(255));
+    cout << mat << endl;
+
+    {
+        FileStorage fs("test_serialization.yml", FileStorage::WRITE);
+        BOOST_CHECK(fs.isOpened());
+
+        fs << "matrix" << mat;
+
+        fs.release();
+        BOOST_CHECK(not fs.isOpened());
+    }
+
+    {
+        FileStorage fs;
+        fs.open("test_serialization.yml", FileStorage::READ);
+        BOOST_CHECK(fs.isOpened());
+
+        Mat loaded;
+        fs["matrix"] >> loaded;
+        cout << loaded << endl;
+        BOOST_CHECK(vis::equals(mat, loaded));
+
+        fs.release();
+        BOOST_CHECK(not fs.isOpened());
+    }
+}
+
