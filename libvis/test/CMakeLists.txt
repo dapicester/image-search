@@ -40,3 +40,8 @@ add_unit_test(NAME test_utils_ported
     SOURCES test_utils_ported.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_vocabulary
+    SOURCES test_vocabulary.cpp
+    LINK_LIBRARIES vis ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+

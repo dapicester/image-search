@@ -22,9 +22,7 @@ Vocabulary::Vocabulary(const std::string c, const cv::Mat& d, size_t n)
     words = kmeans.cluster(data, numWords);
 
     kdtree.reset(new KDTree<float>(words));
-
 }
-
 
 Vocabulary::~Vocabulary() {}
 
@@ -34,7 +32,7 @@ Vocabulary::fromImageList(
         const vector<string>& names,
         size_t numWords) {
     const size_t len = names.size();
-    const size_t numFeatures = iround(numWords*100/len);
+    const size_t numFeatures = iround(numWords*100.0/len);
 
     vector<Mat> descriptors(len);
     HogExtractor hog;

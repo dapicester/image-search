@@ -15,6 +15,10 @@
 
 namespace vis {
 
+namespace vocabulary {
+    static const size_t NUM_WORDS = 300;
+}
+
 class Vocabulary : private boost::noncopyable {
 public:
     Vocabulary(const std::string category, const cv::Mat& data, size_t numWords);
@@ -23,7 +27,7 @@ public:
     static Vocabulary* fromImageList(
         const std::string& category,
         const std::vector<std::string>& names,
-        size_t numWords);
+        size_t numWords = vocabulary::NUM_WORDS);
 
 private:
     std::string category;

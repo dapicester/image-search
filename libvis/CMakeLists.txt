@@ -18,8 +18,9 @@ find_package(VLFeat REQUIRED)
 list(APPEND libraries ${VLFEAT_LIBRARIES})
 list(APPEND includes ${VLFEAT_INCLUDE_DIRS})
 
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS filesystem system REQUIRED)
 list(APPEND includes ${Boost_INCLUDE_DIRS})
+list(APPEND libraries ${Boost_LIBRARIES})
 
 file(GLOB imsearch_SRCS src/*.c src/*.cpp)
 

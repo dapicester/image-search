@@ -8,10 +8,25 @@
 #include <boost/test/unit_test.hpp>
 
 #include "vocabulary.hpp"
+#include "utils/filesystem.hpp"
+#include <iostream>
 
-#define argc boost::unit_test::framework::master_test_suite().argc
-#define argv boost::unit_test::framework::master_test_suite().argv
+using namespace boost::filesystem;
+using namespace std;
+using namespace vis;
 
-BOOST_AUTO_TEST_CASE(dummy) {
+const static path IMAGE_DIR = current_path() / "images";
+
+#define PRINT 1
+
+BOOST_AUTO_TEST_CASE(test_vocabulary) {
+    vector<path> files = getImageFiles(IMAGE_DIR);
+#if PRINT
+    copy(files.begin(), files.end(), ostream_iterator<path>(cout, "\n"));
+#endif
+
+    // boost fs and load image paths in ROOT/images
+    // compute vocabulary
+    // check it's the same as matlab
 }
 
