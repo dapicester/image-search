@@ -7,10 +7,15 @@
 #ifndef VIS_HPP
 #define VIS_HPP
 
-// TODO include all headers
+#pragma message "This header is not ready yet!"
 
 #include "hog.hpp"
+#include "kdtree.hpp"
+#include "kmeans.hpp"
+#include "standardize.hpp"
+#include "traits.hpp"
 #include "utils.hpp"
+#include "vocabulary.hpp"
 
 #endif /* VIS_HPP */
 

@@ -7,8 +7,9 @@
 #ifndef VIS_UTILS_HPP
 #define VIS_UTILS_HPP
 
-#include "kmeans.hpp"
-#include "standardize.hpp"
+#pragma message "This header is not ready yet!"
+
+#include "utils/filesystem.hpp"
 #include "utils/ported.hpp"
 
 #endif /* VIS_UTILS_HPP */

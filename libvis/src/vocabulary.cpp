@@ -6,8 +6,9 @@
 
 #include "vocabulary.hpp"
 #include "hog.hpp"
+#include "kmeans.hpp"
+#include "standardize.hpp"
 #include "utils.hpp"
-#include "utils/filesystem.hpp"
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <cstdio>
