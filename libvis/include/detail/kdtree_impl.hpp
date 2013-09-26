@@ -79,19 +79,8 @@ KDTree<T>::search(const T* query, vl_size numNeighbors, vl_size maxNumComparison
     vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
     double* distances = (double*) vl_calloc(sizeof(double), numNeighbors * numQueries);
 
-    vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, distances, query);
-
     std::vector<KDTreeNeighbor> results;
-    for (int i = 0; i < numNeighbors; ++i) {
-        KDTreeNeighbor item;
-        item.index = indexes[i];
-        item.distance = distances[i]; // TODO do not set if not requested
-
-        results.push_back(item);
-    }
-
-    vl_free(indexes);
-    vl_free(distances);
+    getResults(query, numQueries, numNeighbors, results);
 
     return results;
 }
@@ -99,24 +88,33 @@ KDTree<T>::search(const T* query, vl_size numNeighbors, vl_size maxNumComparison
 template <typename T>
 std::vector<KDTreeNeighbor>
 KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComparisons) {
+    vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);
+
     BOOST_ASSERT_MSG(query.depth() == cv::DataType<T>::type, "Query is not of type T");
     BOOST_ASSERT_MSG(query.isContinuous(), "Query is not continuous");
     BOOST_ASSERT_MSG(query.cols == 1, "Multiple queries not yet supported");
 
-    //vl_size numQueries = query.cols;
-    vl_size numQueries = 1;
+    vl_size numQueries = 1; // TODO numQueries = query.cols;
     T* queryPtr = (T*) vl_calloc(sizeof(T), vl_kdforest_get_data_dimension(forest));
     std::copy(query.begin<T>(), query.end<T>(), queryPtr);
 
-    vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);
+    std::vector<KDTreeNeighbor> results;
+    getResults(queryPtr, numQueries, numNeighbors, results);
 
+    vl_free(queryPtr);
+    return results;
+}
+
+template <typename T>
+void
+KDTree<T>::getResults(const T* query, vl_size numQueries, vl_size numNeighbors,
+        std::vector<KDTreeNeighbor>& results) {
     vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
     double* distances = (double*) vl_calloc(sizeof(double), numNeighbors * numQueries);
 
-    vl_size numComparisons = vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, distances, queryPtr);
+    vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, distances, query);
 
     // TODO get results from multiple queries
-    std::vector<KDTreeNeighbor> results;
     for (int i = 0; i < numNeighbors; ++i) {
         KDTreeNeighbor item;
         item.index = indexes[i];
@@ -125,10 +123,8 @@ KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComp
         results.push_back(item);
     }
 
-    vl_free(queryPtr);
     vl_free(indexes);
     vl_free(distances);
-    return results;
 }
 
 } /* namespace vis */

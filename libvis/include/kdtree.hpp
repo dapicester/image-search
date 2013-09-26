@@ -41,6 +41,10 @@ public:
                                        vl_size maxNumComparisons = 0);
 
 private:
+    void getResults(const T* query, vl_size numQueries, vl_size numNeighbors,
+                    std::vector<KDTreeNeighbor>& results);
+
+private:
     VlKDForest* forest;
     T* dataPtr;
 };
