@@ -16,6 +16,7 @@
 #include "traits.hpp"
 #include "utils.hpp"
 #include "vocabulary.hpp"
+#include "serialization.hpp"
 
 #endif /* VIS_HPP */
 

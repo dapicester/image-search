@@ -1,11 +1,11 @@
 /**
- * @file serialization.hpp
- * @brief Data serialization
+ * @file detail/serialization_matrix.hpp
+ * @brief OpenCV matrix serialization using Boost Serialization
  * @author Paolo D'Apice
  */
 
-#ifndef VIS_SERIALIZATION_HPP
-#define VIS_SERIALIZATION_HPP
+#ifndef VIS_DETAILS_SERIALIZATION_MATRIX_HPP
+#define VIS_DETAILS_SERIALIZATION_MATRIX_HPP
 
 #include <boost/serialization/split_free.hpp>
 #include <boost/serialization/array.hpp>
@@ -28,7 +28,7 @@ save(OutputArchive& ar, const cv::Mat& mat, const unsigned int version) {
     ar & elemSize;
     ar & elemType;
 
-    ar & boost::serialization::make_array(mat.ptr(), dataSize);
+    ar & make_array(mat.ptr(), dataSize);
 }
 
 /// @brief Boost deserialization for @a cv::Mat.
@@ -47,10 +47,10 @@ load(InputArchive& ar, cv::Mat& mat, const unsigned int version) {
 
     mat.create(rows, cols, elemType);
 
-    ar & boost::serialization::make_array(mat.ptr(), dataSize);
+    ar & make_array(mat.ptr(), dataSize);
 }
 
 }} /* namespace boost::serialization */
 
-#endif /* VIS_SERIALIZATION_HPP */
+#endif /* VIS_DETAILS_SERIALIZATION_MATRIX_HPP */
 
