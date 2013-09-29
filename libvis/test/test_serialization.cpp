@@ -7,6 +7,8 @@
 #define BOOST_TEST_MODULE serialization
 #include <boost/test/unit_test.hpp>
 
+#include "kdtree.hpp"
+#include "utils/data.hpp"
 #include "utils/matrix.hpp"
 #include "serialization.hpp"
 #include <opencv2/core/core.hpp>
@@ -19,6 +21,7 @@ using std::endl;
 using std::ios;
 using std::ifstream;
 using std::ofstream;
+using std::vector;
 
 using namespace vis;
 
@@ -57,5 +60,60 @@ BOOST_AUTO_TEST_CASE(matrix_serialization) {
     // binary
     doTest<ar::binary_iarchive, ar::binary_oarchive>(mat, "matrix.bin", false);
     doTest<ar::binary_iarchive, ar::binary_oarchive>(mat, "matrix.bin.gz", true);
+}
+
+BOOST_AUTO_TEST_CASE(vlkdforest_serialization) {
+    int dimensions = 2;
+    int numData = 100;
+    float* data = getTestDataPtr<float>(dimensions, numData);
+
+    BinarySerializer<VlKDForest*>::Saver saver;
+    BinarySerializer<VlKDForest*>::Loader loader;
+
+    {
+        VlKDForest* forest = vl_kdforest_new(VL_TYPE_FLOAT, dimensions, 1, VlDistanceL2);
+        vl_kdforest_set_thresholding_method (forest, VL_KDTREE_MEDIAN);
+        vl_kdforest_build(forest, numData, data);
+
+        saver("vlkdforest.dat", forest);
+
+        vl_kdforest_delete(forest);
+    }
+    {
+        // FIXME memory leak in this block
+
+        VlKDForest* forest;
+        BOOST_REQUIRE(not forest);
+
+        loader("vlkdforest.dat", forest);
+
+        BOOST_CHECK(not forest->data);
+        forest->data = data;
+
+        BOOST_CHECK_EQUAL(VL_TYPE_FLOAT, vl_kdforest_get_data_type(forest));
+        BOOST_CHECK_EQUAL(VL_KDTREE_MEDIAN, vl_kdforest_get_thresholding_method(forest));
+
+        {
+            // query
+            srand(time(NULL));
+            vl_index index = rand() % numData;
+            float* query = data + index * dimensions;
+
+            VlKDForestNeighbor* neighbors = (VlKDForestNeighbor*) vl_malloc(sizeof(VlKDForestNeighbor));
+
+            vl_kdforest_set_max_num_comparisons(forest, 0);
+            vl_kdforest_query(forest, neighbors, 1, query);
+
+            BOOST_CHECK_EQUAL(index, neighbors->index);
+            BOOST_CHECK_EQUAL(0.0, neighbors->distance);
+
+            vl_free(neighbors);
+        }
+
+        BOOST_CHECK(forest);
+        vl_kdforest_delete(forest);
+    }
+
+    delete[] data;
 }
 

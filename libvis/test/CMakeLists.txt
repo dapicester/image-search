@@ -47,5 +47,5 @@ add_unit_test(NAME test_vocabulary
 
 add_unit_test(NAME test_serialization
     SOURCES test_serialization.cpp
-    LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES})
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 

@@ -109,6 +109,7 @@ struct GzipSerializer {
 } /* namespace vis */
 
 #include "detail/serialization_matrix.hpp"
+#include "detail/serialization_kdtree.hpp"
 
 #endif /* VIS_SERIALIZATION_HPP */
 
