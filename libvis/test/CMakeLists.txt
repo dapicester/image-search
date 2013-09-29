@@ -43,7 +43,7 @@ add_unit_test(NAME test_utils_ported
 add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
     LINK_LIBRARIES vis ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    ARGS ${CMAKE_SOURCE_DIR}/data)
 
 add_unit_test(NAME test_serialization
     SOURCES test_serialization.cpp

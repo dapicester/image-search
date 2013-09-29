@@ -8,8 +8,8 @@
 #include "hog.hpp"
 #include "kmeans.hpp"
 #include "standardize.hpp"
+#include "serialization.hpp"
 #include "utils.hpp"
-#include <opencv2/opencv.hpp>
 #include <vector>
 #include <cstdio>
 
@@ -17,6 +17,8 @@ namespace vis {
 
 using namespace cv;
 using namespace std;
+
+Vocabulary::Vocabulary() {}
 
 Vocabulary::Vocabulary(const std::string c, const cv::Mat& d, size_t n)
     : category(c), data(d), numWords(n) {
@@ -72,6 +74,20 @@ Vocabulary::fromImageList(
     vector<string> files;
     path2string(names, files);
     return fromImageList(category, files, numWords);
+}
+
+Vocabulary*
+Vocabulary::load(const fs::path& file) {
+    BinarySerializer<Vocabulary>::Loader loader;
+    Vocabulary* vocabulary = new Vocabulary;
+    loader(file.string().c_str(), *vocabulary);
+    return vocabulary;
+}
+
+void
+Vocabulary::save(const fs::path& file) const {
+    BinarySerializer<Vocabulary>::Saver saver;
+    saver(file.string().c_str(), *this);
 }
 
 } /* namespace vis */

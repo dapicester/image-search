@@ -62,10 +62,16 @@ private:
     void load(Archive& ar, const unsigned int version);
 
     BOOST_SERIALIZATION_SPLIT_MEMBER();
+
 private:
     VlKDForest* forest;
     T* dataPtr;
     vl_size dataSize;
+
+#ifdef BOOST_TEST_MODULE
+public:
+    const VlKDForest* getForest() const { return forest; }
+#endif
 };
 
 } /* namespace vis */
