@@ -117,3 +117,36 @@ BOOST_AUTO_TEST_CASE(vlkdforest_serialization) {
     delete[] data;
 }
 
+BOOST_AUTO_TEST_CASE(kdtree_serialization) {
+    typedef KDTree<float> Tree;
+
+    int dimension = 2;
+    int numData = 100;
+    Mat data = getTestData<float>(dimension, numData);
+
+    {
+        BinarySerializer<Tree>::Saver saver;
+
+        Tree tree(data);
+        saver("kdtree.dat", tree);
+    }
+    {
+        BinarySerializer<Tree>::Loader loader;
+
+        Tree tree;
+        loader("kdtree.dat", tree);
+
+        // query
+        srand(time(NULL));
+        int index = rand() % numData;
+        Mat query = data.col(index).clone();
+
+        vector<KDTreeNeighbor> results = tree.search(query);
+        BOOST_CHECK_EQUAL(1, results.size());
+
+        KDTreeNeighbor record = results.front();
+        BOOST_CHECK_EQUAL(index, record.index);
+        BOOST_CHECK_EQUAL(0.0, record.distance);
+    }
+}
+

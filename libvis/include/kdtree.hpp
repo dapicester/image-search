@@ -10,6 +10,8 @@
 extern "C" {
 #include <vl/kdtree.h>
 }
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/split_member.hpp>
 #include <opencv2/core/core.hpp>
 #include <vector>
 
@@ -25,6 +27,8 @@ struct KDTreeNeighbor {
 template <typename T>
 class KDTree {
 public:
+    KDTree();
+
     /// @brief Builds a new KD-Tree on the external supplied data.
     KDTree(const T* data, vl_size dimension, vl_size numSamples,
            vl_size numTrees = 1, bool verbose = true);
@@ -49,9 +53,19 @@ private:
     void getResults(const T* query, vl_size numQueries, vl_size numNeighbors,
                     std::vector<KDTreeNeighbor>& results);
 
+    friend class boost::serialization::access;
+
+    template <typename Archive>
+    void save(Archive& ar, const unsigned int version) const;
+
+    template <typename Archive>
+    void load(Archive& ar, const unsigned int version);
+
+    BOOST_SERIALIZATION_SPLIT_MEMBER();
 private:
     VlKDForest* forest;
     T* dataPtr;
+    vl_size dataSize;
 };
 
 } /* namespace vis */
