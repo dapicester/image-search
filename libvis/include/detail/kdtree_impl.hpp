@@ -33,6 +33,16 @@ printInfo(const VlKDForest* forest, vl_size numSamples) {
             vl_get_vector_comparison_type_name(kdtree::distance));
 }
 
+void
+printTreeInfo(const VlKDForest* forest) {
+    for (vl_uindex ti = 0; ti < vl_kdforest_get_num_trees(forest); ++ti) {
+        printf("vl_kdforestbuild: tree %llu: depth %llu, num nodes %llu\n",
+                ti,
+                vl_kdforest_get_depth_of_tree(forest, ti),
+                vl_kdforest_get_num_nodes_of_tree(forest, ti));
+    }
+}
+
 template <typename T>
 KDTree<T>::KDTree() {
     forest = NULL;
@@ -53,6 +63,7 @@ KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples,
     BOOST_ASSERT(numDimensions == vl_kdforest_get_data_dimension(forest));
 
     vl_kdforest_build(forest, numSamples, data);
+    if (verbose) printTreeInfo(forest);
 }
 
 template <typename T>
@@ -76,6 +87,7 @@ KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees, bool verbose) {
     BOOST_ASSERT(numDimensions == vl_kdforest_get_data_dimension(forest));
 
     vl_kdforest_build(forest, numSamples, dataPtr);
+    if (verbose) printTreeInfo(forest);
 }
 
 template <typename T>
