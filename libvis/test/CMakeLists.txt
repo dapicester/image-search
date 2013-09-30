@@ -1,3 +1,4 @@
+add_definitions(-DENABLE_TESTING)
 set(SRC_DIR ${libvis_SOURCE_DIR}/src)
 
 find_package(Boost COMPONENTS system unit_test_framework REQUIRED)

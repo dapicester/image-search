@@ -68,7 +68,7 @@ private:
     T* dataPtr;
     vl_size dataSize;
 
-#ifdef BOOST_TEST_MODULE
+#ifdef ENABLE_TESTING
 public:
     const VlKDForest* getForest() const { return forest; }
 #endif

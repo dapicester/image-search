@@ -61,7 +61,7 @@ private:
     cv::Mat words;
     boost::scoped_ptr<KDTree<float> > kdtree;
 
-#ifdef BOOST_TEST_MODULE
+#ifdef ENABLE_TESTING
 public:
     const KDTree<float>* getKDTree() const { return kdtree.get(); }
     const cv::Mat& getWords() const { return words; }
