@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(test_serialization) {
     BOOST_CHECK_EQUAL(300, vocabulary->getNumWords());
     BOOST_CHECK_EQUAL(cv::Size(300,28), vocabulary->getWords().size());
     BOOST_CHECK_EQUAL(1, vl_kdforest_get_num_trees(forest));
-    //BOOST_CHECK_EQUAL(9, vl_kdforest_get_depth_of_tree(forest, 0));
+    BOOST_CHECK_EQUAL(9, vl_kdforest_get_depth_of_tree(forest, 0));
     BOOST_CHECK_EQUAL(599, vl_kdforest_get_num_nodes_of_tree(forest, 0));
 }
 

@@ -83,6 +83,7 @@ save(OutputArchive& ar, const VlKDForest& f, const unsigned int version) {
         for (vl_uindex di = 0; di < f.numData; ++di) {
             ar & tree->dataIndex[di].index;
         }
+        ar & tree->depth;
     }
 }
 
@@ -154,6 +155,7 @@ load(InputArchive& ar, VlKDForest& forest, const unsigned int version) {
         for (vl_uindex di = 0; di < numData; ++di) {
             ar & tree->dataIndex[di].index;
         }
+        ar & tree->depth;
 
         int numNodesToVisit = tree->numUsedNodes;
         restore_parent_recursively(tree, 0, &numNodesToVisit);
