@@ -20,8 +20,8 @@ using namespace std;
 
 Vocabulary::Vocabulary() {}
 
-Vocabulary::Vocabulary(const std::string c, const cv::Mat& d, size_t n)
-    : category(c), data(d), numWords(n) {
+Vocabulary::Vocabulary(const std::string c, const cv::Mat& data, size_t n)
+    : category(c), numWords(n) {
     KMeans<float> kmeans;
     words = kmeans.cluster(data, numWords);
 

@@ -50,6 +50,7 @@ KDTree<T>::KDTree() {
     dataSize = 0;
 }
 
+#if 0
 template <typename T>
 KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples,
         vl_size numTrees, bool verbose) {
@@ -65,6 +66,7 @@ KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples,
     vl_kdforest_build(forest, numSamples, data);
     if (verbose) printTreeInfo(forest);
 }
+#endif
 
 template <typename T>
 KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees, bool verbose) {

@@ -21,7 +21,7 @@ using std::endl;
 using namespace vis;
 
 #define PRINT 1
-
+#if 0
 BOOST_AUTO_TEST_CASE(test_kdtree_ptr) {
     cout << "** pointer" << endl;
 
@@ -97,6 +97,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree_vec) {
     BOOST_REQUIRE_EQUAL(index, record.index);
     BOOST_REQUIRE_EQUAL(0.0, record.distance);
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(test_kdtree_mat) {
     cout << "** cv::Mat" << endl;

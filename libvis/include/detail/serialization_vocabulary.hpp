@@ -15,7 +15,6 @@ template <typename Archive>
 void
 Vocabulary::serialize(Archive& ar, const unsigned int version) {
     ar & category;
-    ar & data;
     ar & numWords;
     ar & words;
     ar & kdtree;

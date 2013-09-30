@@ -57,7 +57,6 @@ private:
 
 private:
     std::string category;
-    cv::Mat data;
     size_t numWords;
     cv::Mat words;
     boost::scoped_ptr<KDTree<float> > kdtree;
