@@ -83,8 +83,6 @@ BOOST_AUTO_TEST_CASE(vlkdforest_serialization) {
         // FIXME memory leak in this block
 
         VlKDForest* forest;
-        BOOST_REQUIRE(not forest);
-
         loader("vlkdforest.dat", forest);
 
         BOOST_CHECK(not forest->data);

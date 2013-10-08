@@ -10,7 +10,6 @@
 #include "standardize.hpp"
 #include "serialization.hpp"
 #include "utils.hpp"
-#include <vector>
 #include <cstdio>
 
 namespace vis {
@@ -78,16 +77,20 @@ Vocabulary::fromImageList(
 
 Vocabulary*
 Vocabulary::load(const fs::path& file) {
+    printf("Loading vocabulary from file %s ... ", file.string().c_str());
     BinarySerializer<Vocabulary>::Loader loader;
     Vocabulary* vocabulary = new Vocabulary;
     loader(file.string().c_str(), *vocabulary);
+    printf("done\n");
     return vocabulary;
 }
 
 void
 Vocabulary::save(const fs::path& file) const {
+    printf("Saving vocabulary to file %s ... ", file.string().c_str());
     BinarySerializer<Vocabulary>::Saver saver;
     saver(file.string().c_str(), *this);
+    printf("done\n");
 }
 
 } /* namespace vis */
