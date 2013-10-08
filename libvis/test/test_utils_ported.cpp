@@ -10,7 +10,15 @@ using namespace vis;
 using namespace cv;
 using namespace std;
 
-#define PRINT 0
+#define PRINT 1
+
+#if PRINT
+#  define printmat(X) cout << #X << ":\n" << X << endl
+#  define print(X) cout << #X << ": " << X << endl;
+#else
+#  define printmat(X)
+#  define print(X)
+#endif
 
 BOOST_AUTO_TEST_CASE(test_colon_indices) {
     Mat expected, actual, indices;
@@ -24,12 +32,12 @@ BOOST_AUTO_TEST_CASE(test_colon_indices) {
                                    9, 11);
     indices = (Mat_<int>(1,2) << 0, 2);
     actual = colon<int>(input, indices, COLUMNS);
-#if PRINT
-    cout << "input" << endl << input << endl;
-    cout << "indices" << endl << indices << endl;
-    cout << "expected" << endl << expected << endl;
-    cout << "actual" << endl << actual << endl;
-#endif
+
+    printmat(input);
+    printmat(indices);
+    printmat(expected);
+    printmat(actual);
+
     BOOST_CHECK(equals(expected, actual));
     BOOST_CHECK(equals(expected, colon<int>(input, indices.t(), COLUMNS)));
 
@@ -38,12 +46,12 @@ BOOST_AUTO_TEST_CASE(test_colon_indices) {
                                    5, 6, 7, 8);
     indices = (Mat_<int>(1, 2) << 0, 1);
     actual = colon<int>(input, indices.t(), ROWS);
-#if PRINT
-    cout << "input" << endl << input << endl;
-    cout << "indices" << endl << indices << endl;
-    cout << "expected" << endl << expected << endl;
-    cout << "actual" << endl << actual << endl;
-#endif
+
+    printmat(input);
+    printmat(indices);
+    printmat(expected);
+    printmat(actual);
+
     BOOST_CHECK(equals(expected, actual));
     BOOST_CHECK(equals(expected, colon<int>(input, indices.t(), ROWS)));
 }
@@ -58,11 +66,11 @@ BOOST_AUTO_TEST_CASE(test_colon) {
                                      5, 6, 7, 8,
                                      9, 10, 11, 12);
     actual = colon<int>(input);
-#if PRINT
-    cout << "input" << endl << input << endl;
-    cout << "expected" << endl << expected << endl;
-    cout << "actual" << endl << actual << endl;
-#endif
+
+    printmat(input);
+    printmat(expected);
+    printmat(actual);
+
     BOOST_CHECK(equals(expected, actual));
 }
 
@@ -108,11 +116,11 @@ BOOST_AUTO_TEST_CASE(test_round) {
     Mat input = (Mat_<double>(1, 5) << 1.0, 1.5, 2.7, 3.0, 4.99);
     Mat expected = (Mat_<double>(1, 5) << 1, 2, 3, 3, 5);
     Mat actual = vis::round<double>(input);
-#if PRINT
-    cout << "input" << endl << input << endl;
-    cout << "expected" << endl << expected << endl;
-    cout << "actual" << endl << actual << endl;
-#endif
+
+    printmat(input);
+    printmat(expected);
+    printmat(actual);
+
     BOOST_CHECK(equals(expected, actual));
 }
 
@@ -121,11 +129,11 @@ BOOST_AUTO_TEST_CASE(test_colsubset) {
     Mat expected = (Mat_<double>(1,5) << 1, 3, 6, 8, 10);
 
     Mat actual = colsubset<double>(input, 5, UNIFORM);
-#if PRINT
-    cout << "input" << endl << input << endl;
-    cout << "expected" << endl << expected << endl;
-    cout << "actual" << endl << actual << endl;
-#endif
+
+    printmat(input);
+    printmat(expected);
+    printmat(actual);
+
     BOOST_CHECK(equals(expected, actual));
 }
 
