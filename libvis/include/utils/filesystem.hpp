@@ -28,8 +28,9 @@ std::vector<boost::filesystem::path>
 getImageFiles(const boost::filesystem::path& dir) {
     std::vector<boost::filesystem::path> files;
 
-    boost::filesystem::directory_iterator it = boost::filesystem::directory_iterator(dir),
-                           end = boost::filesystem::directory_iterator();
+    boost::filesystem::directory_iterator
+            it = boost::filesystem::directory_iterator(dir),
+            end = boost::filesystem::directory_iterator();
 
     std::copy(boost::make_filter_iterator<has_image_extension>(it, end),
               boost::make_filter_iterator<has_image_extension>(end, end),
@@ -39,9 +40,13 @@ getImageFiles(const boost::filesystem::path& dir) {
 }
 
 // TODO unit test for this
-void path2string(const std::vector<boost::filesystem::path>& paths, std::vector<std::string>& names) {
-    std::transform(paths.begin(), paths.end(), std::back_inserter(names),
-                   std::mem_fun_ref<std::string,boost::filesystem::path>(&boost::filesystem::path::string));
+void
+path2string(const std::vector<boost::filesystem::path>& paths,
+        std::vector<std::string>& names) {
+    using boost::filesystem::path;
+    std::transform(paths.begin(), paths.end(),
+                   std::back_inserter(names),
+                   std::mem_fun_ref<std::string, path>(&path::string));
 }
 
 } /* namespace vis */
