@@ -137,3 +137,48 @@ BOOST_AUTO_TEST_CASE(test_colsubset) {
     BOOST_CHECK(equals(expected, actual));
 }
 
+BOOST_AUTO_TEST_CASE(test_hist) {
+    {
+        // random data
+        int numdata = 50;
+        Mat data(1, numdata, cv::DataType<float>::type);
+        cv::randn(data, cv::Scalar(0), cv::Scalar(1));
+
+        int numbins = 10;
+        Mat histogram = hist(data, numbins);
+        double sum = cv::sum(histogram)[0];
+
+        printmat(histogram);
+        print(sum)
+
+        BOOST_CHECK_EQUAL(cv::Size(1, numbins), histogram.size());
+        BOOST_CHECK_EQUAL(numdata, sum);
+
+        Mat normalized = hist(data, numbins, SUM1);
+        Mat expected = histogram / sum;
+
+        printmat(normalized);
+        printmat(expected);
+
+        BOOST_CHECK_CLOSE(1., cv::sum(normalized)[0], 1e-5);
+        BOOST_CHECK_CLOSE(1., cv::sum(expected)[0], 1e-5);
+        BOOST_CHECK(equals(expected, normalized));
+    }
+    {
+        // matlab compatibility
+        Mat data = (cv::Mat_<float>(25,1) << 17, 23,  4, 10, 11,
+                                           24,  5,  6, 12, 18,
+                                            1,  7, 13, 19, 25,
+                                            8, 14, 20, 21,  2,
+                                           15, 16, 22,  3,  9);
+        Mat expected = (cv::Mat_<float>(10,1) << 3, 2, 3, 2, 3, 2, 2, 3, 2, 3);
+        Mat actual = hist(data, 10);
+
+        printmat(expected);
+        printmat(actual);
+
+        BOOST_CHECK(equals(expected, actual));
+    }
+
+}
+

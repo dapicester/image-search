@@ -10,6 +10,7 @@
 #include <boost/assert.hpp>
 #include <boost/math/special_functions/round.hpp>
 #include <opencv2/core/core.hpp>
+#include "opencv2/imgproc/imgproc.hpp"
 
 namespace vis {
 
@@ -147,6 +148,42 @@ colsubset(const cv::Mat& in, size_t num, SubsetMode mode) {
     }
     BOOST_ASSERT(out.cols == n);
     return out;
+}
+
+enum NormalizeMode {
+    NONE,
+    SUM1,
+    RANGE1,
+};
+
+/**
+ * @brief Equivalent of Matlab hist function.
+ * Works only with floats!
+ */
+cv::Mat
+hist(const cv::Mat& in, int numbins, NormalizeMode normalize = NONE) {
+    BOOST_ASSERT_MSG(in.type() == cv::DataType<float>::type, "Support only float data type");
+
+    double min, max;
+    cv::minMaxIdx(in, &min, &max);
+    float range[] = { min, max + 0.1}; // XXX
+    const float* histRange = { range };
+
+    cv::Mat histogram;
+    cv::calcHist(&in, 1, 0, cv::Mat(), histogram, 1, &numbins, &histRange, true, false);
+
+    switch (normalize) {
+    case RANGE1:
+        cv::normalize(histogram, histogram, 0, 1, cv::NORM_MINMAX);
+        break;
+    case SUM1:
+        cv::normalize(histogram, histogram, 1, 0, cv::NORM_L1);
+        break;
+    default:
+        break;
+    }
+
+    return histogram;
 }
 
 } /* namespace vis */
