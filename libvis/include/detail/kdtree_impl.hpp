@@ -96,8 +96,7 @@ getResults(VlKDForest* forest, const T* query, vl_size numQueries,
 
     vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, distances, query);
 
-    // TODO get results from multiple queries
-    for (int i = 0; i < numNeighbors; ++i) {
+    for (int i = 0; i < numNeighbors * numQueries; ++i) {
         KDTreeNeighbor item;
         item.index = indexes[i];
         item.distance = distances[i];
@@ -118,8 +117,7 @@ getResults(VlKDForest* forest, const T* query, vl_size numQueries,
 
     vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, 0, query);
 
-    // TODO get results from multiple queries
-    for (int i = 0; i < numNeighbors; ++i) {
+    for (int i = 0; i < numNeighbors * numQueries; ++i) {
         KDTreeIndex item;
         item.index = indexes[i];
 
@@ -137,11 +135,13 @@ KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComp
 
     BOOST_ASSERT_MSG(query.depth() == cv::DataType<T>::type, "Query is not of type T");
     BOOST_ASSERT_MSG(query.isContinuous(), "Query is not continuous");
-    BOOST_ASSERT_MSG(query.cols == 1, "Multiple queries not yet supported");
+    BOOST_ASSERT_MSG(query.rows == vl_kdforest_get_data_dimension(forest), "Query has wrong data dimension");
 
     vl_size numQueries = query.cols;
-    T* queryPtr = (T*) vl_calloc(sizeof(T), vl_kdforest_get_data_dimension(forest));
-    std::copy(query.begin<T>(), query.end<T>(), queryPtr);
+    T* queryPtr = (T*) vl_calloc(sizeof(T), numQueries * query.rows);
+
+    cv::Mat temp = query.t(); // data is stored by rows, we need columns
+    std::copy(temp.begin<T>(), temp.end<T>(), queryPtr);
 
     std::vector<Record> results;
     getResults(forest, queryPtr, numQueries, numNeighbors, results);

@@ -22,46 +22,58 @@ using namespace vis;
 
 #define PRINT 1
 
-BOOST_AUTO_TEST_CASE(test_kdtree_mat) {
-    cout << "** cv::Mat" << endl;
-
+BOOST_AUTO_TEST_CASE(test_kdtree) {
     int dimension = 2;
     int numData = 100;
     Mat data = getTestData<double>(dimension, numData);
 #if PRINT
-    cout << data << endl;
+    cout << "data:\n" << data << endl;
 #endif
     KDTree<double> tree(data);
 
-    // pick one random record within data
+    int numQueries = 2;
+    Mat indices(1, numQueries, cv::DataType<int>::type);
+    Mat queries(dimension, numQueries, data.type());
+
+    // pick random records within data
     srand(time(NULL));
-    int index = rand() % numData;
-    Mat query = data.col(index).clone();
+    for (int i = 0; i < numQueries; i++) {
+        int index = rand() % numData;
+        indices.at<int>(i) = index;
+        data.col(index).copyTo(queries.col(i));
+    }
 #if PRINT
-    cout << "query: " << query << endl;
+    cout << "indices: " << indices << endl;
+    cout << "queries:\n" << queries << endl;
 #endif
 
     {
-        vector<KDTreeNeighbor> results = tree.search<KDTreeNeighbor>(query);
-        BOOST_REQUIRE_EQUAL(1, results.size());
+        // query for index and distance
+        vector<KDTreeNeighbor> results = tree.search<KDTreeNeighbor>(queries);
+        BOOST_REQUIRE_EQUAL(numQueries, results.size());
 
-        KDTreeNeighbor record = results.front();
+        for (int i = 0; i < numQueries; i++) {
+            KDTreeNeighbor record = results[i];
 #if PRINT
-        printf("record: { i=%llu\td=%f }\n", record.index, record.distance);
+            printf("record[%d]: { i=%llu\td=%f }\n", i, record.index, record.distance);
 #endif
-        BOOST_REQUIRE_EQUAL(index, record.index);
-        BOOST_REQUIRE_EQUAL(0.0, record.distance);
+            BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
+            BOOST_REQUIRE_EQUAL(0.0, record.distance);
+        }
     }
 
     {
-        vector<KDTreeIndex> results = tree.search<KDTreeIndex>(query);
-        BOOST_REQUIRE_EQUAL(1, results.size());
+        // query for index
+        vector<KDTreeIndex> results = tree.search<KDTreeIndex>(queries);
+        BOOST_REQUIRE_EQUAL(numQueries, results.size());
 
-        KDTreeIndex record = results.front();
+        for (int i = 0; i < numQueries; i++) {
+            KDTreeIndex record = results[i];
 #if PRINT
-        printf("record: { i=%llu }\n", record.index);
+            printf("record[%d]: { i=%llu }\n", i, record.index);
 #endif
-        BOOST_REQUIRE_EQUAL(index, record.index);
+            BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
+        }
     }
 }
 
