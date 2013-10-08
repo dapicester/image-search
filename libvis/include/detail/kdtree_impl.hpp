@@ -50,24 +50,6 @@ KDTree<T>::KDTree() {
     dataSize = 0;
 }
 
-#if 0
-template <typename T>
-KDTree<T>::KDTree(const T* data, vl_size numDimensions, vl_size numSamples,
-        vl_size numTrees, bool verbose) {
-    dataPtr = NULL;
-    dataSize = 0;
-
-    forest = vl_kdforest_new(VlType<T>::type, numDimensions, numTrees, kdtree::distance) ;
-    vl_kdforest_set_thresholding_method(forest, kdtree::thresholdingMethod);
-
-    if (verbose) printInfo<T>(forest, numSamples);
-    BOOST_ASSERT(numDimensions == vl_kdforest_get_data_dimension(forest));
-
-    vl_kdforest_build(forest, numSamples, data);
-    if (verbose) printTreeInfo(forest);
-}
-#endif
-
 template <typename T>
 KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees, bool verbose) {
     BOOST_ASSERT_MSG(d.depth() == cv::DataType<T>::type, "Data is not of type T");
@@ -96,22 +78,6 @@ template <typename T>
 KDTree<T>::~KDTree() {
     vl_kdforest_delete(forest);
     if (dataPtr != NULL) vl_free(dataPtr);
-}
-
-template <typename T>
-std::vector<KDTreeNeighbor>
-KDTree<T>::search(const T* query, vl_size numQueries, vl_size numNeighbors, vl_size maxNumComparisons) {
-    vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);
-
-    BOOST_ASSERT_MSG(numQueries == 1, "Multiple queries not yet supported");
-
-    vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
-    double* distances = (double*) vl_calloc(sizeof(double), numNeighbors * numQueries);
-
-    std::vector<KDTreeNeighbor> results;
-    getResults(query, numQueries, numNeighbors, results);
-
-    return results;
 }
 
 template <typename T>

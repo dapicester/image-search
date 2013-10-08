@@ -13,34 +13,6 @@
 
 namespace vis {
 
-#if 0
-/// Print matrix stored into an array
-template <typename T>
-void
-print(const T* data, size_t len) {
-    printf("[");
-    for (int i = 0; i < len; i += 2) {
-        printf("%f ", data[i]);
-    }
-    printf("\n ");
-    for (int i = 1; i < len; i += 2) {
-        printf("%f ", data[i]);
-    }
-    printf("\b]\n");
-}
-
-/// Print vector stored into an array
-template <typename T>
-void
-printv(const T* data, size_t len) {
-    printf("[");
-    for (int i = 0; i < len; i++) {
-        printf("%f, ", data[i]);
-    }
-    printf("\b\b]\n");
-}
-#endif
-
 /// Operator << for vector
 template <typename T>
 std::ostream&

@@ -28,21 +28,11 @@ template <typename T>
 class KDTree {
 public:
     KDTree();
-#if 0
-    /// @brief Builds a new KD-Tree on the external supplied data.
-    KDTree(const T* data, vl_size dimension, vl_size numSamples,
-           vl_size numTrees = 1, bool verbose = true);
-#endif
+
     /// @brief Builds a new KD-Tree retaining a copy of the input matrix.
     KDTree(const cv::Mat& data, vl_size numTrees = 1, bool verbose = true);
 
     ~KDTree();
-
-    /// @brief Queries a KD-tree.
-    std::vector<KDTreeNeighbor> search(const T* query,
-                                       vl_size numQueries,
-                                       vl_size numNeighbors = 1,
-                                       vl_size maxNumComparisons = 0);
 
     /// @brief Queries a KD-tree.
     std::vector<KDTreeNeighbor> search(const cv::Mat& query,
