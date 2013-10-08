@@ -41,14 +41,27 @@ BOOST_AUTO_TEST_CASE(test_kdtree_mat) {
     cout << "query: " << query << endl;
 #endif
 
-    vector<KDTreeNeighbor> results = tree.search(query);
-    BOOST_REQUIRE_EQUAL(1, results.size());
+    {
+        vector<KDTreeNeighbor> results = tree.search<KDTreeNeighbor>(query);
+        BOOST_REQUIRE_EQUAL(1, results.size());
 
-    KDTreeNeighbor record = results.front();
+        KDTreeNeighbor record = results.front();
 #if PRINT
-    printf("record: { i=%llu\td=%f }\n", record.index, record.distance);
+        printf("record: { i=%llu\td=%f }\n", record.index, record.distance);
 #endif
-    BOOST_REQUIRE_EQUAL(index, record.index);
-    BOOST_REQUIRE_EQUAL(0.0, record.distance);
+        BOOST_REQUIRE_EQUAL(index, record.index);
+        BOOST_REQUIRE_EQUAL(0.0, record.distance);
+    }
+
+    {
+        vector<KDTreeIndex> results = tree.search<KDTreeIndex>(query);
+        BOOST_REQUIRE_EQUAL(1, results.size());
+
+        KDTreeIndex record = results.front();
+#if PRINT
+        printf("record: { i=%llu }\n", record.index);
+#endif
+        BOOST_REQUIRE_EQUAL(index, record.index);
+    }
 }
 

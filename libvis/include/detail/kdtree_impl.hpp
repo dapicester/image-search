@@ -80,8 +80,58 @@ KDTree<T>::~KDTree() {
     if (dataPtr != NULL) vl_free(dataPtr);
 }
 
+// template function declaration
+template <typename T, typename N>
+void
+getResults(VlKDForest* forest, const T* query, vl_size numQueries,
+           vl_size numNeighbors, std::vector<N>& results);
+
+// KDTreeNeighbor specialization
 template <typename T>
-std::vector<KDTreeNeighbor>
+void
+getResults(VlKDForest* forest, const T* query, vl_size numQueries,
+        vl_size numNeighbors, std::vector<KDTreeNeighbor>& results) {
+    vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
+    double* distances = (double*) vl_calloc(sizeof(double), numNeighbors * numQueries);
+
+    vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, distances, query);
+
+    // TODO get results from multiple queries
+    for (int i = 0; i < numNeighbors; ++i) {
+        KDTreeNeighbor item;
+        item.index = indexes[i];
+        item.distance = distances[i];
+
+        results.push_back(item);
+    }
+
+    vl_free(indexes);
+    vl_free(distances);
+}
+
+// KDTreeIndex specialization
+template <typename T>
+void
+getResults(VlKDForest* forest, const T* query, vl_size numQueries,
+        vl_size numNeighbors, std::vector<KDTreeIndex>& results) {
+    vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
+
+    vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, 0, query);
+
+    // TODO get results from multiple queries
+    for (int i = 0; i < numNeighbors; ++i) {
+        KDTreeIndex item;
+        item.index = indexes[i];
+
+        results.push_back(item);
+    }
+
+    vl_free(indexes);
+}
+
+template <typename T>
+template <typename Record>
+std::vector<Record>
 KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComparisons) {
     vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);
 
@@ -93,33 +143,11 @@ KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComp
     T* queryPtr = (T*) vl_calloc(sizeof(T), vl_kdforest_get_data_dimension(forest));
     std::copy(query.begin<T>(), query.end<T>(), queryPtr);
 
-    std::vector<KDTreeNeighbor> results;
-    getResults(queryPtr, numQueries, numNeighbors, results);
+    std::vector<Record> results;
+    getResults(forest, queryPtr, numQueries, numNeighbors, results);
 
     vl_free(queryPtr);
     return results;
-}
-
-template <typename T>
-void
-KDTree<T>::getResults(const T* query, vl_size numQueries, vl_size numNeighbors,
-        std::vector<KDTreeNeighbor>& results) {
-    vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
-    double* distances = (double*) vl_calloc(sizeof(double), numNeighbors * numQueries);
-
-    vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, distances, query);
-
-    // TODO get results from multiple queries
-    for (int i = 0; i < numNeighbors; ++i) {
-        KDTreeNeighbor item;
-        item.index = indexes[i];
-        item.distance = distances[i]; // TODO do not set if not requested
-
-        results.push_back(item);
-    }
-
-    vl_free(indexes);
-    vl_free(distances);
 }
 
 template <typename T>

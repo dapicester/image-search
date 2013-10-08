@@ -17,10 +17,15 @@ extern "C" {
 
 namespace vis {
 
-/// @brief KD-tree search results.
+/// @brief KD-tree search results including index and distance.
 struct KDTreeNeighbor {
     vl_uindex index;
     double distance;
+};
+
+/// @brief KD-tree search results including only index.
+struct KDTreeIndex {
+    vl_uindex index;
 };
 
 /// @brief KD-tree object.
@@ -35,13 +40,12 @@ public:
     ~KDTree();
 
     /// @brief Queries a KD-tree.
-    std::vector<KDTreeNeighbor> search(const cv::Mat& query,
-                                       vl_size numNeighbors = 1,
-                                       vl_size maxNumComparisons = 0);
+    template <typename Record>
+    std::vector<Record> search(const cv::Mat& query,
+                               vl_size numNeighbors = 1,
+                               vl_size maxNumComparisons = 0);
 
 private:
-    void getResults(const T* query, vl_size numQueries, vl_size numNeighbors,
-                    std::vector<KDTreeNeighbor>& results);
 
     friend class boost::serialization::access;
 

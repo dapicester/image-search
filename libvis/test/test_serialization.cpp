@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(kdtree_serialization) {
         int index = rand() % numData;
         Mat query = data.col(index).clone();
 
-        vector<KDTreeNeighbor> results = tree.search(query);
+        vector<KDTreeNeighbor> results = tree.search<KDTreeNeighbor>(query);
         BOOST_CHECK_EQUAL(1, results.size());
 
         KDTreeNeighbor record = results.front();
