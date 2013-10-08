@@ -9,11 +9,10 @@
 
 #include <iostream>
 #include <vector>
-#include <cstdio>
 
 namespace vis {
 
-/// Operator << for vector
+/// Operator << for std::vector
 template <typename T>
 std::ostream&
 operator<<(std::ostream& os, const std::vector<T>& v) {
@@ -25,6 +24,20 @@ operator<<(std::ostream& os, const std::vector<T>& v) {
         if (it != end) os << ", ";
     }
     os << "]";
+    return os;
+}
+
+/// Operator << for KDTreeNeighbor
+std::ostream&
+operator<<(std::ostream& os, const KDTreeNeighbor& n) {
+    os << "{" << n.index << "," << n.distance << "}";
+    return os;
+}
+
+/// Operator << for KDTreeIndex
+std::ostream&
+operator<<(std::ostream& os, const KDTreeIndex& i) {
+    os << "{" << i.index << "}";
     return os;
 }
 

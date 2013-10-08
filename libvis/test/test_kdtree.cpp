@@ -12,7 +12,6 @@
 #include "utils/print.hpp"
 #include <iostream>
 #include <cstdlib>
-#include <cstdio>
 
 using cv::Mat;
 using std::vector;
@@ -55,7 +54,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
         for (int i = 0; i < numQueries; i++) {
             KDTreeNeighbor record = results[i];
 #if PRINT
-            printf("record[%d]: { i=%llu\td=%f }\n", i, record.index, record.distance);
+            cout << "record[" << i << "]: " << record << endl;
 #endif
             BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
             BOOST_REQUIRE_EQUAL(0.0, record.distance);
@@ -70,7 +69,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
         for (int i = 0; i < numQueries; i++) {
             KDTreeIndex record = results[i];
 #if PRINT
-            printf("record[%d]: { i=%llu }\n", i, record.index);
+            cout << "record[" << i << "]: " << record << endl;
 #endif
             BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
         }
