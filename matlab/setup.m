@@ -20,7 +20,7 @@ end
 
 function setup_vlfeat(root)
 if exist('vl_version', 'file') ~= 3
-    vlfeat_path = fullfile(root, 'dependencies', 'vlfeat-0.9.16');
+    vlfeat_path = fullfile(root, 'dependencies', 'vlfeat-0.9.17');
     assert(exist(vlfeat_path, 'dir') == 7, 'VLFeat path not found: %s', vlfeat_path)
 
     script = fullfile(vlfeat_path, 'toolbox', 'vl_setup');
