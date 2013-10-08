@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(test_vocabulary) {
     scoped_ptr<Vocabulary> vocabulary(Vocabulary::fromImageList("test", files));
     BOOST_CHECK(vocabulary.get());
 
-    // check it's the same as matlab
+    // check it's the same as matlab (see test_vocabulary.mat)
     const VlKDForest* forest = vocabulary->getKDTree()->getForest();
     BOOST_CHECK_EQUAL(300, vocabulary->getNumWords());
     BOOST_CHECK_EQUAL(cv::Size(300,28), vocabulary->getWords().size());
