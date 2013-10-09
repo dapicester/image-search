@@ -5,11 +5,9 @@
  */
 
 #include "vocabulary.hpp"
-#include "hog.hpp"
+#include "extract.hpp"
 #include "kmeans.hpp"
-#include "standardize.hpp"
 #include "serialization.hpp"
-#include "utils.hpp"
 #include <cstdio>
 
 namespace vis {
@@ -32,47 +30,19 @@ Vocabulary::~Vocabulary() {}
 Vocabulary*
 Vocabulary::fromImageList(
         const string& category,
-        const vector<string>& names,
+        const vector<fs::path>& names,
         size_t numWords) {
     const size_t len = names.size();
     const size_t numFeatures = iround(numWords*100.0/len);
 
-    HogExtractor hog;
     Mat descriptors;
-
-    // TODO openmp parfor
-    size_t i = 0;
-    for (vector<string>::const_iterator it = names.begin(); it != names.end(); ++it) {
-        const string& name = *it;
-        printf("  Extracting features from %s (%lu/%lu)\n", name.c_str(), i+1, len);
-
-        Mat input = imread(name, CV_LOAD_IMAGE_GRAYSCALE); // hog needs only grayscale
-        Mat image; // TODO change standardize signature to allow return?
-        standardizeImage(input, image);
-
-        Mat d = hog.extract(image).toMat();
-        d = colsubset<float>(d, numFeatures, UNIFORM);
-        d = d.t();
-
-        descriptors.push_back(d);
-        ++i;
-    }
-    descriptors = descriptors.t();
+    HogVocabularyCallback cb(numFeatures);
+    extract(names, descriptors, cb);
 
     printf("Computing visual words and kdtree ...\n");
     Vocabulary* vocabulary = new Vocabulary(category, descriptors, numWords);
 
     return vocabulary;
-}
-
-Vocabulary*
-Vocabulary::fromImageList(
-        const string& category,
-        const vector<fs::path>& names,
-        size_t numWords) {
-    vector<string> files;
-    path2string(names, files);
-    return fromImageList(category, files, numWords);
 }
 
 Mat

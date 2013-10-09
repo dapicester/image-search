@@ -25,11 +25,6 @@ namespace vocabulary {
 /// @brief Vocabulary of visual words of HOG descriptors.
 class Vocabulary : private boost::noncopyable {
 public:
-    /// @brief Computes vocabulary for the given image file names.
-    static Vocabulary* fromImageList(
-        const std::string& category,
-        const std::vector<std::string>& names,
-        size_t numWords = vocabulary::NUM_WORDS);
 
     /// @brief Computes vocabulary for the given image file paths.
     static Vocabulary* fromImageList(

@@ -39,16 +39,6 @@ getImageFiles(const boost::filesystem::path& dir) {
     return files;
 }
 
-// TODO unit test for this
-void
-path2string(const std::vector<boost::filesystem::path>& paths,
-        std::vector<std::string>& names) {
-    using boost::filesystem::path;
-    std::transform(paths.begin(), paths.end(),
-                   std::back_inserter(names),
-                   std::mem_fun_ref<std::string, path>(&path::string));
-}
-
 } /* namespace vis */
 
 #endif /* VIS_UTILS_FILESYSTEM_HPP */

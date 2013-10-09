@@ -7,10 +7,9 @@
 #define BOOST_TEST_MODULE histograms
 #include <boost/test/unit_test.hpp>
 
-#include "histograms.hpp"
-#include "hog.hpp"
-#include "standardize.hpp"
+#include "extract.hpp"
 #include "utils/filesystem.hpp"
+#include "vocabulary.hpp"
 #include <boost/scoped_ptr.hpp>
 
 namespace fs = boost::filesystem;
@@ -44,29 +43,11 @@ BOOST_AUTO_TEST_CASE(test_bow) {
     scoped_ptr<Vocabulary> vocabulary(Vocabulary::load(vocabularyFile));
     BOOST_CHECK(vocabulary.get());
 
-    // compute hog
-    HogExtractor hog;
+    // compute bow
     Mat descriptors;
+    HogBagOfWordsCallback cb(vocabulary.get());
+    extract(files, descriptors, cb);
 
-    // TODO openmp parfor
-    // TODO refactor this and vocabulary.cpp
-    size_t i = 0, numImages = files.size();
-    for (vector<fs::path>::const_iterator it = files.begin(); it != files.end(); ++it) {
-        const string& name = it->string();
-        printf("  Extracting features from %s (%lu/%lu)\n", name.c_str(), i+1, numImages);
-
-        Mat input = cv::imread(name, CV_LOAD_IMAGE_GRAYSCALE); // hog needs only grayscale
-        Mat image; // TODO change standardize signature to allow return?
-        standardizeImage(input, image);
-
-        Mat d = hog.extract(image).toMat();
-        Mat hist = bowHistogram(d, *vocabulary).t();
-
-        descriptors.push_back(hist);
-        ++i;
-    }
-    descriptors = descriptors.t();
-
-    BOOST_CHECK_EQUAL(cv::Size(numImages, vocabulary->getNumWords()), descriptors.size());
+    BOOST_CHECK_EQUAL(cv::Size(files.size(), vocabulary->getNumWords()), descriptors.size());
 }
 
