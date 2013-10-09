@@ -21,7 +21,6 @@ using namespace vis;
 #define argc boost::unit_test::framework::master_test_suite().argc
 #define argv boost::unit_test::framework::master_test_suite().argv
 
-
 BOOST_AUTO_TEST_CASE(test_vocabulary) {
     BOOST_REQUIRE_MESSAGE(argc == 2, "Need to specify the data dir");
     const fs::path dataDir = argv[1];

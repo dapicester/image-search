@@ -50,3 +50,8 @@ add_unit_test(NAME test_serialization
     SOURCES test_serialization.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_histograms
+    SOURCES test_histograms.cpp
+    LINK_LIBRARIES vis ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
+    ARGS ${CMAKE_SOURCE_DIR})
+

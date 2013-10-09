@@ -19,6 +19,7 @@ namespace vis {
 
 namespace vocabulary {
     static const size_t NUM_WORDS = 300;
+    static const vl_size MAX_COMPARISONS = 15;
 }
 
 /// @brief Vocabulary of visual words of HOG descriptors.
@@ -41,6 +42,9 @@ public:
 
     /// @brief Write vocabulary to file.
     void save(const boost::filesystem::path& file) const;
+
+    /// @brief Quantize the input descriptors into words.
+    cv::Mat quantize(const cv::Mat& descriptors) const;
 
     size_t getNumWords() const { return numWords; }
 

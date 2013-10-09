@@ -75,6 +75,18 @@ Vocabulary::fromImageList(
     return fromImageList(category, files, numWords);
 }
 
+Mat
+Vocabulary::quantize(const Mat& descriptors) const {
+    vector<KDTreeIndex> neighbors = kdtree->search<KDTreeIndex>(descriptors, 1, vocabulary::MAX_COMPARISONS);
+    Mat quantized(descriptors.rows, descriptors.cols, descriptors.type());
+    for (int i = 0; i < neighbors.size(); i++) {
+        vl_uindex index = neighbors[i].index;
+        words.col(index).copyTo(quantized.col(i));
+    }
+    // Mat::convertTo(cv::DataType<double>::type)
+    return quantized;
+}
+
 Vocabulary*
 Vocabulary::load(const fs::path& file) {
     printf("Loading vocabulary from file %s ... ", file.string().c_str());
