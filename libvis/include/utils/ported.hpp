@@ -10,11 +10,11 @@
 #include <boost/assert.hpp>
 #include <boost/math/special_functions/round.hpp>
 #include <opencv2/core/core.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
+#include <opencv2/imgproc/imgproc.hpp>
 
 namespace vis {
 
-// TODO costruire matrice con varargs
+// TODO move non-template implementations to cpp file
 
 enum ColonDimension {
     ROWS,
@@ -62,11 +62,9 @@ colon(const cv::Mat& in, const cv::Mat& indices, ColonDimension dim) {
 }
 
 /**
- * @brief Matlab colon operator returningall elements as a single column.
- * @tparam T Input data type
- * @param in Input data
+ * @brief Matlab colon operator returning all elements as a single column.
  */
-template <typename T>
+inline
 cv::Mat
 colon(const cv::Mat& in) {
     return in.reshape(0, 1);
@@ -160,13 +158,14 @@ enum NormalizeMode {
  * @brief Equivalent of Matlab hist function.
  * Works only with floats!
  */
+inline
 cv::Mat
 hist(const cv::Mat& in, int numbins, NormalizeMode normalize = NONE) {
     BOOST_ASSERT_MSG(in.type() == cv::DataType<float>::type, "Support only float data type");
 
     double min, max;
     cv::minMaxIdx(in, &min, &max);
-    float range[] = { min, max + 0.1}; // XXX
+    float range[] = { min, max + 0.1}; // XXX verify that range is correct
     const float* histRange = { range };
 
     cv::Mat histogram;

@@ -4,8 +4,8 @@
  * @author Paolo D'Apice
  */
 
-#ifndef VIL_VOCABULARY_H
-#define VIL_VOCABULARY_H
+#ifndef VIS_VOCABULARY_HPP
+#define VIS_VOCABULARY_HPP
 
 #include "kdtree.hpp"
 #include <boost/scoped_ptr.hpp>
@@ -71,5 +71,5 @@ public:
 
 #include "detail/serialization_vocabulary.hpp"
 
-#endif /* VIL_VOCABULARY_H */
+#endif /* VIS_VOCABULARY_HPP */
 

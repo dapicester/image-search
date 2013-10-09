@@ -18,8 +18,9 @@ using namespace cv;
 using namespace std;
 
 BOOST_AUTO_TEST_CASE(lena) {
+    BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
     Mat image = imread(argv[1]);
-    BOOST_WARN_MESSAGE(!image.data, "No image data");
+    BOOST_CHECK_MESSAGE(image.data, "No image data");
 
     BOOST_CHECK_EQUAL(Size(512, 512), image.size());
     BOOST_CHECK_EQUAL(512, image.rows);
@@ -61,7 +62,7 @@ BOOST_AUTO_TEST_CASE(matrix_push_back) {
     BOOST_CHECK(vis::equals(expected, mat));
 }
 
-BOOST_AUTO_TEST_CASE(serialization) {
+BOOST_AUTO_TEST_CASE(matrix_serialization) {
     Mat mat(4, 4, CV_32F);
     randu(mat, Scalar(0), Scalar(255));
     cout << mat << endl;

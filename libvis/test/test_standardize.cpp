@@ -16,6 +16,7 @@ using namespace cv;
 using namespace std;
 
 #define BOOST_CHECK_EQ(X,Y) BOOST_CHECK_EQUAL(X,Y)
+
 #define argc boost::unit_test::framework::master_test_suite().argc
 #define argv boost::unit_test::framework::master_test_suite().argv
 

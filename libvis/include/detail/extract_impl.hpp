@@ -8,7 +8,8 @@
 #define VIS_DETAIL_EXTRACT_IMPL_HPP
 
 #include "standardize.hpp"
-#include "utils.hpp"
+#include "utils/ported.hpp"
+#include "vocabulary.hpp"
 #include <cstdio>
 
 namespace vis {
@@ -69,10 +70,6 @@ HogBagOfWordsCallback::operator()(const cv::Mat& image) const {
     cv::Mat hist = bow(d).t();
     return hist;
 }
-
-
-
-
 
 } /* namespace vis */
 

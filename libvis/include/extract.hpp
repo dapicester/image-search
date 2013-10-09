@@ -8,13 +8,10 @@
 #define VIS_EXTRACT_HPP
 
 #include "hog.hpp"
-#include "vocabulary.hpp"
 #include <boost/filesystem/path.hpp>
 #include <vector>
 
 namespace vis {
-
-// TODO move to _impl.hpp
 
 /**
  * @brief Extract descriptors on a list of images.
@@ -34,6 +31,8 @@ private:
     size_t numFeatures;
     HogExtractor hog;
 };
+
+class Vocabulary;
 
 /// Compute bag-of-words using the given vocabulary.
 struct BagOfWords {

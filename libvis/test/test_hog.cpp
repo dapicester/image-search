@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(compute_hog) {
 
     Mat hogMatrix = descriptors.toMat();
     Size size = hogMatrix.size();
-    BOOST_CHECK_EQUAL(Size(16*16, 28), size); // XXX size is (cols, rows)
+    BOOST_CHECK_EQUAL(Size(16*16, 28), size); // NOTE size is (cols, rows)
     BOOST_CHECK_EQUAL(28, hogMatrix.rows);
     BOOST_CHECK_EQUAL(16*16, hogMatrix.cols);
 
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(hog_values) {
     HogExtractor extractor;
 
     Mat hog = extractor.extract(Mat::eye(16, 16, CV_32F)).toMat();
-    BOOST_CHECK_EQUAL(Size(4, 28), hog.size()); // XXX size is (cols, rows)
+    BOOST_CHECK_EQUAL(Size(4, 28), hog.size()); // NOTE size is (cols, rows)
 #if PRINT
     cout << "hog:\n" << hog << endl;
 #endif

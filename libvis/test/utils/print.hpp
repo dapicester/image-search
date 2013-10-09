@@ -7,6 +7,7 @@
 #ifndef VIS_TEST_UTILS_PRINT_HPP
 #define VIS_TEST_UTILS_PRINT_HPP
 
+#include "kdtree.hpp"
 #include <iostream>
 #include <vector>
 
