@@ -3,6 +3,7 @@
 #                      [LINK_LIBRARIES lib1 lib2 ...]
 #                      [ARGS arg1 arg2 ...]
 #                      [TAG tag])
+# It makes available the variable UNIT_TEST_TARGETS containing all the unit tests
 include(MacroParseArguments)
 macro(add_unit_test)
     parse_arguments(UNIT_TEST "NAME;SOURCES;LINK_LIBRARIES;WORKING_DIRECTORY;ARGS;TAG" ${ARGN})
@@ -24,5 +25,17 @@ macro(add_unit_test)
     add_test(NAME ${testName}
              WORKING_DIRECTORY ${UNIT_TEST_WORKING_DIRECTORY}
              COMMAND ${UNIT_TEST_NAME} ${UNIT_TEST_ARGS})
+    list(APPEND UNIT_TEST_TARGETS  ${testName})
     message(STATUS "  added test: ${testName}")
+endmacro()
+
+# usage: add_all_tests_target(tests)
+macro(add_all_tests_target tests)
+    add_custom_target(all_tests ALL DEPENDS ${tests})
+    add_custom_command(TARGET all_tests
+                       COMMENT "Run all tests"
+                       POST_BUILD
+                       COMMAND ctest ARGS --output-on-failure
+                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    message(STATUS "Enabled testing on build")
 endmacro()

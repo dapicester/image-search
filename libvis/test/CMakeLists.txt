@@ -55,3 +55,5 @@ add_unit_test(NAME test_histograms
     LINK_LIBRARIES vis ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
     ARGS ${CMAKE_SOURCE_DIR})
 
+#add_all_tests_target(${UNIT_TEST_TARGETS})
+
