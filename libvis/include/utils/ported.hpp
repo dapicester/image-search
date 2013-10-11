@@ -148,6 +148,16 @@ colsubset(const cv::Mat& in, size_t num, SubsetMode mode) {
     return out;
 }
 
+/**
+ * @brief Equivalent of Matlab reshape function.
+ */
+inline
+cv::Mat
+reshape(const cv::Mat& in, size_t cols) {
+    cv::Mat out = in.t();
+    return out.reshape(0, cols).t();
+}
+
 enum NormalizeMode {
     NONE,
     SUM1,

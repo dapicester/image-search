@@ -137,6 +137,38 @@ BOOST_AUTO_TEST_CASE(test_colsubset) {
     BOOST_CHECK(equals(expected, actual));
 }
 
+void doReshapeTest(const Mat& expected, const Mat& actual) {
+    printmat(expected);
+    printmat(actual);
+
+    BOOST_CHECK_EQUAL(actual.size(), expected.size());
+    BOOST_CHECK(vis::equals(expected, actual));
+}
+
+BOOST_AUTO_TEST_CASE(test_reshape) {
+    Mat data = (Mat_<int>(3,4) << 8, 1, 6, 2,
+                                  3, 5, 7, 9,
+                                  4, 9, 2, 1);
+    printmat(data);
+    {
+        Mat expected = (Mat_<int>(2,6) << 8, 4, 5, 6, 2, 9,
+                                          3, 1, 9, 7, 2, 1);
+
+        Mat actual = reshape(data,6);
+        doReshapeTest(expected, actual);
+    }
+    {
+        Mat expected = (Mat_<int>(6,2) << 8, 6,
+                                          3, 7,
+                                          4, 2,
+                                          1, 2,
+                                          5, 9,
+                                          9, 1);
+        Mat actual = reshape(data,2);
+        doReshapeTest(expected, actual);
+    }
+}
+
 BOOST_AUTO_TEST_CASE(test_hist) {
     {
         // random data

@@ -62,30 +62,6 @@ BOOST_AUTO_TEST_CASE(matrix_push_back) {
     BOOST_CHECK(vis::equals(expected, mat));
 }
 
-BOOST_AUTO_TEST_CASE(matrix_reshape) {
-    Mat data = (Mat_<int>(3,4) << 8, 1, 6, 2,
-                                  3, 5, 7, 9,
-                                  4, 9, 2, 1);
-    {
-        Mat expected = (Mat_<int>(2,6) << 8, 4, 5, 6, 2, 9,
-                                          3, 1, 9, 7, 2, 1);
-        Mat actual = data.reshape(0,2);
-
-        BOOST_CHECK(vis::equals(expected, actual));
-    }
-    {
-        Mat expected = (Mat_<int>(6,2) << 8, 6,
-                                          3, 7,
-                                          4, 2,
-                                          1, 2,
-                                          5, 9,
-                                          9, 1);
-        Mat actual = data.reshape(0,6);
-
-        BOOST_CHECK(vis::equals(expected, actual));
-    }
-}
-
 BOOST_AUTO_TEST_CASE(matrix_multi) {
     int SIZE[] = { 2, 3, 2 }; // rows, columns, dimensions
     {
