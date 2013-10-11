@@ -62,6 +62,78 @@ BOOST_AUTO_TEST_CASE(matrix_push_back) {
     BOOST_CHECK(vis::equals(expected, mat));
 }
 
+BOOST_AUTO_TEST_CASE(matrix_reshape) {
+    Mat data = (Mat_<int>(3,4) << 8, 1, 6, 2,
+                                  3, 5, 7, 9,
+                                  4, 9, 2, 1);
+    {
+        Mat expected = (Mat_<int>(2,6) << 8, 4, 5, 6, 2, 9,
+                                          3, 1, 9, 7, 2, 1);
+        Mat actual = data.reshape(0,2);
+
+        BOOST_CHECK(vis::equals(expected, actual));
+    }
+    {
+        Mat expected = (Mat_<int>(6,2) << 8, 6,
+                                          3, 7,
+                                          4, 2,
+                                          1, 2,
+                                          5, 9,
+                                          9, 1);
+        Mat actual = data.reshape(0,6);
+
+        BOOST_CHECK(vis::equals(expected, actual));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(matrix_multi) {
+    int SIZE[] = { 2, 3, 2 }; // rows, columns, dimensions
+    {
+        Mat data(3, SIZE, DataType<int>::type, Scalar::all(0));
+        BOOST_CHECK_EQUAL(3, data.dims);
+        BOOST_CHECK_EQUAL(-1, data.rows);
+        BOOST_CHECK_EQUAL(-1, data.cols);
+        BOOST_CHECK_EQUAL(1, data.channels());
+        BOOST_CHECK_EQUAL(Size(SIZE[1],SIZE[0]), data.size()); // NOTE this is not conformant to the API!
+        //BOOST_CHECK_EQUAL(Size(-1, -1)), data.size());       //      this should be correct
+        BOOST_CHECK_EQUAL(SIZE[0]*SIZE[1]*SIZE[2], data.total());
+        BOOST_CHECK_EQUAL(SIZE[0]*SIZE[1], data.step1());
+
+        // NOTE multidimensional matrix actually is a row matrix,
+        // so one has to manually access elements using ptr() or at()
+
+        size_t total = data.total(), step = data.step1();
+        int n = 1;
+        for (int i = 0; i < total; i += step) { // iterate on SIZE[2]
+            for (int j = 0; j < step; j++) {    // iterate on SIZE[0]*SIZE[1]
+                data.at<int>(i+j) = n;
+            }
+            n++;
+        }
+
+        // NOTE NAryMatIterator can also be used
+
+        const Mat* array = &data;
+        Mat plane;
+        NAryMatIterator it(&array, &plane, 1);
+        for (int p = 0; p < it.nplanes; p++) { // NOTE actually it.nplanes is the last argument to NAryMatIterator
+            cout << plane << endl;
+            BOOST_CHECK_EQUAL(Size(total,1), plane.size());
+        }
+    }
+    {
+        vector<Mat> data;
+        for (int i = 0; i < SIZE[2]; i++) {
+            data.push_back(Mat(SIZE[0], SIZE[1], DataType<int>::type, Scalar::all(i+1)));
+        }
+
+        for (int p = 0; p < data.size(); p++) {
+            const Mat& plane = data[p];
+            cout << plane << endl;
+        }
+    }
+}
+
 BOOST_AUTO_TEST_CASE(matrix_serialization) {
     Mat mat(4, 4, CV_32F);
     randu(mat, Scalar(0), Scalar(255));
