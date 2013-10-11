@@ -190,10 +190,10 @@ BOOST_AUTO_TEST_CASE(test_hist) {
     {
         // matlab compatibility
         Mat data = (cv::Mat_<float>(25,1) << 17, 23,  4, 10, 11,
-                                           24,  5,  6, 12, 18,
-                                            1,  7, 13, 19, 25,
-                                            8, 14, 20, 21,  2,
-                                           15, 16, 22,  3,  9);
+                                             24,  5,  6, 12, 18,
+                                              1,  7, 13, 19, 25,
+                                              8, 14, 20, 21,  2,
+                                             15, 16, 22,  3,  9);
         Mat expected = (cv::Mat_<float>(10,1) << 3, 2, 3, 2, 3, 2, 2, 3, 2, 3);
         Mat actual = hist(data, 10);
 
@@ -202,6 +202,27 @@ BOOST_AUTO_TEST_CASE(test_hist) {
 
         BOOST_CHECK(equals(expected, actual));
     }
-
 }
 
+BOOST_AUTO_TEST_CASE(test_imquantize) {
+    Mat data = (Mat_<int>(5,5) << 17, 23,  4, 10, 11,
+                                  24,  5,  6, 12, 18,
+                                   1,  7, 13, 19, 25,
+                                   8, 14, 20, 21,  2,
+                                  15, 16, 22,  3,  9);
+
+    Mat levels = (Mat_<int>(1,5) << 1, 6, 11, 16, 21);
+
+    Mat expected = (Mat_<int>(5,5) << 5, 6, 1, 3, 4,
+                                      6, 2, 3, 4, 4,
+                                      2, 2, 4, 5, 6,
+                                      3, 4, 5, 5, 2,
+                                      3, 5, 6, 2, 3);
+
+    Mat actual = imquantize<int>(data, levels);
+
+    printmat(expected);
+    printmat(actual);
+
+    BOOST_CHECK(equals(expected, actual));
+}
