@@ -36,8 +36,6 @@ BOOST_AUTO_TEST_CASE(lena) {
     }
 }
 
-#define print(X) cout << #X << ": " << X << endl;
-
 BOOST_AUTO_TEST_CASE(opencv_traits) {
     float data[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     Mat mat(3,3, CV_32F, data);

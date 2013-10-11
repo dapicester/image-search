@@ -19,15 +19,13 @@ using std::cout;
 using std::endl;
 using namespace vis;
 
-#define PRINT 1
-
 BOOST_AUTO_TEST_CASE(test_kdtree) {
     int dimension = 2;
     int numData = 100;
     Mat data = getTestData<double>(dimension, numData);
-#if PRINT
-    cout << "data:\n" << data << endl;
-#endif
+
+    printmat(data);
+
     KDTree<double> tree(data);
 
     int numQueries = 2;
@@ -41,10 +39,9 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
         indices.at<int>(i) = index;
         data.col(index).copyTo(queries.col(i));
     }
-#if PRINT
-    cout << "indices: " << indices << endl;
-    cout << "queries:\n" << queries << endl;
-#endif
+
+    printmat(indices);
+    printmat(queries);
 
     {
         // query for index and distance
@@ -53,9 +50,9 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
 
         for (int i = 0; i < numQueries; i++) {
             KDTreeNeighbor record = results[i];
-#if PRINT
-            cout << "record[" << i << "]: " << record << endl;
-#endif
+
+            print(record);
+
             BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
             BOOST_REQUIRE_EQUAL(0.0, record.distance);
         }
@@ -68,9 +65,9 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
 
         for (int i = 0; i < numQueries; i++) {
             KDTreeIndex record = results[i];
-#if PRINT
-            cout << "record[" << i << "]: " << record << endl;
-#endif
+
+            print(record);
+
             BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
         }
     }

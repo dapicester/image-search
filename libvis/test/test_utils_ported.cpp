@@ -4,21 +4,12 @@
 #include "utils/ported.hpp"
 #include "utils/data.hpp"
 #include "utils/matrix.hpp"
+#include "utils/print.hpp"
 #include <iostream>
 
 using namespace vis;
 using namespace cv;
 using namespace std;
-
-#define PRINT 1
-
-#if PRINT
-#  define printmat(X) cout << #X << ":\n" << X << endl
-#  define print(X) cout << #X << ": " << X << endl;
-#else
-#  define printmat(X)
-#  define print(X)
-#endif
 
 BOOST_AUTO_TEST_CASE(test_colon_indices) {
     Mat expected, actual, indices;
@@ -181,7 +172,7 @@ BOOST_AUTO_TEST_CASE(test_hist) {
         double sum = cv::sum(histogram)[0];
 
         printmat(histogram);
-        print(sum)
+        print(sum);
 
         BOOST_CHECK_EQUAL(cv::Size(1, numbins), histogram.size());
         BOOST_CHECK_EQUAL(numdata, sum);
