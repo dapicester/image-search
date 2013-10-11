@@ -35,7 +35,7 @@ endif()
 target_link_libraries(vis ${libraries})
 
 if(ENABLE_CTAGS)
-    add_ctags_target(vis)
+    add_ctags_target()
 endif()
 
 if(ENABLE_TESTING)
