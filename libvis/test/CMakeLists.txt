@@ -55,5 +55,10 @@ add_unit_test(NAME test_histograms
     LINK_LIBRARIES vis ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
     ARGS ${CMAKE_SOURCE_DIR})
 
+add_unit_test(NAME test_hsv
+    SOURCES test_hsv.cpp ${SRC_DIR}/hsv.cpp
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
+    ARGS ${CMAKE_CURRENT_SOURCE_DIR}/lena.png)
+
 #add_all_tests_target(${UNIT_TEST_TARGETS})
 
