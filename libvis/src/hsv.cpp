@@ -60,7 +60,7 @@ void filter(Mat& image) {
 /// Compute the histogram using non-uniform mapping
 template <typename T>
 Mat
-computeHistogram(const Mat& quantized, const Vec3i& levels) {
+computeHistogram(const Mat& quantized, const Vec3i& levels, bool normalize) {
     BOOST_ASSERT(quantized.depth() == DataType<T>::type);
 
     const Size& sz = quantized.size();
@@ -112,7 +112,11 @@ computeHistogram(const Mat& quantized, const Vec3i& levels) {
     values.insert(values.end(), grays.begin(), grays.end());
 
     Mat histogram;
-    cv::normalize(Mat(values), histogram, 1, 0, cv::NORM_L1);
+    if (normalize) {
+        cv::normalize(Mat(values), histogram, 1, 0, cv::NORM_L1);
+    } else {
+        histogram = Mat(values);
+    }
 
     return histogram;
 }
@@ -123,7 +127,7 @@ HsvExtractor::HsvExtractor(const Vec3i& l, bool f)
 HsvExtractor::~HsvExtractor() {}
 
 Mat
-HsvExtractor::extract(const Mat& image) const {
+HsvExtractor::extract(const Mat& image, bool normalize) const {
     Mat hsv = toHsv(image);
     Mat quantized = quantize(hsv, levels + Vec3i(0,1,1));
 
@@ -133,7 +137,7 @@ HsvExtractor::extract(const Mat& image) const {
 
     BOOST_ASSERT(quantized.size() == image.size());
 
-    return computeHistogram<float>(quantized, levels);
+    return computeHistogram<float>(quantized, levels, normalize);
 }
 
 } /* namespace vis */

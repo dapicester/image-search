@@ -72,14 +72,16 @@ BOOST_AUTO_TEST_CASE(test_functions) {
 
 BOOST_AUTO_TEST_CASE(test_histogram) {
     Vec3i levels(3, 2, 2);
+    bool normalize = argc > 2;
+
     HsvExtractor extractor(levels);
 
-    Mat histogram = extractor.extract(image);
+    Mat histogram = extractor.extract(image, normalize);
     print(histogram);
 
     int numbins = (levels[0] * levels[1] * levels[2] + levels[2] + 1);
     BOOST_CHECK_EQUAL(Size(1, numbins), histogram.size()); // NOTE size is (cols, rows)
-    BOOST_CHECK_CLOSE(1., sum(histogram)[0], 1e-5);
+    if (normalize) BOOST_CHECK_CLOSE(1., sum(histogram)[0], 1e-5);
 
 }
 

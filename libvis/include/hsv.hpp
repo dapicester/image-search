@@ -23,7 +23,7 @@ public:
     ~HsvExtractor();
 
     /// @brief Extracts HSV color histogram from a color single-precision image.
-    cv::Mat extract(const cv::Mat& image) const;
+    cv::Mat extract(const cv::Mat& image, bool normalize = true) const;
 
 private:
     const cv::Vec3i levels;
