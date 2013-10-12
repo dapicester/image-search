@@ -18,6 +18,7 @@ clc
 setup('all');
 
 opts.levels = [18 3 3];
+opts.filt = true;
 opts.topk = 10;
 opts.save = 'no';
 opts = vl_argparse(opts, varargin);
@@ -35,7 +36,9 @@ for str = images
     image = load_image(fullfile(image_dir, name));
     
     image = standardizeImage(image, 'height', 128);
-    [histogram,quant] = hsvHistogram(image);
+    [histogram,quant] = hsvHistogram(image, ...
+                                     'levels', opts.levels, ...
+                                     'medfilt', opts.filt);
     [idx, topk, fk] = topk_colors(histogram, opts.topk);
     
     display_results
