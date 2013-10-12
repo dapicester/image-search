@@ -29,8 +29,7 @@ extract(const std::vector<boost::filesystem::path>& names, cv::Mat& output, cons
         printf("  Extracting features from %s (%lu/%lu)\n", name.c_str(), i+1, numImages);
 
         cv::Mat input = cv::imread(name, CV_LOAD_IMAGE_GRAYSCALE); // FIXME only hog needs grayscale
-        cv::Mat image; // TODO change standardize signature to allow return?
-        standardizeImage(input, image);
+        cv::Mat image = standardizeImage(input);
 
         cv::Mat m = cb(image);
 
