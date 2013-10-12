@@ -8,6 +8,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "utils/matrix.hpp"
+#include "utils/print.hpp"
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
@@ -15,7 +16,7 @@
 #define argv boost::unit_test::framework::master_test_suite().argv
 
 using namespace cv;
-using namespace std;
+using namespace vis;
 
 BOOST_AUTO_TEST_CASE(lena) {
     BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
@@ -31,7 +32,7 @@ BOOST_AUTO_TEST_CASE(lena) {
     if (argc > 2) {
         imshow("Display image", image);
 
-        cout << "Press a key to continue" << endl;
+        print("Press a key to continue");
         waitKey(0);
     }
 }
@@ -57,7 +58,7 @@ BOOST_AUTO_TEST_CASE(matrix_push_back) {
                                          2, 2, 2,
                                          3, 3, 3,
                                          3, 3, 3);
-    BOOST_CHECK(vis::equals(expected, mat));
+    BOOST_CHECK(equals(expected, mat));
 }
 
 BOOST_AUTO_TEST_CASE(matrix_multi) {
@@ -91,7 +92,7 @@ BOOST_AUTO_TEST_CASE(matrix_multi) {
         Mat plane;
         NAryMatIterator it(&array, &plane, 1);
         for (int p = 0; p < it.nplanes; p++) { // NOTE actually it.nplanes is the last argument to NAryMatIterator
-            cout << plane << endl;
+            print(plane);
             BOOST_CHECK_EQUAL(Size(total,1), plane.size());
         }
     }
@@ -103,7 +104,7 @@ BOOST_AUTO_TEST_CASE(matrix_multi) {
 
         for (int p = 0; p < data.size(); p++) {
             const Mat& plane = data[p];
-            cout << plane << endl;
+            print(plane);
         }
     }
 }
@@ -111,7 +112,7 @@ BOOST_AUTO_TEST_CASE(matrix_multi) {
 BOOST_AUTO_TEST_CASE(matrix_serialization) {
     Mat mat(4, 4, CV_32F);
     randu(mat, Scalar(0), Scalar(255));
-    cout << mat << endl;
+    print(mat);
 
     {
         FileStorage fs("test_serialization.yml", FileStorage::WRITE);
@@ -130,11 +131,47 @@ BOOST_AUTO_TEST_CASE(matrix_serialization) {
 
         Mat loaded;
         fs["matrix"] >> loaded;
-        cout << loaded << endl;
+        print(loaded);
         BOOST_CHECK(vis::equals(mat, loaded));
 
         fs.release();
         BOOST_CHECK(not fs.isOpened());
+    }
+}
+
+BOOST_AUTO_TEST_CASE(hsv) {
+    BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
+    Mat image = imread(argv[1]);
+
+    image.convertTo(image, CV_32F, 1./255);
+    BOOST_CHECK_EQUAL(CV_32FC3, image.type());
+    BOOST_CHECK(hasMinMax(image, 0., 1.));
+
+    Mat hsv;
+    cvtColor(image, hsv, CV_BGR2HSV);
+
+    vector<Mat> planes;
+    split(hsv, planes);
+
+    Mat hue = planes[0];
+    BOOST_CHECK(hasMinMax(hue, 0., 360.));    // NOTE hue is in [0,360]
+    hue /= 360.;
+    BOOST_CHECK(hasMinMax(hue, 0., 1.));
+
+    Mat sat = planes[1];
+    BOOST_CHECK(hasMinMax(sat, 0., 1.));
+
+    Mat val = planes[2];
+    BOOST_CHECK(hasMinMax(val, 0., 1.));
+
+    Mat bgr;
+    cvtColor(hsv, bgr, CV_HSV2BGR);
+
+    if (argc > 2) {
+        imshow("image", image);
+        imshow("hsv", hsv);
+        imshow("bgr", bgr);
+        waitKey(0);
     }
 }
 
