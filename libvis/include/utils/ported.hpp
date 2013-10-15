@@ -217,6 +217,35 @@ imquantize(const cv::Mat& in, const cv::Mat& levels) {
     return index;
 }
 
+/**
+ * @brief Equivalent of Matlab ind2sub for a 3-dimensional input.
+ */
+template <typename T>
+cv::Vec<T,3>
+ind2sub(const cv::Vec<T,3>& size, T index) {
+    BOOST_ASSERT_MSG(index >=0 and index < size[0]*size[1]*size[2], "out of range");
+
+    // TODO refactor this
+
+    cv::Vec<T,3> out;
+    cv::Vec<T,3> k(1, size[0], size[0] * size[1]);
+
+    T vi, vj;
+    T n = index + 1; // 0-base index
+    for (int i = 2; i >= 0; i--) {
+        vi = (n - 1) % k[i] + 1;
+        vj = (n - vi) / k[i] + 1;
+
+        n = vi;
+        out(i) = vj - 1; // 0-base index
+
+        BOOST_ASSERT(n >= 0);
+        BOOST_ASSERT(out(i) >= 0);
+    }
+
+    return out;
+}
+
 } /* namespace vis */
 
 #endif /* VIS_UTILS_PORTED_HPP */

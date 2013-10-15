@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(test_functions) {
     BOOST_CHECK_EQUAL(quantized.size(), image.size());
     BOOST_CHECK_EQUAL(quantized.type(), image.type());
 
-    if (argc > 3) {
+    if (argc > 2) {
         display(image);
         display(swapChannels(hsv));
 
@@ -76,13 +76,25 @@ BOOST_AUTO_TEST_CASE(test_histogram) {
 
     HsvExtractor extractor(levels);
 
-    Mat histogram = extractor.extract(image, normalize);
+    Mat quantized;
+    Mat histogram = extractor.extract(image, normalize, quantized);
     print(histogram);
 
     int numbins = (levels[0] * levels[1] * levels[2] + levels[2] + 1);
     BOOST_CHECK_EQUAL(Size(1, numbins), histogram.size()); // NOTE size is (cols, rows)
     if (normalize) BOOST_CHECK_CLOSE(1., sum(histogram)[0], 1e-5);
 
+    BOOST_CHECK(not quantized.empty());
+
+    Mat histImage = extractor.render(histogram);
+
+    if (argc > 2) {
+        imshow("hsv", histImage);
+        imshow("quantized", quantized);
+
+        print("Press a key to continue");
+        waitKey(0);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

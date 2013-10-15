@@ -5,7 +5,6 @@
 #include "utils/data.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
-#include <iostream>
 
 using namespace vis;
 using namespace cv;
@@ -226,3 +225,36 @@ BOOST_AUTO_TEST_CASE(test_imquantize) {
 
     BOOST_CHECK(equals(expected, actual));
 }
+
+int at(const Mat& mat, const Vec3i& index) {
+    int idx[3];
+    for (int i=0; i<3;i++) idx[i] = index[i];
+    return mat.at<int>(idx) ;
+}
+
+BOOST_AUTO_TEST_CASE(test_ind2sub) {
+    {
+        const Vec3i size(3,2,2);
+
+        // matlab-compatible indexing
+        BOOST_CHECK_EQUAL(Vec3i(0,0,0), ind2sub(size, 0));
+        BOOST_CHECK_EQUAL(Vec3i(2,0,0), ind2sub(size, 2));
+        BOOST_CHECK_EQUAL(Vec3i(1,1,0), ind2sub(size, 4));
+        BOOST_CHECK_EQUAL(Vec3i(2,0,1), ind2sub(size, 8));
+        BOOST_CHECK_EQUAL(Vec3i(2,1,1), ind2sub(size, 11));
+    }
+    {
+        int sz[] = {3,2,2};
+        int data[12] = {0,1,2,3,4,5,6,7,8,9,10,11};
+        Mat mat(3, sz, DataType<int>::type, data);
+        printMat3(mat, sz, true);
+
+        // TODO OpenCV row-major order
+        //BOOST_CHECK_EQUAL(0, mat.at<int>(0,0,0));
+        //BOOST_CHECK_EQUAL(2, mat.at<int>(2,0,0));
+        //BOOST_CHECK_EQUAL(4, mat.at<int>(1,1,0));
+        //BOOST_CHECK_EQUAL(8, mat.at<int>(2,0,1));
+        //BOOST_CHECK_EQUAL(11, mat.at<int>(2,1,1));
+    }
+}
+

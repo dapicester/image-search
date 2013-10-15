@@ -127,7 +127,7 @@ HsvExtractor::HsvExtractor(const Vec3i& l, bool f)
 HsvExtractor::~HsvExtractor() {}
 
 Mat
-HsvExtractor::extract(const Mat& image, bool normalize) const {
+HsvExtractor::extract(const Mat& image, bool normalize, OutputArray& qimage) const {
     Mat hsv = toHsv(image);
     Mat quantized = quantize(hsv, levels + Vec3i(0,1,1));
 
@@ -137,7 +137,86 @@ HsvExtractor::extract(const Mat& image, bool normalize) const {
 
     BOOST_ASSERT(quantized.size() == image.size());
 
+    if (qimage.needed()) {
+        vector<Mat> planes;
+        split(quantized, planes);
+
+        Vec3i l = levels + Vec3i(0, 1, 1);
+        for (int i = 0; i < 3; i++)
+            planes[i] /= l[i];
+        planes[0] *= 360.;
+        merge(planes, qimage);
+        cvtColor(qimage, qimage, CV_HSV2BGR);
+    }
+
     return computeHistogram<float>(quantized, levels, normalize);
+}
+
+Scalar colorLevel(int index, Vec3i levels) {
+    // TODO move these outside and pass as arguments
+    int numColors = levels[0] * levels[1] * levels[2];
+    int numGrays = levels[2] + 1;
+    Mat grays = linspace(1, 256, numGrays);
+
+    if (index >= numColors) { // gray
+        int level = index - numColors;
+        int value = grays.at<int>(level) - 1;
+        return Scalar(value, value, value);
+    }
+    else { // color
+        Vec3f idx;
+        Vec3i k(1, levels[0], levels[0] * levels[1]);
+
+        int n = index;
+        int vi, vj;
+        for (int i = 2; i >= 0; i--) {
+            vi = (n - 1) % k[i] + 1;
+            vj = (n - vi) / k[i] + 1;
+
+            n = vi;
+            idx(i) = vj - 1;
+
+            BOOST_ASSERT(n >= 0);
+            BOOST_ASSERT(idx(i) >= 0);
+        }
+
+        idx[0] /= levels[0];
+        idx[1] /= levels[1];
+        idx[2] /= levels[2];
+
+        Mat bgr(1, 1, CV_32FC3, Scalar::all(0));
+        bgr.at<Vec3f>(0) = idx;
+
+        cvtColor(bgr, bgr, CV_HSV2BGR);
+
+        Vec3f& val = bgr.at<Vec3f>(0);
+        val *= 255;
+        return Scalar(val[0], val[1], val[2]);
+    }
+}
+
+Mat
+HsvExtractor::render(const Mat& histogram) const {
+    int width = 512, height = 200; // size of the rendered image
+    Mat image(height, width, CV_8UC3, Scalar::all(0));
+
+    int bins = histogram.total();
+    int binw = cvRound(static_cast<double>(width)/bins);
+
+    Mat normalized;
+    normalize(histogram, normalized, 0, height, NORM_MINMAX);
+
+    MatConstIterator_<float> it = normalized.begin<float>(), end = normalized.end<float>();
+    for (int bin = 0; it < end; ++it, ++bin) {
+        int binh = cvRound(*it);
+
+        if (binh == 0) continue;
+
+        Rect rect(binw*bin, height - binh, binw, binh);
+        rectangle(image, rect, colorLevel(bin, levels), CV_FILLED);
+    }
+
+    return image;
 }
 
 } /* namespace vis */
