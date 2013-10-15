@@ -53,10 +53,6 @@ quantize(const Mat& image, const Vec3i& levels) {
     return quantized;
 }
 
-void filter(Mat& image) {
-    // TODO median filter
-}
-
 /// Compute the histogram using non-uniform mapping
 template <typename T>
 Mat
@@ -132,7 +128,7 @@ HsvExtractor::extract(const Mat& image, bool normalize, OutputArray& qimage) con
     Mat quantized = quantize(hsv, levels + Vec3i(0,1,1));
 
     if (medfilt) {
-        filter(quantized);
+        quantized = medfilt2<float>(quantized);
     }
 
     BOOST_ASSERT(quantized.size() == image.size());
