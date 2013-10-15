@@ -274,3 +274,25 @@ BOOST_AUTO_TEST_CASE(test_ind2sub) {
     }
 }
 
+BOOST_AUTO_TEST_CASE(test_medfilt2) {
+    Mat data = (Mat_<float>(5,5) << 17, 23,  4, 10, 11,
+                                    24,  5,  6, 12, 18,
+                                     1,  7, 13, 19, 25,
+                                     8, 14, 20, 21,  2,
+                                    15, 16, 22,  3,  9);
+
+    Mat expected = (Mat_<float>(5,5) << 17, 17,  8,  8, 15,
+                                        17,  7,  8, 14, 16,
+                                        10, 10, 13, 16, 16,
+                                        10, 12, 18, 19,  9,
+                                        11, 18, 18,  9,  9);
+
+    Mat actual = medfilt2<float>(data).t(); // NOTE transposed wrt Matlab
+
+    print(data);
+    print(expected);
+    print(actual);
+
+    BOOST_CHECK(equals(expected, actual));
+}
+

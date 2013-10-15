@@ -264,6 +264,21 @@ ind2sub(const cv::Vec<T,3>& size, T index) {
     return out;
 }
 
+/**
+ * @brief Equivalent of Matlab medfilt2 function.
+ */
+template <typename T>
+cv::Mat
+medfilt2(const cv::Mat& in) {
+    BOOST_ASSERT(in.depth() == cv::DataType<T>::type);
+    BOOST_ASSERT(in.isContinuous());
+
+    cv::Mat out(in.size(), in.type());
+    cv::medianBlur(in, out, 3); // 3x3 neighborhood
+
+    return out;
+}
+
 } /* namespace vis */
 
 #endif /* VIS_UTILS_PORTED_HPP */
