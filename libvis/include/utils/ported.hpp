@@ -217,6 +217,24 @@ imquantize(const cv::Mat& in, const cv::Mat& levels) {
     return index;
 }
 
+/// Convert row-major index to column-major index.
+inline
+int
+r2c(int index, int rows, int columns) {
+    // TODO support more than 2 dimensions
+    int row = index % rows;
+    int column = index / rows;
+    return row * columns + column;
+}
+
+/// Convert column-major index to row-major index.
+inline
+int
+c2r(int index, int rows, int columns) {
+    // TODO support more than 2 dimensions
+    return r2c(index, columns, rows);
+}
+
 /**
  * @brief Equivalent of Matlab ind2sub for a 3-dimensional input.
  */

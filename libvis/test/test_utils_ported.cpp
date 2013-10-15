@@ -226,6 +226,22 @@ BOOST_AUTO_TEST_CASE(test_imquantize) {
     BOOST_CHECK(equals(expected, actual));
 }
 
+typedef int(*func)(int, int, int);
+
+void testOrder(func f, int rows, int cols, int* expected, int num) {
+    for (int i = 0; i < num; i++)
+        BOOST_CHECK_EQUAL(expected[i], f(i, rows, cols));
+}
+
+BOOST_AUTO_TEST_CASE(test_rc) {
+    int rows = 3, cols = 2;
+    int col2row[] = {0,3,1,4,2,5};
+    int row2col[] = {0,2,4,1,3,5};
+
+    testOrder(c2r, rows, cols, col2row, 6);
+    testOrder(r2c, rows, cols, row2col, 6);
+}
+
 int at(const Mat& mat, const Vec3i& index) {
     int idx[3];
     for (int i=0; i<3;i++) idx[i] = index[i];
