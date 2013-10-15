@@ -7,9 +7,12 @@
 #ifndef VIS_UTILS_PRINT_HPP
 #define VIS_UTILS_PRINT_HPP
 
+#include <opencv2/core/core.hpp>
 #include <iostream>
 #include <vector>
+#include <cstdio>
 
+// TODO change macros to template functions
 #define print(X) std::cout << #X << ": " << X << std::endl
 #define printmat(X) std::cout << #X << ":\n" << X << std::endl
 
@@ -26,6 +29,23 @@ operator<<(std::ostream& os, const std::vector<T>& v) {
     }
     os << "]";
     return os;
+}
+
+/// Print multidimensional matrix (OpenCV does not support it)
+inline
+void
+printMat3(const cv::Mat& mat, const int* dims, bool showindices = false) {
+    if (not showindices) std::cout << '[';
+    for (int i = 0; i < dims[0]; i++) {
+        for (int j = 0; j < dims[1]; j++) {
+            for (int k = 0; k < dims[2]; k++) {
+                std::cout << mat.at<int>(i,j,k) << ' ';
+                if (showindices)
+                    std::cout << "@(" << i << ',' << j << ',' << k << ")\n";
+            }
+        }
+    }
+    if (not showindices) std::cout << "\b]\n";
 }
 
 #endif /* VIS_UTILS_PRINT_HPP */
