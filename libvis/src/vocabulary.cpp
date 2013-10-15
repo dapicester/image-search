@@ -33,7 +33,7 @@ Vocabulary::fromImageList(
         const vector<fs::path>& names,
         size_t numWords) {
     const size_t len = names.size();
-    const size_t numFeatures = iround(numWords*100.0/len);
+    const size_t numFeatures = cvRound(numWords*100.0/len);
 
     Mat descriptors;
     HogVocabularyCallback cb(numFeatures);

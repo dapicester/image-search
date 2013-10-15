@@ -92,13 +92,13 @@ linspace(T min, T max, size_t n) {
 /// @brief Round to the nearest integer
 template <typename T>
 double round(T in) {
-    return boost::math::round(in);
+    return boost::math::round(in); // TODO use cvRound
 }
 
 /// @brief Round to the nearest integer
 template <typename T>
 int iround(T in) {
-    return boost::math::iround(in);
+    return boost::math::iround(in); // TODO use cvRound
 }
 
 /**
