@@ -128,11 +128,9 @@ computeHistogram(const Mat& quantized, const Vec3i& levels, bool normalize) {
     }
     values.insert(values.end(), grays.begin(), grays.end());
 
-    Mat histogram;
+    Mat histogram(values);
     if (normalize) {
-        cv::normalize(Mat(values), histogram, 1, 0, cv::NORM_L1);
-    } else {
-        histogram = Mat(values);
+        cv::normalize(histogram, histogram, 1, 0, cv::NORM_L1);
     }
 
     return histogram;
@@ -182,39 +180,29 @@ Scalar colorLevel(int index, Vec3i levels) {
     int numGrays = levels[2] + 1;
     Mat grays = linspace(1, 256, numGrays);
 
-    if (index >= numColors) { // gray
+    if (index > numColors - 1) { // grays
         int level = index - numColors;
         int value = grays.at<int>(level) - 1;
         return Scalar(value, value, value);
     }
-    else { // color
-        Vec3f idx;
-        Vec3i k(1, levels[0], levels[0] * levels[1]);
+    else { // colors
+        Vec3i indices = ind2sub(levels, index); // FIXME ind2sub should be for row-major
 
-        int n = index;
-        int vi, vj;
-        for (int i = 2; i >= 0; i--) {
-            vi = (n - 1) % k[i] + 1;
-            vj = (n - vi) / k[i] + 1;
-
-            n = vi;
-            idx(i) = vj - 1;
-
-            BOOST_ASSERT(n >= 0);
-            BOOST_ASSERT(idx(i) >= 0);
+        Vec3f temp;
+        for (int i = 0; i < 3; i++) {
+            temp[i] = static_cast<float>(indices[i] + 1) / levels[i];
+            BOOST_ASSERT(temp[i] >= 0. and temp[i] <= 1.);
         }
+        temp[0] *= 360.;
 
-        idx[0] /= levels[0];
-        idx[1] /= levels[1];
-        idx[2] /= levels[2];
-
-        Mat bgr(1, 1, CV_32FC3, Scalar::all(0));
-        bgr.at<Vec3f>(0) = idx;
+        Mat bgr(1, 1, CV_32FC3);
+        bgr.at<Vec3f>(0) = temp;
 
         cvtColor(bgr, bgr, CV_HSV2BGR);
 
         Vec3f& val = bgr.at<Vec3f>(0);
-        val *= 255;
+        val *= 255.;
+
         return Scalar(val[0], val[1], val[2]);
     }
 }
@@ -224,6 +212,8 @@ HsvExtractor::render(const Mat& histogram) const {
     int width = 512, height = 200; // size of the rendered image
     Mat image(height, width, CV_8UC3, Scalar::all(0));
 
+    rectangle(image, Rect(0, 0, width, height), Scalar(210, 210, 210), CV_FILLED);
+
     int bins = histogram.total();
     int binw = cvRound(static_cast<double>(width)/bins);
 
@@ -232,7 +222,7 @@ HsvExtractor::render(const Mat& histogram) const {
 
     MatConstIterator_<float> it = normalized.begin<float>(), end = normalized.end<float>();
     for (int bin = 0; it < end; ++it, ++bin) {
-        int binh = cvRound(*it);
+        int binh = cvCeil(*it);
 
         if (binh == 0) continue;
 

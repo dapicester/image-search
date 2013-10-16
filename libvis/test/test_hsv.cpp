@@ -69,26 +69,25 @@ BOOST_FIXTURE_TEST_CASE(test_functions, Peppers) {
 
 BOOST_FIXTURE_TEST_CASE(test_histogram, Peppers) {
     Vec3i levels(3,2,2);
-    bool normalize = argc > 1;
-
     HsvExtractor extractor(levels);
 
     Mat quantized;
-    Mat histogram = extractor.extract(image, normalize, quantized);
+    Mat histogram = extractor.extract(image, true, quantized);
 
     print(histogram);
 
     int numbins = extractor.getNumBins();
     BOOST_CHECK_EQUAL(Size(1, numbins), histogram.size()); // NOTE size is (cols, rows)
-    if (normalize) BOOST_CHECK_CLOSE(1., sum(histogram)[0], 1e-5);
+    BOOST_CHECK_CLOSE(1., sum(histogram)[0], 1e-5);
 
     BOOST_CHECK(not quantized.empty());
 
     Mat histImage = extractor.render(histogram);
 
     if (argc > 1) {
-        imshow("hsv", histImage);
-        imshow("quantized", quantized);
+        display("histogram", histImage);
+        display("image", image);
+        display("quantized", quantized);
 
         print("Press a key to continue");
         waitKey(0);
