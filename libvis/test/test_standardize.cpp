@@ -7,6 +7,7 @@
 #define BOOST_TEST_MODULE standardize
 #include <boost/test/unit_test.hpp>
 
+#include "images.hpp"
 #include "standardize.hpp"
 #include "utils/print.hpp"
 #include <opencv2/opencv.hpp>
@@ -18,9 +19,8 @@ using namespace cv;
 #define argv boost::unit_test::framework::master_test_suite().argv
 
 BOOST_AUTO_TEST_CASE(color_resize) {
-    BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
-
-    Mat image = imread(argv[1]);
+    Mat image = imread(LENA);
+    BOOST_REQUIRE_MESSAGE(image.data, "Require lena image");
 
     double min, max;
     minMaxIdx(image, &min, &max);
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(color_resize) {
     BOOST_CHECK(0.0 <= min);                                        // range is [0, 1]
     BOOST_CHECK(1.0 >= max);
 
-    if (argc > 2) {
+    if (argc > 1) {
         imshow("Input", image);
         imshow("Output", standard);
 
@@ -56,11 +56,11 @@ BOOST_AUTO_TEST_CASE(color_resize) {
 }
 
 BOOST_AUTO_TEST_CASE(grayscale_noresize) {
-    BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
-
     const static int height = 1024;
 
-    Mat image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+    Mat image = imread(LENA, CV_LOAD_IMAGE_GRAYSCALE);
+    BOOST_REQUIRE_MESSAGE(image.data, "Require lena image");
+
     BOOST_CHECK_LT(image.size().height, height);                    // do not need to be resized
     BOOST_CHECK_EQUAL(image.channels(), 1);
 
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(grayscale_noresize) {
     BOOST_CHECK_EQUAL(standard.depth(), CV_32F);
     BOOST_CHECK_EQUAL(standard.channels(), 1);
 
-    if (argc > 2) {
+    if (argc > 1) {
         imshow("Input", image);
         imshow("Output", standard);
 

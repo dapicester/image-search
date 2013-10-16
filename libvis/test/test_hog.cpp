@@ -8,7 +8,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "hog.hpp"
-#include "standardize.hpp"
+#include "fixtures.hpp"
 #include "utils/data.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
@@ -22,20 +22,7 @@ using namespace std;
 #define argc boost::unit_test::framework::master_test_suite().argc
 #define argv boost::unit_test::framework::master_test_suite().argv
 
-struct Fixture {
-    Fixture() {
-        BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
-
-        input = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
-        standardizeImage(input, image, 128);
-    }
-    ~Fixture() {}
-    Mat input, image;
-};
-
-BOOST_FIXTURE_TEST_SUITE(suite, Fixture)
-
-BOOST_AUTO_TEST_CASE(compute_hog) {
+BOOST_FIXTURE_TEST_CASE(compute_hog, Lena) {
     HogExtractor extractor;
 
     ::HogDescriptors descriptors = extractor.extract(image);
@@ -54,7 +41,7 @@ BOOST_AUTO_TEST_CASE(compute_hog) {
     Mat diff = hogMatrix != hogMatrix2;
     BOOST_CHECK_EQUAL(0, countNonZero(diff));
 
-    if (argc > 2) {
+    if (argc > 1) {
         namedWindow("image");
         imshow("image", input);
 
@@ -67,7 +54,7 @@ BOOST_AUTO_TEST_CASE(compute_hog) {
     }
 }
 
-BOOST_AUTO_TEST_CASE(compute_hog_matrix) {
+BOOST_FIXTURE_TEST_CASE(compute_hog_matrix, Lena) {
     HogExtractor extractor;
 
     // descriptors and then matrix
@@ -78,8 +65,6 @@ BOOST_AUTO_TEST_CASE(compute_hog_matrix) {
     Mat hogMatrix2 = extractor.extract(image).toMat();
     BOOST_CHECK(equals(hogMatrix, hogMatrix2));
 }
-
-BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_CASE(hog_values) {
     HogExtractor extractor;

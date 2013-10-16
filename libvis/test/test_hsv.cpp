@@ -7,8 +7,9 @@
 #define BOOST_TEST_MODULE hsv
 #include <boost/test/unit_test.hpp>
 
-#include "hsv.hpp"
+#include "fixtures.hpp"
 #include "standardize.hpp"
+#include "hsv.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
 #include <opencv2/highgui/highgui.hpp>
@@ -19,29 +20,18 @@ using namespace cv;
 #define argc boost::unit_test::framework::master_test_suite().argc
 #define argv boost::unit_test::framework::master_test_suite().argv
 
-#define display(IMAGE) namedWindow((#IMAGE)); imshow((#IMAGE),(IMAGE));
-
-struct Fixture {
-    Fixture() {
-        BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
-
-        input = imread(argv[1]);
-        standardizeImage(input, image, 128);
-    }
-    ~Fixture() {}
-    Mat input, image;
-};
+#define display(TITLE, IMAGE) \
+            namedWindow((TITLE), CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_EXPANDED); \
+            imshow((TITLE),(IMAGE));
 
 Mat swapChannels(const Mat& in) {
-    Mat out(in.rows, in.cols, in.type());
-    static int fromto[] = { 0,2,  1,1,  2,0 };
+    Mat out(in.size(), in.type());
+    const static int fromto[] = { 0,2,  1,1,  2,0 };
     mixChannels(&in, 1, &out, 1, fromto, 3);
     return out;
 }
 
-BOOST_FIXTURE_TEST_SUITE(suite, Fixture)
-
-BOOST_AUTO_TEST_CASE(test_functions) {
+BOOST_FIXTURE_TEST_CASE(test_functions, Peppers) {
     Mat hsv = toHsv(image);
 
     BOOST_CHECK_EQUAL(hsv.size(), image.size());
@@ -53,9 +43,9 @@ BOOST_AUTO_TEST_CASE(test_functions) {
     BOOST_CHECK_EQUAL(quantized.size(), image.size());
     BOOST_CHECK_EQUAL(quantized.type(), image.type());
 
-    if (argc > 2) {
-        display(image);
-        display(swapChannels(hsv));
+    if (argc > 1) {
+        display("image", image);
+        display("hsv", swapChannels(hsv)); // HSV channels are interpreted as BGR
 
         vector<Mat> planes;
         split(quantized, planes);
@@ -63,16 +53,16 @@ BOOST_AUTO_TEST_CASE(test_functions) {
         planes[1] /= levels[1] + 1;
         planes[2] /= levels[2] + 1;
         merge(planes, quantized);
-        display(swapChannels(quantized));
+        display("quantized", swapChannels(quantized)); // idem
 
         print("Press a key to continue");
         waitKey(0);
     }
 }
 
-BOOST_AUTO_TEST_CASE(test_histogram) {
-    Vec3i levels(3, 2, 2);
-    bool normalize = argc > 2;
+BOOST_FIXTURE_TEST_CASE(test_histogram, Peppers) {
+    Vec3i levels(3,2,2);
+    bool normalize = argc > 1;
 
     HsvExtractor extractor(levels);
 
@@ -88,14 +78,12 @@ BOOST_AUTO_TEST_CASE(test_histogram) {
 
     Mat histImage = extractor.render(histogram);
 
-    if (argc > 2) {
+    if (argc > 1) {
         imshow("hsv", histImage);
-        imshow("quantized", quantized);
+        imshow("quantized", swapChannels(quantized));
 
         print("Press a key to continue");
         waitKey(0);
     }
 }
-
-BOOST_AUTO_TEST_SUITE_END()
 

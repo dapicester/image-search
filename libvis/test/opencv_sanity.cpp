@@ -7,6 +7,7 @@
 #define BOOST_TEST_MODULE sanity
 #include <boost/test/unit_test.hpp>
 
+#include "images.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
 #include <opencv2/opencv.hpp>
@@ -18,9 +19,8 @@
 using namespace cv;
 using namespace vis;
 
-BOOST_AUTO_TEST_CASE(lena) {
-    BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
-    Mat image = imread(argv[1]);
+BOOST_AUTO_TEST_CASE(test_read_show) {
+    Mat image = imread(LENA);
     BOOST_CHECK_MESSAGE(image.data, "No image data");
 
     BOOST_CHECK_EQUAL(Size(512, 512), image.size());
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(lena) {
     BOOST_CHECK_EQUAL(2, image.dims);
     BOOST_CHECK_EQUAL(3, image.channels());
 
-    if (argc > 2) {
+    if (argc > 1) {
         imshow("Display image", image);
 
         print("Press a key to continue");
@@ -140,8 +140,8 @@ BOOST_AUTO_TEST_CASE(matrix_serialization) {
 }
 
 BOOST_AUTO_TEST_CASE(hsv) {
-    BOOST_REQUIRE_MESSAGE(argc > 1, "Require lena image");
-    Mat image = imread(argv[1]);
+    Mat image = imread(LENA);
+    BOOST_CHECK_MESSAGE(image.data, "No image data");
 
     image.convertTo(image, CV_32F, 1./255);
     BOOST_CHECK_EQUAL(CV_32FC3, image.type());

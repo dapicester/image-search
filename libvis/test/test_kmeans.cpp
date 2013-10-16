@@ -11,7 +11,6 @@
 #include "utils/data.hpp"
 
 using cv::Mat;
-using cv::Mat_;
 using namespace vis;
 
 BOOST_AUTO_TEST_CASE(test_quantize) {

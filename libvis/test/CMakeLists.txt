@@ -6,10 +6,13 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 
 message(STATUS "Tests:")
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/images)
+configure_file(images.hpp.in images.hpp)
+
 add_unit_test(NAME opencv_sanity
     SOURCES opencv_sanity.cpp
-    LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES}
-    ARGS ${CMAKE_CURRENT_SOURCE_DIR}/lena.png)
+    LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME vlfeat_sanity
     SOURCES vlfeat_sanity.cpp
@@ -29,13 +32,11 @@ add_unit_test(NAME test_kdtree
 
 add_unit_test(NAME test_standardize
     SOURCES test_standardize.cpp
-    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
-    ARGS ${CMAKE_CURRENT_SOURCE_DIR}/lena.png)
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hog
     SOURCES test_hog.cpp ${SRC_DIR}/hog.cpp
-    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
-    ARGS ${CMAKE_CURRENT_SOURCE_DIR}/lena.png)
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_utils_ported
     SOURCES test_utils_ported.cpp
@@ -57,8 +58,7 @@ add_unit_test(NAME test_histograms
 
 add_unit_test(NAME test_hsv
     SOURCES test_hsv.cpp ${SRC_DIR}/hsv.cpp
-    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
-    ARGS ${CMAKE_CURRENT_SOURCE_DIR}/lena.png)
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 #add_all_tests_target(${UNIT_TEST_TARGETS})
 

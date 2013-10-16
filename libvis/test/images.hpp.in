@@ -1,0 +1,14 @@
+/**
+ * @file images.hpp
+ * @brief Fullpaths to images used during tests (preprocessed by CMake).
+ * @author Paolo D'Apice
+ */
+
+#ifndef TEST_IMAGES_HPP
+#define TEST_IMAGES_HPP
+
+#define LENA        "/home/paolo/projects/image-search/images/lena.png"
+#define PEPPERS     "/home/paolo/projects/image-search/images/peppers.png"
+
+#endif
+
