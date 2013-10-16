@@ -34,6 +34,25 @@ toHsv(const Mat& image) {
 }
 
 Mat
+toBgr(const Mat& image, const Vec3i& levels) {
+    BOOST_ASSERT(image.depth() == DataType<float>::type);
+    BOOST_ASSERT(image.channels() == 3);
+
+    vector<Mat> planes;
+    split(image, planes);
+    if (sum(levels)[0] > 0) {
+        for (int i = 0; i < 3;  i++) planes[i] /= levels[i];
+    }
+    planes[0] *= 360.;
+
+    Mat bgr;
+    merge(planes, bgr);
+    cvtColor(bgr, bgr, CV_HSV2BGR);
+
+    return bgr;
+}
+
+Mat
 quantize(const Mat& image, const Vec3i& levels) {
     BOOST_ASSERT(image.depth() == DataType<float>::type);
     BOOST_ASSERT(image.channels() == 3);
@@ -139,6 +158,8 @@ HsvExtractor::extract(const Mat& image, bool normalize, OutputArray& qimage) con
     BOOST_ASSERT(quantized.size() == image.size());
 
     if (qimage.needed()) {
+        // TODO use toBgr() here
+
         vector<Mat> planes;
         split(quantized, planes);
 

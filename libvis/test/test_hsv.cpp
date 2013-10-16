@@ -38,22 +38,29 @@ BOOST_FIXTURE_TEST_CASE(test_functions, Peppers) {
     BOOST_CHECK_EQUAL(hsv.type(), image.type());
     BOOST_CHECK(hasMinMax(hsv, 0., 1.));
 
-    Vec3i levels(3, 2, 2);
-    Mat quantized = quantize(hsv, levels + Vec3i(0, 1, 1));
+    Vec3i levels(3, 2+1, 2+1);
+    Mat quantized = quantize(hsv, levels);
     BOOST_CHECK_EQUAL(quantized.size(), image.size());
     BOOST_CHECK_EQUAL(quantized.type(), image.type());
+
+    vector<Mat> planes;
+    split(quantized, planes);
+    BOOST_CHECK(hasMinMax(planes[0], 1, levels[0]));
+    BOOST_CHECK(hasMinMax(planes[1], 1, levels[1]));
+    BOOST_CHECK(hasMinMax(planes[2], 1, levels[2]));
 
     if (argc > 1) {
         display("image", image);
         display("hsv", swapChannels(hsv)); // HSV channels are interpreted as BGR
 
-        vector<Mat> planes;
-        split(quantized, planes);
         planes[0] /= levels[0];
-        planes[1] /= levels[1] + 1;
-        planes[2] /= levels[2] + 1;
+        planes[1] /= levels[1];
+        planes[2] /= levels[2];
         merge(planes, quantized);
         display("quantized", swapChannels(quantized)); // idem
+
+        Mat bgr = toBgr(quantized);
+        display("rgb", bgr);
 
         print("Press a key to continue");
         waitKey(0);

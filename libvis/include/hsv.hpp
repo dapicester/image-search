@@ -38,6 +38,9 @@ private:
 /// Convert a BGR color single-precision image to HSV colorspace.
 cv::Mat toHsv(const cv::Mat& image);
 
+/// Convert a HSV color single-precision image to BGR colorspace.
+cv::Mat toBgr(const cv::Mat& image, const cv::Vec3i& levels = cv::Vec3i());
+
 /// Quantize image channels to given levels.
 cv::Mat quantize(const cv::Mat& image, const cv::Vec3i& levels);
 
