@@ -122,6 +122,11 @@ HsvExtractor::HsvExtractor(const Vec3i& l, bool f)
 
 HsvExtractor::~HsvExtractor() {}
 
+size_t
+HsvExtractor::getNumBins() const {
+    return levels[0] * levels[1] * levels[2] + levels[2] + 1;
+}
+
 Mat
 HsvExtractor::extract(const Mat& image, bool normalize, OutputArray& qimage) const {
     Mat hsv = toHsv(image);

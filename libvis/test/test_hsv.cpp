@@ -68,9 +68,10 @@ BOOST_FIXTURE_TEST_CASE(test_histogram, Peppers) {
 
     Mat quantized;
     Mat histogram = extractor.extract(image, normalize, quantized);
+
     print(histogram);
 
-    int numbins = (levels[0] * levels[1] * levels[2] + levels[2] + 1);
+    int numbins = extractor.getNumBins();
     BOOST_CHECK_EQUAL(Size(1, numbins), histogram.size()); // NOTE size is (cols, rows)
     if (normalize) BOOST_CHECK_CLOSE(1., sum(histogram)[0], 1e-5);
 

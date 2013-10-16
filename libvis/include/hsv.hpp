@@ -28,6 +28,8 @@ public:
     /// @brief Render the histogram to a displayable image.
     cv::Mat render(const cv::Mat& histogram) const;
 
+    size_t getNumBins() const;
+
 private:
     const cv::Vec3i levels;
     const bool medfilt;
