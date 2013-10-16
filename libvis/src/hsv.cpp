@@ -63,11 +63,13 @@ quantize(const Mat& image, const Vec3i& levels) {
     for (int i = 0; i < 3; i++) {
         float step = 1./levels[i];
         Mat thresh = linspace<float>(step, 1. - step, levels[i] - 1);
-        channels[i] = imquantize<float>(channels[i].t(), thresh);
+        channels[i] = imquantize<float>(channels[i], thresh);
+        BOOST_ASSERT(channels[i].size() == image.size());
     }
 
     Mat quantized;
     merge(channels, quantized);
+    BOOST_ASSERT(quantized.size() == image.size());
 
     return quantized;
 }

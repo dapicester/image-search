@@ -88,7 +88,7 @@ BOOST_FIXTURE_TEST_CASE(test_histogram, Peppers) {
 
     if (argc > 1) {
         imshow("hsv", histImage);
-        imshow("quantized", swapChannels(quantized));
+        imshow("quantized", quantized);
 
         print("Press a key to continue");
         waitKey(0);
