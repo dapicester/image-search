@@ -197,6 +197,7 @@ hist(const cv::Mat& in, int numbins, NormalizeMode normalize = NONE) {
 
 /**
  * @brief Equivalent of Matlab imquantize function.
+ * Input matrix must be transposed.
  */
 template <typename T>
 cv::Mat
@@ -211,7 +212,7 @@ imquantize(const cv::Mat& in, const cv::Mat& levels) {
         cv::Mat temp = (in > levels.at<T>(i)) / 255;
         temp = temp.t(); // Matlab store images by columns, OpenCV by rows
         temp.convertTo(temp, cv::DataType<T>::type);
-        index += temp;
+        index += temp.t();
     }
 
     return index;
@@ -266,6 +267,7 @@ ind2sub(const cv::Vec<T,3>& size, T index) {
 
 /**
  * @brief Equivalent of Matlab medfilt2 function.
+ * Input matrix must be transposed.
  */
 template <typename T>
 cv::Mat

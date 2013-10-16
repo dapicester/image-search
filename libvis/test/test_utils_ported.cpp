@@ -1,14 +1,17 @@
 #define BOOST_TEST_MODULE utils_ported
 #include <boost/test/unit_test.hpp>
 
+#include "fixtures.hpp"
 #include "utils/ported.hpp"
 #include "utils/data.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
 
 using namespace vis;
-using namespace cv;
-using namespace std;
+using cv::DataType;
+using cv::Mat;
+using cv::Mat_;
+using cv::Vec3i;
 
 BOOST_AUTO_TEST_CASE(test_colon_indices) {
     Mat expected, actual, indices;
@@ -218,7 +221,7 @@ BOOST_AUTO_TEST_CASE(test_imquantize) {
                                       3, 4, 5, 5, 2,
                                       3, 5, 6, 2, 3);
 
-    Mat actual = imquantize<int>(data, levels);
+    Mat actual = imquantize<int>(data.t(), levels); // NOTE transposed wrt Matlab
 
     printmat(expected);
     printmat(actual);
@@ -287,7 +290,7 @@ BOOST_AUTO_TEST_CASE(test_medfilt2) {
                                         10, 12, 18, 19,  9,
                                         11, 18, 18,  9,  9);
 
-    Mat actual = medfilt2<float>(data).t(); // NOTE transposed wrt Matlab
+    Mat actual = medfilt2<float>(data.t()); // NOTE transposed wrt Matlab
 
     print(data);
     print(expected);
