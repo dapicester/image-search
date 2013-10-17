@@ -61,6 +61,22 @@ BOOST_AUTO_TEST_CASE(matrix_push_back) {
     BOOST_CHECK(equals(expected, mat));
 }
 
+BOOST_AUTO_TEST_CASE(matrix_split_merge) {
+    vector<Mat> v;
+
+    const int N = 10;
+    for (int i = 0; i < N; i++) {
+        Mat m = (Mat_<int>(2,2) << 1,2,3,4);
+        v.push_back(m);
+    }
+
+    Mat out; // n-dimensional matrix
+    merge(v, out);
+
+    BOOST_CHECK_EQUAL(Size(2,2), out.size());
+    BOOST_CHECK_EQUAL(N, out.channels());
+}
+
 BOOST_AUTO_TEST_CASE(matrix_multi) {
     int SIZE[] = { 2, 3, 2 }; // rows, columns, dimensions
     {
