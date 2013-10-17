@@ -147,7 +147,7 @@ HsvExtractor::getNumBins() const {
 }
 
 Mat
-HsvExtractor::extract(const Mat& image, bool normalize, OutputArray& qimage) const {
+HsvExtractor::extract(const Mat& image, bool normalize, OutputArray qimage) const {
     Mat hsv = toHsv(image);
     Mat quantized = quantize(hsv, levels + Vec3i(0,1,1));
 

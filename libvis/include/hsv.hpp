@@ -23,7 +23,8 @@ public:
     ~HsvExtractor();
 
     /// @brief Extracts HSV color histogram from a color single-precision image.
-    cv::Mat extract(const cv::Mat& image, bool normalize = true, cv::OutputArray& quantized = cv::noArray()) const;
+    // XXX gcc doesn't like cv::OutputArray& while for clang there is no problem
+    cv::Mat extract(const cv::Mat& image, bool normalize = true, cv::OutputArray quantized = cv::noArray()) const;
 
     /// @brief Render the histogram to a displayable image.
     cv::Mat render(const cv::Mat& histogram) const;
