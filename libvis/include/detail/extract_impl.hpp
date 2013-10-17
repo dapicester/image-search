@@ -41,7 +41,7 @@ extract(const std::vector<boost::filesystem::path>& names,
         descriptors.push_back(m);
         ++i;
     }
-    output = descriptors.t();
+    output = descriptors.t(); // TODO avoid transpose
 }
 
 HogVocabularyCallback::HogVocabularyCallback(size_t n)
@@ -51,7 +51,7 @@ cv::Mat
 HogVocabularyCallback::operator()(const cv::Mat& image) const {
     cv::Mat d = hog.extract(image).toMat();
     d = colsubset<float>(d, numFeatures, UNIFORM);
-    d = d.t();
+    d = d.t(); // TODO avoid transpose
     return d;
 }
 
@@ -71,7 +71,7 @@ HogBagOfWordsCallback::HogBagOfWordsCallback(const Vocabulary* v)
 cv::Mat
 HogBagOfWordsCallback::operator()(const cv::Mat& image) const {
     cv::Mat d = hog.extract(image).toMat();
-    cv::Mat hist = bow(d).t();
+    cv::Mat hist = bow(d).t(); // TODO avoid transpose
     return hist;
 }
 
@@ -79,7 +79,7 @@ HsvHistogramsCallback::HsvHistogramsCallback() {}
 
 cv::Mat
 HsvHistogramsCallback::operator()(const cv::Mat& image) const {
-    return hsv.extract(image).t();
+    return hsv.extract(image).t(); // TODO avoid transpose
 }
 
 size_t
