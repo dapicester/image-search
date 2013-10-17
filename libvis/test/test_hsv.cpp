@@ -78,7 +78,7 @@ BOOST_FIXTURE_TEST_CASE(test_histogram, Peppers) {
 
     int numbins = extractor.getNumBins();
     BOOST_CHECK_EQUAL(Size(1, numbins), histogram.size()); // NOTE size is (cols, rows)
-    BOOST_CHECK_CLOSE(1., sum(histogram)[0], 1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(sum(histogram)[0], 1., 0.1);
 
     BOOST_CHECK(not quantized.empty());
 
