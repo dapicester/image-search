@@ -8,10 +8,16 @@
 #define VIS_EXTRACT_HPP
 
 #include "hog.hpp"
+#include "hsv.hpp"
 #include <boost/filesystem/path.hpp>
 #include <vector>
 
 namespace vis {
+
+enum LoadImage {
+    COLORS,
+    GRAYSCALE
+};
 
 /**
  * @brief Extract descriptors on a list of images.
@@ -21,7 +27,10 @@ namespace vis {
  */
 template <typename Callback>
 void
-extract(const std::vector<boost::filesystem::path>& names, cv::Mat& output, const Callback& cb);
+extract(const std::vector<boost::filesystem::path>& names,
+        cv::Mat& output,
+        const Callback& cb,
+        LoadImage flag = COLORS);
 
 /// Compute HOGs for constructing a word vocabulary.
 struct HogVocabularyCallback {
@@ -49,6 +58,15 @@ struct HogBagOfWordsCallback {
 private:
     BagOfWords bow;
     HogExtractor hog;
+};
+
+/// Compute HSV color histogram.
+struct HsvHistogramsCallback {
+    HsvHistogramsCallback();
+    cv::Mat operator()(const cv::Mat& image) const;
+    size_t getNumBins() const;
+private:
+    HsvExtractor hsv;
 };
 
 } /* namespace vis */

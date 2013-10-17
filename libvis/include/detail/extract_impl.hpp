@@ -16,7 +16,10 @@ namespace vis {
 
 template <typename Callback>
 void
-extract(const std::vector<boost::filesystem::path>& names, cv::Mat& output, const Callback& cb) {
+extract(const std::vector<boost::filesystem::path>& names,
+        cv::Mat& output,
+        const Callback& cb,
+        LoadImage flag) {
     cv::Mat descriptors;
 
     // TODO openmp parfor
@@ -28,7 +31,9 @@ extract(const std::vector<boost::filesystem::path>& names, cv::Mat& output, cons
         const std::string& name = it->string();
         printf("  Extracting features from %s (%lu/%lu)\n", name.c_str(), i+1, numImages);
 
-        cv::Mat input = cv::imread(name, CV_LOAD_IMAGE_GRAYSCALE); // FIXME only hog needs grayscale
+        cv::Mat input = cv::imread(name, flag == GRAYSCALE ? CV_LOAD_IMAGE_GRAYSCALE : CV_LOAD_IMAGE_COLOR);
+        BOOST_ASSERT(input.channels() == (flag == GRAYSCALE ? 1 : 3));
+
         cv::Mat image = standardizeImage(input);
 
         cv::Mat m = cb(image);
@@ -68,6 +73,18 @@ HogBagOfWordsCallback::operator()(const cv::Mat& image) const {
     cv::Mat d = hog.extract(image).toMat();
     cv::Mat hist = bow(d).t();
     return hist;
+}
+
+HsvHistogramsCallback::HsvHistogramsCallback() {}
+
+cv::Mat
+HsvHistogramsCallback::operator()(const cv::Mat& image) const {
+    return hsv.extract(image).t();
+}
+
+size_t
+HsvHistogramsCallback::getNumBins() const {
+    return hsv.getNumBins();
 }
 
 } /* namespace vis */
