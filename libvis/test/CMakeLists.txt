@@ -30,6 +30,12 @@ add_unit_test(NAME armadillo_usage
     SOURCES armadillo_usage.cpp
     LINK_LIBRARIES ${MATH_LIBRARIES} ${Boost_LIBRARIES})
 
+if(OPENMP_FOUND)
+add_unit_test(NAME openmp_usage
+    SOURCES openmp_usage.cpp
+    LINK_LIBRARIES ${Boost_LIBRARIES})
+endif()
+
 add_unit_test(NAME test_conversions
     SOURCES test_conversions.cpp
     LINK_LIBRARIES ${MATH_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})

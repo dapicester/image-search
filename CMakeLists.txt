@@ -8,6 +8,7 @@ set(image-search_VERSION_PATCH 0)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 include(EnableCXX11)
+include(EnableOpenMP)
 include(MacroBuildInfo)
 include(MacroOutOfSourceBuild)
 macro_ensure_out_of_source_build("Project ${PROJECT_NAME} requires an out of source build.")
