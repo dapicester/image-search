@@ -87,6 +87,23 @@ HsvHistogramsCallback::getNumBins() const {
     return hsv.getNumBins();
 }
 
+CompositeCallback::CompositeCallback(const Vocabulary* v)
+        : hog(v) {}
+
+cv::Mat
+CompositeCallback::operator()(const cv::Mat& image) const {
+    cv::Mat d;
+    cv::Mat bwimage;
+    cv::cvtColor(image, bwimage, CV_BGR2GRAY);
+    cv::hconcat(hog(bwimage), hsv(image), d);
+    return d;
+}
+
+size_t
+CompositeCallback::getNumBins() const {
+    return hsv.getNumBins();
+}
+
 } /* namespace vis */
 
 #endif /* VIS_DETAIL_EXTRACT_IMPL_HPP */

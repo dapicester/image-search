@@ -69,6 +69,15 @@ private:
     HsvExtractor hsv;
 };
 
+struct CompositeCallback {
+    CompositeCallback(const Vocabulary* v);
+    cv::Mat operator()(const cv::Mat& image) const;
+    size_t getNumBins() const;
+private:
+    HogBagOfWordsCallback hog;
+    HsvHistogramsCallback hsv;
+};
+
 } /* namespace vis */
 
 #include "detail/extract_impl.hpp"
