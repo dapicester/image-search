@@ -6,16 +6,18 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 
 message(STATUS "Tests:")
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/images)
-configure_file(images.hpp.in images.hpp)
+set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
+configure_file(images.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/images.hpp)
+message(STATUS "Test paths written to: ${CMAKE_CURRENT_BINARY_DIR}/images.hpp")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-add_unit_test(NAME opencv_sanity
-    SOURCES opencv_sanity.cpp
+add_unit_test(NAME opencv_usage
+    SOURCES opencv_usage.cpp
     LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
-add_unit_test(NAME vlfeat_sanity
-    SOURCES vlfeat_sanity.cpp
+add_unit_test(NAME vlfeat_usage
+    SOURCES vlfeat_usage.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_kmeans
@@ -38,27 +40,25 @@ add_unit_test(NAME test_hog
     SOURCES test_hog.cpp ${SRC_DIR}/hog.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_hsv
+    SOURCES test_hsv.cpp ${SRC_DIR}/hsv.cpp
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_utils_ported
     SOURCES test_utils_ported.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
-
-add_unit_test(NAME test_vocabulary
-    SOURCES test_vocabulary.cpp
-    LINK_LIBRARIES vis ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
-    ARGS ${CMAKE_SOURCE_DIR}/data)
 
 add_unit_test(NAME test_serialization
     SOURCES test_serialization.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_vocabulary
+    SOURCES test_vocabulary.cpp
+    LINK_LIBRARIES vis ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_histograms
     SOURCES test_histograms.cpp
-    LINK_LIBRARIES vis ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES}
-    ARGS ${CMAKE_SOURCE_DIR})
-
-add_unit_test(NAME test_hsv
-    SOURCES test_hsv.cpp ${SRC_DIR}/hsv.cpp
-    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+    LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
 #add_all_tests_target(${UNIT_TEST_TARGETS})
 

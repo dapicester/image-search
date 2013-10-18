@@ -1,26 +1,23 @@
 /**
- * @file opencv_sanity.cpp
- * @brief Sanity test for the OpenCV libraries
+ * @file opencv_usage.cpp
+ * @brief Usage test for the OpenCV libraries
  * @author Paolo D'Apice
  */
 
-#define BOOST_TEST_MODULE sanity
+#define BOOST_TEST_MODULE usage
 #include <boost/test/unit_test.hpp>
 
-#include "images.hpp"
+#include "fixtures.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
 #include <opencv2/opencv.hpp>
-#include <iostream>
 
 #define argc boost::unit_test::framework::master_test_suite().argc
-#define argv boost::unit_test::framework::master_test_suite().argv
 
 using namespace cv;
-using namespace vis;
 
-BOOST_AUTO_TEST_CASE(test_read_show) {
-    Mat image = imread(LENA);
+BOOST_AUTO_TEST_CASE(read_show) {
+    Mat image = imread(test::LENA);
     BOOST_CHECK_MESSAGE(image.data, "No image data");
 
     BOOST_CHECK_EQUAL(Size(512, 512), image.size());
@@ -32,7 +29,7 @@ BOOST_AUTO_TEST_CASE(test_read_show) {
     if (argc > 1) {
         imshow("Display image", image);
 
-        print("Press a key to continue");
+        println("Press a key to continue");
         waitKey(0);
     }
 }
@@ -58,7 +55,7 @@ BOOST_AUTO_TEST_CASE(matrix_push_back) {
                                          2, 2, 2,
                                          3, 3, 3,
                                          3, 3, 3);
-    BOOST_CHECK(equals(expected, mat));
+    BOOST_CHECK(test::equals(expected, mat));
 }
 
 BOOST_AUTO_TEST_CASE(matrix_split_merge) {
@@ -148,7 +145,7 @@ BOOST_AUTO_TEST_CASE(matrix_serialization) {
         Mat loaded;
         fs["matrix"] >> loaded;
         print(loaded);
-        BOOST_CHECK(vis::equals(mat, loaded));
+        BOOST_CHECK(test::equals(mat, loaded));
 
         fs.release();
         BOOST_CHECK(not fs.isOpened());
@@ -156,12 +153,12 @@ BOOST_AUTO_TEST_CASE(matrix_serialization) {
 }
 
 BOOST_AUTO_TEST_CASE(hsv) {
-    Mat image = imread(LENA);
+    Mat image = imread(test::LENA);
     BOOST_CHECK_MESSAGE(image.data, "No image data");
 
     image.convertTo(image, CV_32F, 1./255);
     BOOST_CHECK_EQUAL(CV_32FC3, image.type());
-    BOOST_CHECK(hasMinMax(image, 0., 1.));
+    BOOST_CHECK(test::hasMinMax(image, 0., 1.));
 
     Mat hsv;
     cvtColor(image, hsv, CV_BGR2HSV);
@@ -170,15 +167,15 @@ BOOST_AUTO_TEST_CASE(hsv) {
     split(hsv, planes);
 
     Mat hue = planes[0];
-    BOOST_CHECK(hasMinMax(hue, 0., 360.));    // NOTE hue is in [0,360]
+    BOOST_CHECK(test::hasMinMax(hue, 0., 360.));    // NOTE hue is in [0,360]
     hue /= 360.;
-    BOOST_CHECK(hasMinMax(hue, 0., 1.));
+    BOOST_CHECK(test::hasMinMax(hue, 0., 1.));
 
     Mat sat = planes[1];
-    BOOST_CHECK(hasMinMax(sat, 0., 1.));
+    BOOST_CHECK(test::hasMinMax(sat, 0., 1.));
 
     Mat val = planes[2];
-    BOOST_CHECK(hasMinMax(val, 0., 1.));
+    BOOST_CHECK(test::hasMinMax(val, 0., 1.));
 
     Mat bgr;
     cvtColor(hsv, bgr, CV_HSV2BGR);

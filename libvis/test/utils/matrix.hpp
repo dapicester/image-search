@@ -9,7 +9,7 @@
 
 #include <opencv2/core/core.hpp>
 
-namespace vis {
+namespace test {
 
 /// @return true if matrices are equals
 bool
@@ -27,7 +27,7 @@ hasMinMax(const cv::Mat& in, double min, double max) {
     return ( (max >= max_) and (min <= min_));
 }
 
-} /* namespace vis */
+} /* namespace test */
 
 #endif /* VIS_TEST_UTILS_MATRIX_HPP */
 

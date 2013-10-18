@@ -7,8 +7,8 @@
 #ifndef TEST_IMAGES_HPP
 #define TEST_IMAGES_HPP
 
-#define LENA        "/home/paolo/projects/image-search/images/lena.png"
-#define PEPPERS     "/home/paolo/projects/image-search/images/peppers.png"
+#define IMAGES_DIR  "${IMAGES_DIR}"
+#define DATA_DIR    "${DATA_DIR}"
 
 #endif
 

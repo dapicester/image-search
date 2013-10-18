@@ -13,44 +13,36 @@
 #include "serialization.hpp"
 #include <opencv2/core/core.hpp>
 #include <fstream>
-#include <iostream>
 
-using cv::Mat;
-using std::cout;
-using std::endl;
-using std::ios;
-using std::ifstream;
-using std::ofstream;
-using std::vector;
-
-using namespace vis;
+namespace ar = boost::archive;
+namespace io = boost::iostreams;
 
 template <typename InputArchive, typename OutputArchive>
-void doTest(const Mat& input, const char* filename, bool compression) {
+void doTest(const cv::Mat& input, const char* filename, bool compression) {
     if (compression) {
-        static compress_serializer<OutputArchive, Mat, io::gzip_compressor> GzipSaver;
+        static vis::compress_serializer<OutputArchive, cv::Mat, io::gzip_compressor> GzipSaver;
         GzipSaver(filename, input);
     }
     else {
-        static serializer<OutputArchive, Mat> Saver;
+        static vis::serializer<OutputArchive, cv::Mat> Saver;
         Saver(filename, input);
     }
 
-    Mat loaded;
+    cv::Mat loaded;
     if (compression) {
-        static compress_deserializer<InputArchive, Mat, io::gzip_decompressor> GzipLoader;
+        static vis::compress_deserializer<InputArchive, cv::Mat, io::gzip_decompressor> GzipLoader;
         GzipLoader(filename, loaded);
     }
     else {
-        static deserializer<InputArchive, Mat> Loader;
+        static vis::deserializer<InputArchive, cv::Mat> Loader;
         Loader(filename, loaded);
     }
 
-    BOOST_CHECK(equals(loaded, input));
+    BOOST_CHECK(test::equals(loaded, input));
 }
 
 BOOST_AUTO_TEST_CASE(matrix_serialization) {
-    Mat mat(4, 4, CV_32F);
+    cv::Mat mat(4, 4, CV_32F);
     cv::randu(mat, cv::Scalar(0), cv::Scalar(255));
 
     // plain text
@@ -65,10 +57,10 @@ BOOST_AUTO_TEST_CASE(matrix_serialization) {
 BOOST_AUTO_TEST_CASE(vlkdforest_serialization) {
     int dimensions = 2;
     int numData = 100;
-    float* data = getTestDataPtr<float>(dimensions, numData);
+    float* data = test::getTestDataPtr<float>(dimensions, numData);
 
-    BinarySerializer<VlKDForest*>::Saver saver;
-    BinarySerializer<VlKDForest*>::Loader loader;
+    vis::BinarySerializer<VlKDForest*>::Saver saver;
+    vis::BinarySerializer<VlKDForest*>::Loader loader;
 
     {
         VlKDForest* forest = vl_kdforest_new(VL_TYPE_FLOAT, dimensions, 1, VlDistanceL2);
@@ -116,20 +108,20 @@ BOOST_AUTO_TEST_CASE(vlkdforest_serialization) {
 }
 
 BOOST_AUTO_TEST_CASE(kdtree_serialization) {
-    typedef KDTree<float> Tree;
+    typedef vis::KDTree<float> Tree;
 
     int dimension = 2;
     int numData = 100;
-    Mat data = getTestData<float>(dimension, numData);
+    cv::Mat data = test::getTestData<float>(dimension, numData);
 
     {
-        BinarySerializer<Tree>::Saver saver;
+        vis::BinarySerializer<Tree>::Saver saver;
 
         Tree tree(data);
         saver("kdtree.dat", tree);
     }
     {
-        BinarySerializer<Tree>::Loader loader;
+        vis::BinarySerializer<Tree>::Loader loader;
 
         Tree tree;
         loader("kdtree.dat", tree);
@@ -137,12 +129,12 @@ BOOST_AUTO_TEST_CASE(kdtree_serialization) {
         // query
         srand(time(NULL));
         int index = rand() % numData;
-        Mat query = data.col(index).clone();
+        cv::Mat query = data.col(index).clone();
 
-        vector<KDTreeNeighbor> results = tree.search<KDTreeNeighbor>(query);
+        std::vector<vis::KDTreeNeighbor> results = tree.search<vis::KDTreeNeighbor>(query);
         BOOST_CHECK_EQUAL(1, results.size());
 
-        KDTreeNeighbor record = results.front();
+        vis::KDTreeNeighbor record = results.front();
         BOOST_CHECK_EQUAL(index, record.index);
         BOOST_CHECK_EQUAL(0.0, record.distance);
     }

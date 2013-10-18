@@ -15,6 +15,7 @@
 // TODO change macros to template functions
 #define print(X) std::cout << #X << ": " << X << std::endl
 #define printmat(X) std::cout << #X << ":\n" << X << std::endl
+#define println(X) std::cout << X << std::endl
 
 /// Operator << for std::vector
 template <typename T>

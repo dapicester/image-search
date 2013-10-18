@@ -8,34 +8,14 @@
 #include <boost/test/unit_test.hpp>
 
 #include "vocabulary.hpp"
-#include "utils/filesystem.hpp"
-#include <boost/filesystem.hpp>
+#include "fixtures.hpp"
 #include <boost/scoped_ptr.hpp>
 
 namespace fs = boost::filesystem;
 
-using boost::scoped_ptr;
-using namespace std;
-using namespace vis;
-
-#define argc boost::unit_test::framework::master_test_suite().argc
-#define argv boost::unit_test::framework::master_test_suite().argv
-
-BOOST_AUTO_TEST_CASE(test_vocabulary) {
-    BOOST_REQUIRE_MESSAGE(argc == 2, "Need to specify the data dir");
-    const fs::path dataDir = argv[1];
-
-    BOOST_REQUIRE_MESSAGE(fs::is_directory(dataDir), "invalid data dir");
-    const fs::path imageDir = dataDir / "test";
-
-    vector<fs::path> files = getImageFiles(imageDir);
-
-    // arrange as matlab
-    std::reverse(files.begin(), files.end());
-    std::sort(files.begin(), files.end());
-
+BOOST_FIXTURE_TEST_CASE(test_vocabulary, test::ImageDir) {
     // compute vocabulary
-    scoped_ptr<Vocabulary> vocabulary(Vocabulary::fromImageList("test", files));
+    boost::scoped_ptr<vis::Vocabulary> vocabulary(vis::Vocabulary::fromImageList("test", files));
     BOOST_CHECK(vocabulary.get());
 
     // check it's the same as matlab (see test_vocabulary.mat)
@@ -59,7 +39,7 @@ BOOST_AUTO_TEST_CASE(test_serialization) {
     const fs::path vocabularyFile = "test_vocabulary.dat";
     BOOST_REQUIRE_MESSAGE(fs::is_regular_file(vocabularyFile), "Cannot find vocabulary file");
 
-    scoped_ptr<Vocabulary> vocabulary(Vocabulary::load(vocabularyFile));
+    boost::scoped_ptr<vis::Vocabulary> vocabulary(vis::Vocabulary::load(vocabularyFile));
     BOOST_CHECK(vocabulary.get());
     // check it's the same
     const VlKDForest* forest = vocabulary->getKDTree()->getForest();

@@ -14,15 +14,14 @@
 #include <cstdlib>
 
 using cv::Mat;
-using std::vector;
-using std::cout;
-using std::endl;
-using namespace vis;
+using vis::KDTree;
+using vis::KDTreeNeighbor;
+using vis::KDTreeIndex;
 
 BOOST_AUTO_TEST_CASE(test_kdtree) {
     int dimension = 2;
     int numData = 100;
-    Mat data = getTestData<double>(dimension, numData);
+    Mat data = test::getTestData<double>(dimension, numData);
 
     printmat(data);
 
@@ -45,7 +44,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
 
     {
         // query for index and distance
-        vector<KDTreeNeighbor> results = tree.search<KDTreeNeighbor>(queries);
+        std::vector<KDTreeNeighbor> results = tree.search<KDTreeNeighbor>(queries);
         BOOST_REQUIRE_EQUAL(numQueries, results.size());
 
         for (int i = 0; i < numQueries; i++) {
@@ -60,7 +59,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
 
     {
         // query for index
-        vector<KDTreeIndex> results = tree.search<KDTreeIndex>(queries);
+        std::vector<KDTreeIndex> results = tree.search<KDTreeIndex>(queries);
         BOOST_REQUIRE_EQUAL(numQueries, results.size());
 
         for (int i = 0; i < numQueries; i++) {

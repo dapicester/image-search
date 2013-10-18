@@ -7,7 +7,6 @@
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
 
-using namespace vis;
 using cv::DataType;
 using cv::Mat;
 using cv::Mat_;
@@ -24,29 +23,29 @@ BOOST_AUTO_TEST_CASE(test_colon_indices) {
                                    5, 7,
                                    9, 11);
     indices = (Mat_<int>(1,2) << 0, 2);
-    actual = colon<int>(input, indices, COLUMNS);
+    actual = vis::colon<int>(input, indices, vis::COLUMNS);
 
     printmat(input);
     printmat(indices);
     printmat(expected);
     printmat(actual);
 
-    BOOST_CHECK(equals(expected, actual));
-    BOOST_CHECK(equals(expected, colon<int>(input, indices.t(), COLUMNS)));
+    BOOST_CHECK(test::equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, vis::colon<int>(input, indices.t(), vis::COLUMNS)));
 
     /* row subset */
     expected = (Mat_<int>(2, 4) << 1, 2, 3, 4,
                                    5, 6, 7, 8);
     indices = (Mat_<int>(1, 2) << 0, 1);
-    actual = colon<int>(input, indices.t(), ROWS);
+    actual = vis::colon<int>(input, indices.t(), vis::ROWS);
 
     printmat(input);
     printmat(indices);
     printmat(expected);
     printmat(actual);
 
-    BOOST_CHECK(equals(expected, actual));
-    BOOST_CHECK(equals(expected, colon<int>(input, indices.t(), ROWS)));
+    BOOST_CHECK(test::equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, vis::colon<int>(input, indices.t(), vis::ROWS)));
 }
 
 BOOST_AUTO_TEST_CASE(test_colon) {
@@ -58,13 +57,13 @@ BOOST_AUTO_TEST_CASE(test_colon) {
     expected = (Mat_<int>(1, 3*4) << 1, 2, 3, 4,
                                      5, 6, 7, 8,
                                      9, 10, 11, 12);
-    actual = colon(input);
+    actual = vis::colon(input);
 
     printmat(input);
     printmat(expected);
     printmat(actual);
 
-    BOOST_CHECK(equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, actual));
 }
 
 BOOST_AUTO_TEST_CASE(test_linspace) {
@@ -73,12 +72,12 @@ BOOST_AUTO_TEST_CASE(test_linspace) {
     /* implicit type */
     expected = (Mat_<double>(1,10) << 1,2,3,4,5,6,7,8,9,10);
     actual = vis::linspace(1.0, 10.0, 10);
-    BOOST_CHECK(equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, actual));
 
     /* explicit type */
     expected = (Mat_<int>(1,10) << 1,2,3,4,5,6,7,8,9,10);
     actual = vis::linspace<int>(1, 10, 10);
-    BOOST_CHECK(equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, actual));
 
     /* double */
     expected = (Mat_<double>(1,15)
@@ -114,20 +113,20 @@ BOOST_AUTO_TEST_CASE(test_round) {
     printmat(expected);
     printmat(actual);
 
-    BOOST_CHECK(equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, actual));
 }
 
 BOOST_AUTO_TEST_CASE(test_colsubset) {
     Mat input = (Mat_<double>(1,10) << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
     Mat expected = (Mat_<double>(1,5) << 1, 3, 6, 8, 10);
 
-    Mat actual = colsubset<double>(input, 5, UNIFORM);
+    Mat actual = vis::colsubset<double>(input, 5, vis::UNIFORM);
 
     printmat(input);
     printmat(expected);
     printmat(actual);
 
-    BOOST_CHECK(equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, actual));
 }
 
 void doReshapeTest(const Mat& expected, const Mat& actual) {
@@ -135,7 +134,7 @@ void doReshapeTest(const Mat& expected, const Mat& actual) {
     printmat(actual);
 
     BOOST_CHECK_EQUAL(actual.size(), expected.size());
-    BOOST_CHECK(vis::equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, actual));
 }
 
 BOOST_AUTO_TEST_CASE(test_reshape) {
@@ -147,7 +146,7 @@ BOOST_AUTO_TEST_CASE(test_reshape) {
         Mat expected = (Mat_<int>(2,6) << 8, 4, 5, 6, 2, 9,
                                           3, 1, 9, 7, 2, 1);
 
-        Mat actual = reshape(data,6);
+        Mat actual = vis::reshape(data,6);
         doReshapeTest(expected, actual);
     }
     {
@@ -157,7 +156,7 @@ BOOST_AUTO_TEST_CASE(test_reshape) {
                                           1, 2,
                                           5, 9,
                                           9, 1);
-        Mat actual = reshape(data,2);
+        Mat actual = vis::reshape(data,2);
         doReshapeTest(expected, actual);
     }
 }
@@ -166,11 +165,11 @@ BOOST_AUTO_TEST_CASE(test_hist) {
     {
         // random data
         int numdata = 50;
-        Mat data(1, numdata, cv::DataType<float>::type);
+        Mat data(1, numdata, DataType<float>::type);
         cv::randn(data, cv::Scalar(0), cv::Scalar(1));
 
         int numbins = 10;
-        Mat histogram = hist(data, numbins);
+        Mat histogram = vis::hist(data, numbins);
         double sum = cv::sum(histogram)[0];
 
         printmat(histogram);
@@ -179,7 +178,7 @@ BOOST_AUTO_TEST_CASE(test_hist) {
         BOOST_CHECK_EQUAL(cv::Size(1, numbins), histogram.size());
         BOOST_CHECK_EQUAL(numdata, sum);
 
-        Mat normalized = hist(data, numbins, SUM1);
+        Mat normalized = vis::hist(data, numbins, vis::SUM1);
         Mat expected = histogram / sum;
 
         printmat(normalized);
@@ -187,22 +186,22 @@ BOOST_AUTO_TEST_CASE(test_hist) {
 
         BOOST_CHECK_CLOSE(1., cv::sum(normalized)[0], 1e-5);
         BOOST_CHECK_CLOSE(1., cv::sum(expected)[0], 1e-5);
-        BOOST_CHECK(equals(expected, normalized));
+        BOOST_CHECK(test::equals(expected, normalized));
     }
     {
         // matlab compatibility
-        Mat data = (cv::Mat_<float>(25,1) << 17, 23,  4, 10, 11,
+        Mat data = (Mat_<float>(25,1) << 17, 23,  4, 10, 11,
                                              24,  5,  6, 12, 18,
                                               1,  7, 13, 19, 25,
                                               8, 14, 20, 21,  2,
                                              15, 16, 22,  3,  9);
-        Mat expected = (cv::Mat_<float>(10,1) << 3, 2, 3, 2, 3, 2, 2, 3, 2, 3);
-        Mat actual = hist(data, 10);
+        Mat expected = (Mat_<float>(10,1) << 3, 2, 3, 2, 3, 2, 2, 3, 2, 3);
+        Mat actual = vis::hist(data, 10);
 
         printmat(expected);
         printmat(actual);
 
-        BOOST_CHECK(equals(expected, actual));
+        BOOST_CHECK(test::equals(expected, actual));
     }
 }
 
@@ -221,12 +220,12 @@ BOOST_AUTO_TEST_CASE(test_imquantize) {
                                       3, 4, 5, 5, 2,
                                       3, 5, 6, 2, 3);
 
-    Mat actual = imquantize<int>(data.t(), levels); // NOTE transposed wrt Matlab
+    Mat actual = vis::imquantize<int>(data.t(), levels); // NOTE transposed wrt Matlab
 
     printmat(expected);
     printmat(actual);
 
-    BOOST_CHECK(equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, actual));
 }
 
 typedef int(*func)(int, int, int);
@@ -241,8 +240,8 @@ BOOST_AUTO_TEST_CASE(test_rc) {
     int col2row[] = {0,3,1,4,2,5};
     int row2col[] = {0,2,4,1,3,5};
 
-    testOrder(c2r, rows, cols, col2row, 6);
-    testOrder(r2c, rows, cols, row2col, 6);
+    testOrder(vis::c2r, rows, cols, col2row, 6);
+    testOrder(vis::r2c, rows, cols, row2col, 6);
 }
 
 int at(const Mat& mat, const Vec3i& index) {
@@ -256,11 +255,11 @@ BOOST_AUTO_TEST_CASE(test_ind2sub) {
         const Vec3i size(3,2,2);
 
         // matlab-compatible indexing
-        BOOST_CHECK_EQUAL(Vec3i(0,0,0), ind2sub(size, 0));
-        BOOST_CHECK_EQUAL(Vec3i(2,0,0), ind2sub(size, 2));
-        BOOST_CHECK_EQUAL(Vec3i(1,1,0), ind2sub(size, 4));
-        BOOST_CHECK_EQUAL(Vec3i(2,0,1), ind2sub(size, 8));
-        BOOST_CHECK_EQUAL(Vec3i(2,1,1), ind2sub(size, 11));
+        BOOST_CHECK_EQUAL(Vec3i(0,0,0), vis::ind2sub(size, 0));
+        BOOST_CHECK_EQUAL(Vec3i(2,0,0), vis::ind2sub(size, 2));
+        BOOST_CHECK_EQUAL(Vec3i(1,1,0), vis::ind2sub(size, 4));
+        BOOST_CHECK_EQUAL(Vec3i(2,0,1), vis::ind2sub(size, 8));
+        BOOST_CHECK_EQUAL(Vec3i(2,1,1), vis::ind2sub(size, 11));
     }
     {
         int sz[] = {3,2,2};
@@ -290,12 +289,12 @@ BOOST_AUTO_TEST_CASE(test_medfilt2) {
                                         10, 12, 18, 19,  9,
                                         11, 18, 18,  9,  9);
 
-    Mat actual = medfilt2<float>(data.t()); // NOTE transposed wrt Matlab
+    Mat actual = vis::medfilt2<float>(data.t()); // NOTE transposed wrt Matlab
 
     print(data);
     print(expected);
     print(actual);
 
-    BOOST_CHECK(equals(expected, actual));
+    BOOST_CHECK(test::equals(expected, actual));
 }
 

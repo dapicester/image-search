@@ -13,19 +13,16 @@
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
 #include <opencv2/highgui/highgui.hpp>
-#include <iostream>
 
-using namespace vis;
-using namespace cv;
-using namespace std;
+using cv::Mat;
+using cv::Size;
 
 #define argc boost::unit_test::framework::master_test_suite().argc
-#define argv boost::unit_test::framework::master_test_suite().argv
 
-BOOST_FIXTURE_TEST_CASE(compute_hog, Lena) {
-    HogExtractor extractor;
+BOOST_FIXTURE_TEST_CASE(compute_hog, test::Lena) {
+    vis::HogExtractor extractor;
 
-    ::HogDescriptors descriptors = extractor.extract(image);
+    vis::HogDescriptors descriptors = extractor.extract(image);
     BOOST_CHECK_EQUAL(descriptors.getWidth(), 16);
     BOOST_CHECK_EQUAL(descriptors.getHeight(), 16);
     BOOST_CHECK_EQUAL(descriptors.getDimension(), 3*8+4);
@@ -42,32 +39,30 @@ BOOST_FIXTURE_TEST_CASE(compute_hog, Lena) {
     BOOST_CHECK_EQUAL(0, countNonZero(diff));
 
     if (argc > 1) {
-        namedWindow("image");
-        imshow("image", input);
+        cv::imshow("image", input);
 
         Mat hogImage = extractor.render(descriptors);
-        namedWindow("hog");
-        imshow("hog", hogImage);
+        cv::imshow("hog", hogImage);
 
-        cout << "Press a key to continue" << endl;
-        waitKey(0);
+        println("Press a key to continue");
+        cv::waitKey(0);
     }
 }
 
-BOOST_FIXTURE_TEST_CASE(compute_hog_matrix, Lena) {
-    HogExtractor extractor;
+BOOST_FIXTURE_TEST_CASE(compute_hog_matrix, test::Lena) {
+    vis::HogExtractor extractor;
 
     // descriptors and then matrix
-    HogDescriptors descriptors = extractor.extract(image);
+    vis::HogDescriptors descriptors = extractor.extract(image);
     Mat hogMatrix = descriptors.toMat();
 
     // direct conversion to Mat
     Mat hogMatrix2 = extractor.extract(image).toMat();
-    BOOST_CHECK(equals(hogMatrix, hogMatrix2));
+    BOOST_CHECK(test::equals(hogMatrix, hogMatrix2));
 }
 
 BOOST_AUTO_TEST_CASE(hog_values) {
-    HogExtractor extractor;
+    vis::HogExtractor extractor;
 
     Mat hog = extractor.extract(Mat::eye(16, 16, CV_32F)).toMat();
     BOOST_CHECK_EQUAL(Size(4, 28), hog.size()); // NOTE size is (cols, rows)
@@ -75,7 +70,7 @@ BOOST_AUTO_TEST_CASE(hog_values) {
     print(hog);
 
     // from Matlab
-    Mat expected = (Mat_<float>(28,4) <<
+    Mat expected = (cv::Mat_<float>(28,4) <<
             0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0,

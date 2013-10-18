@@ -11,12 +11,12 @@
 #include "utils/data.hpp"
 
 using cv::Mat;
-using namespace vis;
+using vis::KMeans;
 
 BOOST_AUTO_TEST_CASE(test_quantize) {
     int dimension = 2;
     int numData = 100;
-    Mat data = getTestData<double>(dimension, numData);
+    Mat data = test::getTestData<double>(dimension, numData);
 
     int numClusters = 3;
     KMeans<double> kmeans;
