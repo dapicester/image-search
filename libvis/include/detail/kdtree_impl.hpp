@@ -53,7 +53,6 @@ KDTree<T>::KDTree() {
 template <typename T>
 KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees, bool verbose) {
     BOOST_ASSERT_MSG(d.depth() == cv::DataType<T>::type, "Data is not of type T");
-    BOOST_ASSERT_MSG(d.isContinuous(), "Data is not continuous");
 
     vl_size numDimensions = d.rows;
     vl_size numSamples = d.cols;
@@ -134,7 +133,6 @@ KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComp
     vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);
 
     BOOST_ASSERT_MSG(query.depth() == cv::DataType<T>::type, "Query is not of type T");
-    BOOST_ASSERT_MSG(query.isContinuous(), "Query is not continuous");
     BOOST_ASSERT_MSG(query.rows == vl_kdforest_get_data_dimension(forest), "Query has wrong data dimension");
 
     vl_size numQueries = query.cols;
