@@ -38,6 +38,10 @@ add_unit_test(NAME vlfeat_usage
     SOURCES vlfeat_usage.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${Boost_LIBRARIES})
 
+add_unit_test(NAME glog_usage
+    SOURCES glog_usage.cpp
+    LINK_LIBRARIES ${GLOG_LIBRARIES} ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_kmeans
     SOURCES test_kmeans.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})

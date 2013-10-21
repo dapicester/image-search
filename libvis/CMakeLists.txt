@@ -25,6 +25,10 @@ find_package(Boost COMPONENTS filesystem iostreams serialization system REQUIRED
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
+find_package(Glog REQUIRED)
+list(APPEND includes ${GLOG_INCLUDE_DIRS})
+list(APPEND libraries ${GLOG_LIBRARIES})
+
 file(GLOB imsearch_SRCS src/*.c src/*.cpp)
 
 list(REMOVE_DUPLICATES includes)
