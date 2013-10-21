@@ -77,9 +77,15 @@ Index::getType() const {
     return type;
 }
 
-} /* namespace vis */
+template <typename Archive>
+void
+Index::serialize(Archive& ar, const unsigned int version) {
+    ar & category;
+    ar & type;
+    ar & kdtree;
+}
 
-#include "detail/serialization_index.hpp"
+} /* namespace vis */
 
 #endif /* VIS_INDEX_HPP */
 

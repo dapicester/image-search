@@ -11,6 +11,8 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/scoped_ptr.hpp>
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
@@ -25,6 +27,8 @@ namespace vocabulary {
 /// @brief Vocabulary of visual words of HOG descriptors.
 class Vocabulary : private boost::noncopyable {
 public:
+
+    ~Vocabulary();
 
     /// @brief Computes vocabulary for the given image file paths.
     static Vocabulary* fromImageList(
@@ -41,9 +45,7 @@ public:
     /// @brief Quantize the input descriptors into words.
     cv::Mat quantize(const cv::Mat& descriptors) const;
 
-    size_t getNumWords() const { return numWords; }
-
-    ~Vocabulary();
+    size_t getNumWords() const;
 
 private:
     Vocabulary();
@@ -67,9 +69,21 @@ public:
 #endif
 };
 
-} /* namespace vis */
+inline size_t
+Vocabulary::getNumWords() const {
+    return numWords;
+}
 
-#include "detail/serialization_vocabulary.hpp"
+template <typename Archive>
+void
+Vocabulary::serialize(Archive& ar, const unsigned int version) {
+    ar & category;
+    ar & numWords;
+    ar & words;
+    ar & kdtree;
+}
+
+} /* namespace vis */
 
 #endif /* VIS_VOCABULARY_HPP */
 
