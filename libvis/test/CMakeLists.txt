@@ -60,5 +60,9 @@ add_unit_test(NAME test_histograms
     SOURCES test_histograms.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_index
+    SOURCES test_index.cpp
+    LINK_LIBRARIES vis ${Boost_LIBRARIES})
+
 #add_all_tests_target(${UNIT_TEST_TARGETS})
 
