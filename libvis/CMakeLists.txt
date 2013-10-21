@@ -6,7 +6,6 @@ set(libvis_VERSION_MINOR 1)
 set(libvis_VERSION_PATCH 0)
 
 message(STATUS "Building libvis")
-macro_build_info()
 
 list(APPEND includes ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
@@ -26,6 +25,8 @@ file(GLOB imsearch_SRCS src/*.c src/*.cpp)
 
 list(REMOVE_DUPLICATES includes)
 include_directories(${includes})
+
+macro_build_info()
 
 if(BUILD_STATIC_LIBRARIES)
     add_library(vis STATIC ${imsearch_SRCS})
