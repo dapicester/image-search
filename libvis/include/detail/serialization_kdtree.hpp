@@ -14,8 +14,6 @@ extern "C" {
 #include <vl/kdtree.h>
 }
 
-#include <iostream>
-
 BOOST_SERIALIZATION_SPLIT_FREE(VlKDForest)
 
 /// Taken from VLFeat's toolbox/misc/kdtree.h
@@ -25,7 +23,6 @@ restore_parent_recursively(VlKDTree* tree, int nodeIndex, int* numNodesToVisit) 
     int lowerChild = node->lowerChild;
     int upperChild = node->upperChild;
 
-    // TODO always enable this check
     BOOST_ASSERT_MSG(*numNodesToVisit != 0, "forest.trees has an inconsistent tree structure.");
 
     *numNodesToVisit -= 1;
@@ -44,16 +41,6 @@ restore_parent_recursively(VlKDTree* tree, int nodeIndex, int* numNodesToVisit) 
 }
 
 namespace boost { namespace serialization {
-
-template <typename Archive>
-void serialize(Archive& ar, VlKDTreeNode& n, const unsigned int version) {
-}
-
-#if 1
-#  define log(X) std::cout << #X << ": " << X << std::endl;
-#else
-#  define log(x);
-#endif
 
 /// @brief Boost serialization for @a VlKDForest
 template <typename OutputArchive>
