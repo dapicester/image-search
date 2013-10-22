@@ -22,6 +22,11 @@ list(APPEND includes ${CMAKE_CURRENT_BINARY_DIR})
 
 macro_build_info()
 
+set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/images)
+set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
+configure_file(src/directories.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/directories.hpp)
+message(STATUS "Test paths written to: ${CMAKE_CURRENT_BINARY_DIR}/directories.hpp")
+
 include_directories(${includes})
 add_executable(demo ${demo_SRCS} ${demo_UIS_H} ${demo_MOCS_SRCS})
 target_link_libraries(demo ${libraries})

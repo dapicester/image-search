@@ -1,0 +1,14 @@
+/**
+ * @file directories.hpp
+ * @brief Fullpaths to images used for demo (preprocessed by CMake).
+ * @author Paolo D'Apice
+ */
+
+#ifndef DEMO_DIRECTORIES_HPP
+#define DEMO_DIRECTORIES_HPP
+
+#define IMAGES_DIR  "${IMAGES_DIR}"
+#define DATA_DIR    "${DATA_DIR}"
+
+#endif
+
