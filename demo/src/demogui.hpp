@@ -15,6 +15,10 @@ class QAbstractButton;
 class QListWidgetItem;
 class QStringList;
 
+namespace vis {
+    class Vocabulary;
+}
+
 class DemoGui : public QMainWindow, private Ui::MainWindow {
     Q_OBJECT
 
@@ -42,11 +46,15 @@ private:
     /// Load image queries from file.
     void loadQueryNames();
 
+    /// Load visual word vocabulary.
+    void loadVocabulary();
 
 private:
     QScopedPointer<QStringList> names;
     QString category;
     QString queryType;
+
+    QScopedPointer<vis::Vocabulary> vocabulary;
 };
 
 #endif /* DEMO_HPP */

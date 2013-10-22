@@ -7,6 +7,7 @@
 #ifndef DEMO_UTILS_HPP
 #define DEMO_UTILS_HPP
 
+#include <QString>
 #include <boost/filesystem/path.hpp>
 #include <vector>
 
@@ -14,6 +15,15 @@
 std::vector<std::string>
 loadNames(const boost::filesystem::path& file);
 
+/// Load file names from file.
+std::vector<boost::filesystem::path>
+loadNames(const boost::filesystem::path& file, const boost::filesystem::path& prefix);
+
+/// Get the path to the vocabulary file for the given category.
+boost::filesystem::path
+vocabularyFile(const boost::filesystem::path& dataDir, const QString& category);
+
+/// Operator << for std::vector.
 template <typename T>
 std::ostream&
 operator<<(std::ostream& os, std::vector<T> v) {

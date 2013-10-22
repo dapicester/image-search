@@ -7,6 +7,7 @@
 #include "demogui.hpp"
 #include "directories.hpp"
 #include "utils.hpp"
+#include <vocabulary.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/foreach.hpp>
 #include <QDebug>
@@ -14,6 +15,10 @@
 namespace fs = boost::filesystem;
 
 #define connectbtn(BTN, FUNC) connect(BTN, SIGNAL(clicked()), this, SLOT(FUNC))
+
+namespace {
+    static const fs::path DATA_PATH = fs::path(DATA_DIR);
+}
 
 DemoGui::DemoGui() :
         names(new QStringList) {
@@ -33,10 +38,13 @@ DemoGui::DemoGui() :
     connect(queryTypeGroup, SIGNAL(buttonClicked(QAbstractButton*)),
             this, SLOT(setQueryType(QAbstractButton*)));
 
-    // other initializations
+    // other gui initializations
     loadQueryNames();
     setQueryNames(categoryGroup->checkedButton());
     setQueryType(queryTypeGroup->checkedButton());
+
+    // other initializations
+    loadVocabulary();
 }
 
 DemoGui::~DemoGui() {
@@ -44,7 +52,7 @@ DemoGui::~DemoGui() {
 
 void
 DemoGui::loadQueryNames() {
-    fs::path file = fs::path(DATA_DIR) / "test.txt";
+    fs::path file = DATA_PATH / "test.txt";
     std::vector<std::string> queryNames = loadNames(file);
     BOOST_FOREACH(const std::string& name, queryNames) {
         names->append( QString(name.c_str()) );
@@ -71,7 +79,7 @@ DemoGui::showQueryImage(int row) {
 
     QString name = queryList->item(row)->text();
     //qDebug() << "query: " << name;
-    fs::path file = fs::path(DATA_DIR) / "test" / name.toStdString();
+    fs::path file = DATA_PATH / "test" / name.toStdString();
     QPixmap image(file.string().c_str());
     queryImage->setPixmap(image.scaled(queryImage->size(), Qt::KeepAspectRatio));
 }
@@ -80,6 +88,16 @@ void
 DemoGui::setQueryType(QAbstractButton* button) {
     queryType = button->text();
     qDebug() << "queryType: " << queryType;
+}
+
+void
+DemoGui::loadVocabulary() {
+    fs::path loadfile = vocabularyFile(DATA_PATH, category);
+    if (not fs::exists(loadfile)) {
+        qDebug() << "vocabulary not found!";
+        return;
+    }
+    vocabulary.reset(vis::Vocabulary::load(loadfile));
 }
 
 void
@@ -108,6 +126,18 @@ DemoGui::recomputeDescriptors() {
 
 void
 DemoGui::recomputeVocabulary() {
-    // TODO
-    qDebug() << "recompute vocabulary";
+    QString categoryFile = category + ".txt";
+    fs::path file = DATA_PATH / categoryFile.toStdString();
+    qDebug() << "file: " << file.string().c_str();
+
+    fs::path dir = DATA_PATH / category.toStdString();
+    qDebug() << "dir: " << dir.string().c_str();
+
+    std::vector<fs::path> names = loadNames(file, dir);
+    vocabulary.reset(vis::Vocabulary::fromImageList(category.toStdString(), names));
+
+    fs::path savefile = vocabularyFile(DATA_PATH, category);
+    vocabulary->save(savefile);
+
+    qDebug() << "vocabulary done!";
 }

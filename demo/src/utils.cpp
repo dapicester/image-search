@@ -5,6 +5,7 @@
  */
 
 #include "utils.hpp"
+#include <boost/foreach.hpp>
 #include <fstream>
 
 namespace fs = boost::filesystem;
@@ -20,5 +21,23 @@ loadNames(const fs::path& file) {
               std::istream_iterator<string>(),
               std::back_inserter(names));
     return names;
+}
+
+vector<fs::path>
+loadNames(const fs::path& file, const fs::path& prefix) {
+    vector<string> lines = loadNames(file);
+    vector<fs::path> names;
+    BOOST_FOREACH(const string& line, lines) {
+        names.push_back(prefix / line);
+    }
+    return names;
+}
+
+fs::path
+vocabularyFile(const fs::path& dataDir, const QString& category) {
+    QString file = category;
+    file.prepend("vocabulary_");
+    file.append(".dgz");
+    return dataDir / file.toStdString();
 }
 
