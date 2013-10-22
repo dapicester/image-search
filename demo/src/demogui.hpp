@@ -36,6 +36,8 @@ public slots:
     /// Display the currently selected query image.
     void showQueryImage(int);
 
+    void setQueryType(QAbstractButton*);
+
 private:
     /// Load image queries from file.
     void loadQueryNames();
@@ -44,6 +46,7 @@ private:
 private:
     QScopedPointer<QStringList> names;
     QString category;
+    QString queryType;
 };
 
 #endif /* DEMO_HPP */

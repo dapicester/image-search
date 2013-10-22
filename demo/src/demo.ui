@@ -131,6 +131,9 @@
      <property name="checked">
       <bool>true</bool>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">queryTypeGroup</string>
+     </attribute>
     </widget>
     <widget class="QRadioButton" name="radioButton_2">
      <property name="geometry">
@@ -144,6 +147,9 @@
      <property name="text">
       <string>shape</string>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">queryTypeGroup</string>
+     </attribute>
     </widget>
     <widget class="QRadioButton" name="radioButton_3">
      <property name="geometry">
@@ -157,6 +163,9 @@
      <property name="text">
       <string>combined</string>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">queryTypeGroup</string>
+     </attribute>
     </widget>
    </widget>
    <widget class="QPushButton" name="searchButton">
@@ -315,5 +324,6 @@
  <connections/>
  <buttongroups>
   <buttongroup name="categoryGroup"/>
+  <buttongroup name="queryTypeGroup"/>
  </buttongroups>
 </ui>

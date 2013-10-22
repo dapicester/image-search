@@ -30,10 +30,13 @@ DemoGui::DemoGui() :
             this, SLOT(setQueryNames(QAbstractButton*)));
     connect(queryList, SIGNAL(currentRowChanged(int)),
             this, SLOT(showQueryImage(int)));
+    connect(queryTypeGroup, SIGNAL(buttonClicked(QAbstractButton*)),
+            this, SLOT(setQueryType(QAbstractButton*)));
 
     // other initializations
     loadQueryNames();
     setQueryNames(categoryGroup->checkedButton());
+    setQueryType(queryTypeGroup->checkedButton());
 }
 
 DemoGui::~DemoGui() {
@@ -73,6 +76,11 @@ DemoGui::showQueryImage(int row) {
     queryImage->setPixmap(image.scaled(queryImage->size(), Qt::KeepAspectRatio));
 }
 
+void
+DemoGui::setQueryType(QAbstractButton* button) {
+    queryType = button->text();
+    qDebug() << "queryType: " << queryType;
+}
 
 void
 DemoGui::showAll() {
