@@ -14,7 +14,7 @@
    <string>Image Search Demo</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="categoryBox">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -41,6 +41,9 @@
      <property name="checked">
       <bool>true</bool>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">categoryGroup</string>
+     </attribute>
     </widget>
     <widget class="QRadioButton" name="shoeRadioButton">
      <property name="geometry">
@@ -54,6 +57,9 @@
      <property name="text">
       <string>shoe</string>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">categoryGroup</string>
+     </attribute>
     </widget>
     <widget class="QRadioButton" name="womanShoeRadioButton">
      <property name="geometry">
@@ -67,17 +73,10 @@
      <property name="text">
       <string>woman_shoe</string>
      </property>
+     <attribute name="buttonGroup">
+      <string notr="true">categoryGroup</string>
+     </attribute>
     </widget>
-   </widget>
-   <widget class="QListView" name="queryListView">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>130</y>
-      <width>131</width>
-      <height>181</height>
-     </rect>
-    </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
@@ -170,7 +169,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="searchButton">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -234,7 +233,7 @@
     <property name="title">
      <string>Recompute</string>
     </property>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="recomputeIndexButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -247,7 +246,7 @@
       <string>Index</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="recomputeDescriptorsButton">
      <property name="geometry">
       <rect>
        <x>110</x>
@@ -260,7 +259,7 @@
       <string>Descriptors</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_4">
+    <widget class="QPushButton" name="recomputeVocabularyButton">
      <property name="geometry">
       <rect>
        <x>210</x>
@@ -273,6 +272,19 @@
       <string>Vocabulary</string>
      </property>
     </widget>
+   </widget>
+   <widget class="QListWidget" name="queryList">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>131</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <property name="sortingEnabled">
+     <bool>false</bool>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -289,4 +301,7 @@
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="categoryGroup"/>
+ </buttongroups>
 </ui>
