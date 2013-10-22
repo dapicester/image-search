@@ -1,15 +1,30 @@
-cmake_minimum_required(VERSION 2.8)
 project(demo)
 
-set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+message(STATUS "Building image-search demo")
 
-set(demo_SRCS
-    src/main.cpp
-)
+set(LIBVIS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/libvis/include")
+list(APPEND includes ${LIBVIS_INCLUDE_DIR})
+list(APPEND libraries vis)
 
-set(LIBVIS_INCLUDE_DIR "../libvis/include")
+find_package(Qt4 4.8 REQUIRED QtCore QtGui)
+include(${QT_USE_FILE})
+list(APPEND libraries ${QT_LIBRARIES})
 
-include_directories(${LIBVIS_INCLUDE_DIR})
-add_executable(demo ${demo_SRCS})
-target_link_libraries(demo vis)
+file(GLOB demo_SRCS src/*.c src/*.cpp)
+
+set(demo_UIS src/demo.ui)
+qt4_wrap_ui(demo_UIS_H ${demo_UIS})
+
+set(demo_MOCS src/demogui.hpp)
+qt4_wrap_cpp(demo_MOCS_SRCS ${demo_MOCS})
+
+list(APPEND includes ${CMAKE_CURRENT_BINARY_DIR})
+
+macro_build_info()
+
+include_directories(${includes})
+add_executable(demo ${demo_SRCS} ${demo_UIS_H} ${demo_MOCS_SRCS})
+target_link_libraries(demo ${libraries})
+
+#add_notes_target() FIXME conflicts with target in libvis
 
