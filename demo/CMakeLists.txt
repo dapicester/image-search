@@ -31,5 +31,7 @@ include_directories(${includes})
 add_executable(demo ${demo_SRCS} ${demo_UIS_H} ${demo_MOCS_SRCS})
 target_link_libraries(demo ${libraries})
 
+set_target_properties(demo PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
+
 #add_notes_target() FIXME conflicts with target in libvis
 
