@@ -6,9 +6,13 @@
 
 #include "index.hpp"
 #include "kdtree.hpp"
+#include "serialization.hpp"
 #include <boost/foreach.hpp>
+#include <cstdio>
 
 namespace vis {
+
+namespace fs = boost::filesystem;
 
 Index::Index() {}
 
@@ -27,6 +31,24 @@ Index::query(const cv::Mat& data, std::vector<id_type>& results, size_t numResul
     BOOST_FOREACH(const KDTreeIndex& item, items) {
         results.push_back(item.index);
     }
+}
+
+Index*
+Index::load(const fs::path& file) {
+    printf("Loading index from file %s ... ", file.string().c_str());
+    BinarySerializer<Index>::Loader loader;
+    Index* index = new Index;
+    loader(file.string().c_str(), *index);
+    printf("done\n");
+    return index;
+}
+
+void
+Index::save(const fs::path& file) {
+    printf("Saving index to file %s ...", file.string().c_str());
+    BinarySerializer<Index>::Saver saver;
+    saver(file.string().c_str(), *this);
+    printf("done\n");
 }
 
 } /* namespace vis */

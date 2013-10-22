@@ -11,11 +11,13 @@
 #include "fixtures.hpp"
 #include "index.hpp"
 #include "vocabulary.hpp"
-#include "serialization.hpp"
+#include <boost/scoped_ptr.hpp>
+
+namespace fs = boost::filesystem;
 
 vis::Vocabulary* loadVocabulary() {
-    static const boost::filesystem::path vocabularyFile = "test_vocabulary.dat";
-    BOOST_REQUIRE_MESSAGE(boost::filesystem::is_regular_file(vocabularyFile),
+    static const fs::path vocabularyFile = "test_vocabulary.dat";
+    BOOST_REQUIRE_MESSAGE(fs::is_regular_file(vocabularyFile),
                           "Cannot find vocabulary file: " << vocabularyFile);
 
     vis::Vocabulary* vp = vis::Vocabulary::load(vocabularyFile);
@@ -26,6 +28,7 @@ vis::Vocabulary* loadVocabulary() {
 
 BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
     cv::Mat descriptors;
+    fs::path indexFile("index.dat.gz");
 
     {
         // 1. compute histograms/load from file
@@ -43,20 +46,16 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
         vis::Index index;
         index.build("test", descriptors, vis::HOG_HSV);
 
-        // 3. serialize
-
-        vis::GzipSerializer<vis::Index>::Saver save;
-        save("index.dat.gz", index);
+        // 3. save
+        index.save("index.dat.gz");
     }
 
     {
         // 4. load
 
-        vis::GzipSerializer<vis::Index>::Loader load;
-        vis::Index index;
-        load("index.dat.gz", index);
-        BOOST_REQUIRE_EQUAL("test", index.getCategory());
-        BOOST_REQUIRE_EQUAL(vis::HOG_HSV, index.getType());
+        boost::scoped_ptr<vis::Index> index(vis::Index::load(indexFile));
+        BOOST_REQUIRE_EQUAL("test", index->getCategory());
+        BOOST_REQUIRE_EQUAL(vis::HOG_HSV, index->getType());
 
         // 5. query
 
@@ -65,13 +64,13 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
 
         // single result
         std::vector<vis::Index::id_type> match;
-        index.query(query, match);
+        index->query(query, match);
         BOOST_REQUIRE_EQUAL(1, match.size());
         BOOST_REQUIRE_EQUAL(queryId, match[0]); // exact match
 
         // multiple results
         std::vector<vis::Index::id_type> results;
-        index.query(query, results, 5);
+        index->query(query, results, 5);
         BOOST_REQUIRE_EQUAL(5, results.size());
         BOOST_REQUIRE_EQUAL(queryId, results[0]); // idem
     }

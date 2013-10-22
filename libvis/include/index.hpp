@@ -8,8 +8,10 @@
 #define VIS_INDEX_HPP
 
 #include <opencv2/core/core.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/serialization/access.hpp>
+#include <boost/serialization/scoped_ptr.hpp>
 
 namespace vis {
 
@@ -54,6 +56,12 @@ public:
     std::string getCategory() const;
 
     IndexType getType() const;
+
+    /// @brief Read index from file.
+    static Index* load(const boost::filesystem::path& file);
+
+    /// @brief Write index to file.
+    void save(const boost::filesystem::path& file);
 
 private:
     std::string category;
