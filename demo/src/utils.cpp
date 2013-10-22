@@ -41,3 +41,12 @@ vocabularyFile(const fs::path& dataDir, const QString& category) {
     return dataDir / file.toStdString();
 }
 
+fs::path
+indexFile(const fs::path& dataDir, const QString& category, const QString& type) {
+    QString file = category;
+    file.append("_");
+    file.append(type);
+    file.append("_index.dgz");
+    return dataDir / file.toStdString();
+}
+

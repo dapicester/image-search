@@ -44,6 +44,7 @@ DemoGui::DemoGui() :
     setQueryType(queryTypeGroup->checkedButton());
 
     // other initializations
+    loadIndex();
     loadVocabulary();
 }
 
@@ -88,6 +89,16 @@ void
 DemoGui::setQueryType(QAbstractButton* button) {
     queryType = button->text();
     qDebug() << "queryType: " << queryType;
+}
+
+void
+DemoGui::loadIndex() {
+    fs::path loadfile = indexFile(DATA_PATH, category, queryType);
+    if (not fs::exists(loadfile)) {
+        qDebug() << "index not found!";
+        return;
+    }
+    index.reset(vis::Index::load(loadfile));
 }
 
 void

@@ -23,6 +23,10 @@ loadNames(const boost::filesystem::path& file, const boost::filesystem::path& pr
 boost::filesystem::path
 vocabularyFile(const boost::filesystem::path& dataDir, const QString& category);
 
+/// Get the path to the index file for the given category.
+boost::filesystem::path
+indexFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
+
 /// Operator << for std::vector.
 template <typename T>
 std::ostream&

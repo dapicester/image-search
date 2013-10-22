@@ -16,6 +16,7 @@ class QListWidgetItem;
 class QStringList;
 
 namespace vis {
+    class Index;
     class Vocabulary;
 }
 
@@ -46,6 +47,9 @@ private:
     /// Load image queries from file.
     void loadQueryNames();
 
+    /// Load index.
+    void loadIndex();
+
     /// Load visual word vocabulary.
     void loadVocabulary();
 
@@ -54,6 +58,7 @@ private:
     QString category;
     QString queryType;
 
+    QScopedPointer<vis::Index> index;
     QScopedPointer<vis::Vocabulary> vocabulary;
 };
 
