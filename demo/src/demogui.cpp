@@ -28,6 +28,8 @@ DemoGui::DemoGui() :
 
     connect(categoryGroup, SIGNAL(buttonClicked(QAbstractButton*)),
             this, SLOT(setQueryNames(QAbstractButton*)));
+    connect(queryList, SIGNAL(currentRowChanged(int)),
+            this, SLOT(showQueryImage(int)));
 
     // other initializations
     loadQueryNames();
@@ -54,7 +56,23 @@ DemoGui::setQueryNames(QAbstractButton* button) {
 
     queryList->clear();
     queryList->addItems(queryNames);
+    queryList->setCurrentRow(0);
 }
+
+void
+DemoGui::showQueryImage(int row) {
+    if (row < 0) {
+        // list content has changed
+        return;
+    }
+
+    QString name = queryList->item(row)->text();
+    //qDebug() << "query: " << name;
+    fs::path file = fs::path(DATA_DIR) / "test" / name.toStdString();
+    QPixmap image(file.string().c_str());
+    queryImage->setPixmap(image.scaled(queryImage->size(), Qt::KeepAspectRatio));
+}
+
 
 void
 DemoGui::showAll() {

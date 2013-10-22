@@ -12,6 +12,7 @@
 #include <QScopedPointer>
 
 class QAbstractButton;
+class QListWidgetItem;
 class QStringList;
 
 class DemoGui : public QMainWindow, private Ui::MainWindow {
@@ -31,6 +32,9 @@ public slots:
 
     /// Properly set image query names according to selected category.
     void setQueryNames(QAbstractButton*);
+
+    /// Display the currently selected query image.
+    void showQueryImage(int);
 
 private:
     /// Load image queries from file.
