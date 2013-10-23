@@ -9,7 +9,6 @@
 
 #include "utils/filesystem.hpp"
 #include "utils/ported.hpp"
-#include "utils/print.hpp"
 
 #endif /* VIS_UTILS_HPP */
 
