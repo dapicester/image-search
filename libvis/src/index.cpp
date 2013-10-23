@@ -36,9 +36,7 @@ Index::query(const cv::Mat& data, std::vector<id_type>& results, size_t numResul
 Index*
 Index::load(const fs::path& file) {
     printf("Loading index from file %s ... ", file.string().c_str());
-    BinarySerializer<Index>::Loader loader;
-    Index* index = new Index;
-    loader(file.string().c_str(), *index);
+    Index* index = vis::load<Index, BinarySerializer>(file);
     printf("done\n");
     return index;
 }
@@ -46,8 +44,7 @@ Index::load(const fs::path& file) {
 void
 Index::save(const fs::path& file) {
     printf("Saving index to file %s ...", file.string().c_str());
-    BinarySerializer<Index>::Saver saver;
-    saver(file.string().c_str(), *this);
+    vis::save<Index, BinarySerializer>(file, *this);
     printf("done\n");
 }
 

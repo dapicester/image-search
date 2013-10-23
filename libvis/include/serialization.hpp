@@ -94,17 +94,37 @@ struct compress_deserializer {
     }
 };
 
+/// @brief Binary serialization/deserialization objects container.
 template <typename Object>
 struct BinarySerializer {
     typedef serializer<ar::binary_oarchive, Object> Saver;
     typedef deserializer<ar::binary_iarchive, Object> Loader;
 };
 
+/// @brief Compressed binary serialization/deserialization objects container.
 template <typename Object>
 struct GzipSerializer {
     typedef compress_serializer<ar::binary_oarchive, Object, io::gzip_compressor> Saver;
     typedef compress_deserializer<ar::binary_iarchive, Object, io::gzip_decompressor> Loader;
 };
+
+/// @brief Load object from file.
+template <typename Object, template <typename> class Serializer>
+Object*
+load(const fs::path& file) {
+    typename Serializer<Object>::Loader loader;
+    Object* obj = new Object;
+    loader(file.string().c_str(), *obj);
+    return obj;
+}
+
+/// @brief Save object to file.
+template <typename Object, template <typename> class Serializer>
+void
+save(const fs::path& file, const Object& obj) {
+    typename Serializer<Object>::Saver saver;
+    saver(file.string().c_str(), obj);
+}
 
 } /* namespace vis */
 

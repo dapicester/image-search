@@ -27,7 +27,7 @@ namespace vocabulary {
 /// @brief Vocabulary of visual words of HOG descriptors.
 class Vocabulary : private boost::noncopyable {
 public:
-
+    Vocabulary();
     ~Vocabulary();
 
     /// @brief Computes vocabulary for the given image file paths.
@@ -48,7 +48,6 @@ public:
     size_t getNumWords() const;
 
 private:
-    Vocabulary();
     Vocabulary(const std::string category, const cv::Mat& data, size_t numWords);
 
     friend class boost::serialization::access;

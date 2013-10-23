@@ -60,9 +60,7 @@ Vocabulary::quantize(const Mat& descriptors) const {
 Vocabulary*
 Vocabulary::load(const fs::path& file) {
     printf("Loading vocabulary from file %s ... ", file.string().c_str());
-    BinarySerializer<Vocabulary>::Loader loader;
-    Vocabulary* vocabulary = new Vocabulary;
-    loader(file.string().c_str(), *vocabulary);
+    Vocabulary* vocabulary = vis::load<Vocabulary, BinarySerializer>(file);
     printf("done\n");
     return vocabulary;
 }
@@ -70,8 +68,7 @@ Vocabulary::load(const fs::path& file) {
 void
 Vocabulary::save(const fs::path& file) const {
     printf("Saving vocabulary to file %s ... ", file.string().c_str());
-    BinarySerializer<Vocabulary>::Saver saver;
-    saver(file.string().c_str(), *this);
+    vis::save<Vocabulary, BinarySerializer>(file, *this);
     printf("done\n");
 }
 
