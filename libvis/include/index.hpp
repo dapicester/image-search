@@ -7,6 +7,7 @@
 #ifndef VIS_INDEX_HPP
 #define VIS_INDEX_HPP
 
+#include "descriptors_type.hpp"
 #include <opencv2/core/core.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -16,13 +17,6 @@
 namespace vis {
 
 template <typename T> class KDTree;
-
-/// Available index types.
-enum IndexType {
-    HOG,        ///< Index using HOG descriptors.
-    HSV,        ///< Index using HSV color histograms.
-    HOG_HSV,    ///< Index using both HOG descriptors and HSV color histograms.
-};
 
 /// Index structure.
 class Index {
@@ -36,11 +30,11 @@ public:
      * @brief Build an index.
      * @param category A string identifier for this index.
      * @param data Matrix containing N rows where the \a n-th row corresponds to \a n-th indexed image.
-     * @param type Index type.
+     * @param type Descriptors type.
      */
     void build(const std::string& category,
                const cv::Mat& data,
-               IndexType type);
+               DescriptorsType type);
 
     /// @brief Type of the returned id used for querying.
     typedef size_t id_type;
@@ -55,7 +49,7 @@ public:
 
     std::string getCategory() const;
 
-    IndexType getType() const;
+    DescriptorsType getType() const;
 
     /// @brief Read index from file.
     static Index* load(const boost::filesystem::path& file);
@@ -65,7 +59,7 @@ public:
 
 private:
     std::string category;
-    IndexType type;
+    DescriptorsType type;
     boost::scoped_ptr< KDTree<float> > kdtree;
 
 private:
@@ -80,7 +74,7 @@ Index::getCategory() const {
     return category;
 }
 
-inline IndexType
+inline DescriptorsType
 Index::getType() const {
     return type;
 }

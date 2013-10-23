@@ -19,7 +19,7 @@ Index::Index() {}
 Index::~Index() {}
 
 void
-Index::build(const std::string& cat, const cv::Mat& data, IndexType t) {
+Index::build(const std::string& cat, const cv::Mat& data, DescriptorsType t) {
     category = cat;
     type = t;
     kdtree.reset(new KDTree<float>(data));
