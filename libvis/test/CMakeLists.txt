@@ -56,8 +56,8 @@ add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
-add_unit_test(NAME test_histograms
-    SOURCES test_histograms.cpp
+add_unit_test(NAME test_descriptors
+    SOURCES test_descriptors.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_index

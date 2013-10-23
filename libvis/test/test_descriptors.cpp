@@ -1,12 +1,10 @@
 /**
- * @file test_histograms.cpp
- * @brief Test for histogram computation
+ * @file test_descriptors.cpp
+ * @brief Test for descriptors computation.
  * @author Paolo D'Apice
  */
 
-// TODO rename to test descriptors
-
-#define BOOST_TEST_MODULE histograms
+#define BOOST_TEST_MODULE descriptors
 #include <boost/test/unit_test.hpp>
 
 #include "callbacks.hpp"
@@ -27,9 +25,9 @@ vis::Vocabulary* loadVocabulary() {
     return vp;
 };
 
-BOOST_FIXTURE_TEST_SUITE(histograms, test::ImageDir)
+BOOST_FIXTURE_TEST_SUITE(test_descriptors, test::ImageDir)
 
-BOOST_AUTO_TEST_CASE(test_bow) {
+BOOST_AUTO_TEST_CASE(bow) {
     boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
     vis::HogBagOfWordsCallback cb(vocabulary.get());
 
@@ -48,7 +46,7 @@ BOOST_AUTO_TEST_CASE(test_bow) {
 #endif
 }
 
-BOOST_AUTO_TEST_CASE(test_hsv) {
+BOOST_AUTO_TEST_CASE(hsv) {
     vis::HsvHistogramsCallback cb;
 
     const cv::Size expectedSize(files.size(), cb.getNumBins());
@@ -66,7 +64,7 @@ BOOST_AUTO_TEST_CASE(test_hsv) {
 #endif
 }
 
-BOOST_AUTO_TEST_CASE(test_bow_hsv) {
+BOOST_AUTO_TEST_CASE(bow_hsv) {
     boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
 
     /*
