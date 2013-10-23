@@ -24,7 +24,7 @@ struct has_image_extension {
 };
 
 /// Get image files in given directory.
-std::vector<boost::filesystem::path>
+static std::vector<boost::filesystem::path>
 getImageFiles(const boost::filesystem::path& dir) {
     std::vector<boost::filesystem::path> files;
 

@@ -40,7 +40,7 @@ KMeans<T>::~KMeans() {
     vl_kmeans_delete(kmeans);
 }
 
-void
+static void
 printInfo(const VlKMeans* kmeans, vl_size dimension, vl_size numData, vl_size numCenters) {
     printf("kmeans: Initialization = plusplus\n");
     printf("kmeans: Algorithm = Elkan\n");
