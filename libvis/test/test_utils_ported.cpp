@@ -6,6 +6,7 @@
 #include "utils/data.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
+#include <boost/lexical_cast.hpp>
 
 using cv::DataType;
 using cv::Mat;
@@ -127,6 +128,31 @@ BOOST_AUTO_TEST_CASE(test_colsubset) {
     printmat(actual);
 
     BOOST_CHECK(test::equals(expected, actual));
+}
+
+BOOST_AUTO_TEST_CASE(test_subset) {
+    std::vector<std::string> v;
+    for (int i=1; i<=100; i++)
+        v.push_back(boost::lexical_cast<std::string>(i));
+    print(v);
+
+    std::vector<std::string> actual = vis::subset(v, 10, vis::UNIFORM);
+    print(actual);
+
+    std::vector<std::string> expected;
+    expected.push_back("1");
+    expected.push_back("12");
+    expected.push_back("23");
+    expected.push_back("34");
+    expected.push_back("45");
+    expected.push_back("56");
+    expected.push_back("67");
+    expected.push_back("78");
+    expected.push_back("89");
+    expected.push_back("100");
+    print(expected);
+
+    BOOST_CHECK(std::equal(actual.begin(), actual.end(), expected.begin()));
 }
 
 void doReshapeTest(const Mat& expected, const Mat& actual) {

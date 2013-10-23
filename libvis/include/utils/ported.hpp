@@ -148,6 +148,31 @@ colsubset(const cv::Mat& in, size_t num, SubsetMode mode) {
     return out;
 }
 
+template <typename T>
+std::vector<T>
+subset(const std::vector<T>& in, size_t num, SubsetMode mode) {
+    size_t m = in.size();
+    size_t n = std::min(m, num);
+
+    std::vector<T> out;
+    cv::Mat idx;
+    switch (mode) {
+    case UNIFORM:
+        idx = linspace<int>(0, m-1, n);
+        idx = round<int>(idx);
+        break;
+    default:
+        // FIXME
+        throw "not yet implemented!";
+    }
+    for( cv::MatConstIterator_<int> it = idx.begin<int>(); it != idx.end<int>(); ++it) {
+        out.push_back(in[*it]);
+    }
+    BOOST_ASSERT(out.size() == n);
+    return out;
+
+}
+
 /**
  * @brief Equivalent of Matlab reshape function.
  */
