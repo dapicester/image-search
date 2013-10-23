@@ -7,7 +7,9 @@
 #ifndef VIS_HPP
 #define VIS_HPP
 
-#include "hog.hpp"
+#include "callbacks.hpp"
+#include "descriptors.hpp"
+#include "index.hpp"
 #include "kdtree.hpp"
 #include "kmeans.hpp"
 #include "standardize.hpp"
