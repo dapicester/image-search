@@ -6,6 +6,7 @@
 
 #include "utils.hpp"
 #include <boost/foreach.hpp>
+#include <QMessageBox>
 #include <fstream>
 
 namespace fs = boost::filesystem;
@@ -70,5 +71,20 @@ indexFile(const fs::path& dataDir, const QString& category, const QString& type)
     file.append(type).append("_").append(category);
     file.append(DATA_EXT);
     return dataDir / file.toStdString();
+}
+
+bool
+confirmMessageBox(const QString& message) {
+    QMessageBox msg;
+    msg.setText(message);
+    msg.setInformativeText("Are you sure?");
+    msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msg.setDefaultButton(QMessageBox::Ok);
+    switch(msg.exec()) {
+    case QMessageBox::Ok:
+        return true;
+    default:
+        return false;
+    }
 }
 

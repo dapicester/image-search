@@ -44,6 +44,10 @@ descriptorsFile(const boost::filesystem::path& dataDir, const QString& category,
 boost::filesystem::path
 indexFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
 
+/// Display a confirmation message box.
+bool
+confirmMessageBox(const QString& message);
+
 /// Operator << for std::vector.
 template <typename T>
 std::ostream&
