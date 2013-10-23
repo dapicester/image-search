@@ -21,7 +21,7 @@ namespace standardize {
  * @param[out] out A single-precision image with maximum size of @a height.
  * @param height Maximum height
  */
-void
+static void
 standardizeImage(const cv::Mat& in, cv::Mat& out, int height = standardize::HEIGHT) {
     // single precision
     cv::Mat single;
@@ -38,7 +38,7 @@ standardizeImage(const cv::Mat& in, cv::Mat& out, int height = standardize::HEIG
     cv::resize(single, out, cv::Size(), scale, scale, cv::INTER_LINEAR);
 }
 
-inline
+static inline
 cv::Mat
 standardizeImage(const cv::Mat& in, int height = standardize::HEIGHT) {
     cv::Mat out;
