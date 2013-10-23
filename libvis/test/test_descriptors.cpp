@@ -11,6 +11,7 @@
 #include "descriptors.hpp"
 #include "fixtures.hpp"
 #include "vocabulary.hpp"
+#include "utils/matrix.hpp"
 #include <boost/scoped_ptr.hpp>
 
 namespace fs = boost::filesystem;
@@ -98,6 +99,20 @@ BOOST_AUTO_TEST_CASE(bow_hsv) {
     BOOST_CHECK_EQUAL(expectedSize, descriptors.get().size());
     // TODO check type
 #endif
+}
+
+BOOST_AUTO_TEST_CASE(serialization) {
+    vis::HsvHistogramsCallback cb;
+    fs::path file("test_descriptors.dat");
+
+    vis::Descriptors histograms;
+    histograms.compute("test", files, cb);
+    histograms.save(file);
+
+    vis::Descriptors* loaded = vis::Descriptors::load(file);
+    BOOST_CHECK_EQUAL(histograms.getCategory(), loaded->getCategory());
+    BOOST_CHECK(test::equals(histograms.get(), loaded->get()));
+    // TODO check type
 }
 
 BOOST_AUTO_TEST_SUITE_END()
