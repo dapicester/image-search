@@ -11,6 +11,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/foreach.hpp>
 #include <QDebug>
+#include <QProgressDialog>
 
 namespace fs = boost::filesystem;
 
@@ -137,18 +138,26 @@ DemoGui::recomputeDescriptors() {
 
 void
 DemoGui::recomputeVocabulary() {
-    QString categoryFile = category + ".txt";
-    fs::path file = DATA_PATH / categoryFile.toStdString();
+    if (not confirmMessageBox("Recompute vocabulary")) {
+        qDebug() << "canceled";
+        return;
+    }
+
+    QProgressDialog* progress = progressDialog("Computing vocabulary ...", this, 0, 10);
+    progress->setValue(3);
+
+    fs::path file = categoryFile(DATA_PATH, category);
     qDebug() << "file: " << file.string().c_str();
-
-    fs::path dir = DATA_PATH / category.toStdString();
+    fs::path dir = categoryDir(DATA_PATH, category);
     qDebug() << "dir: " << dir.string().c_str();
-
     std::vector<fs::path> names = loadNames(file, dir);
     vocabulary.reset(vis::Vocabulary::fromImageList(category.toStdString(), names));
+    progress->setValue(6);
 
     fs::path savefile = vocabularyFile(DATA_PATH, category);
     vocabulary->save(savefile);
+    progress->setValue(10);
 
     qDebug() << "vocabulary done!";
+    delete progress;
 }
