@@ -151,6 +151,7 @@ DemoGui::recomputeVocabulary() {
     fs::path dir = categoryDir(DATA_PATH, category);
     qDebug() << "dir: " << dir.string().c_str();
     std::vector<fs::path> names = loadNames(file, dir);
+    names = vis::subset(names, 100, vis::UNIFORM);
     vocabulary.reset(vis::Vocabulary::fromImageList(category.toStdString(), names));
     progress->setValue(6);
 
