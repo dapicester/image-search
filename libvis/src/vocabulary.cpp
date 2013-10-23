@@ -5,6 +5,7 @@
  */
 
 #include "vocabulary.hpp"
+#include "callbacks.hpp"
 #include "extract.hpp"
 #include "kmeans.hpp"
 #include "serialization.hpp"

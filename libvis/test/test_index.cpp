@@ -7,6 +7,7 @@
 #define BOOST_TEST_MODULE index
 #include <boost/test/unit_test.hpp>
 
+#include "callbacks.hpp"
 #include "extract.hpp"
 #include "fixtures.hpp"
 #include "index.hpp"

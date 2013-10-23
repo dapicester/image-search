@@ -7,7 +7,7 @@
 #define BOOST_TEST_MODULE histograms
 #include <boost/test/unit_test.hpp>
 
-#include "extract.hpp"
+#include "callbacks.hpp"
 #include "fixtures.hpp"
 #include "vocabulary.hpp"
 #include <boost/scoped_ptr.hpp>
