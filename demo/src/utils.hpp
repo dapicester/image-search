@@ -11,6 +11,9 @@
 #include <boost/filesystem/path.hpp>
 #include <vector>
 
+class QProgressDialog;
+class QWidget;
+
 /// Load file content.
 std::vector<std::string>
 loadNames(const boost::filesystem::path& file);
@@ -45,8 +48,10 @@ boost::filesystem::path
 indexFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
 
 /// Display a confirmation message box.
-bool
-confirmMessageBox(const QString& message);
+bool confirmMessageBox(const QString& message);
+
+/// Progress dialog box.
+QProgressDialog* progressDialog(const QString& title, QWidget* parent, int min, int max);
 
 /// Operator << for std::vector.
 template <typename T>

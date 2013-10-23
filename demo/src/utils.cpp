@@ -7,6 +7,7 @@
 #include "utils.hpp"
 #include <boost/foreach.hpp>
 #include <QMessageBox>
+#include <QProgressDialog>
 #include <fstream>
 
 namespace fs = boost::filesystem;
@@ -88,3 +89,10 @@ confirmMessageBox(const QString& message) {
     }
 }
 
+QProgressDialog*
+progressDialog(const QString& title, QWidget* parent, int min, int max) {
+    QProgressDialog* dialog = new QProgressDialog(title, "Cancel", min, max, parent);
+    //dialog->setWindowModality(Qt::WindowModal);
+    dialog->show();
+    return dialog;
+}
