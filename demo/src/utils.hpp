@@ -14,6 +14,18 @@
 class QProgressDialog;
 class QWidget;
 
+/// Get QString string from std::string.
+inline QString
+str(const std::string string) {
+    return QString(string.c_str());
+}
+
+/// Get QString string from boost::filesystem::path.
+inline QString
+str(const boost::filesystem::path& path) {
+    return QString(path.string().c_str());
+}
+
 /// Load file content.
 std::vector<std::string>
 loadNames(const boost::filesystem::path& file);

@@ -5,21 +5,9 @@
  */
 
 #include "demogui.hpp"
-#include "directories.hpp"
-#include "utils.hpp"
-#include <vocabulary.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/foreach.hpp>
 #include <QDebug>
-#include <QProgressDialog>
-
-namespace fs = boost::filesystem;
 
 #define connectbtn(BTN, FUNC) connect(BTN, SIGNAL(clicked()), this, SLOT(FUNC))
-
-namespace {
-    static const fs::path DATA_PATH = fs::path(DATA_DIR);
-}
 
 DemoGui::DemoGui() :
         names(new QStringList) {
@@ -46,19 +34,11 @@ DemoGui::DemoGui() :
 
     // other initializations
     loadIndex();
+    loadDescriptors();
     loadVocabulary();
 }
 
 DemoGui::~DemoGui() {
-}
-
-void
-DemoGui::loadQueryNames() {
-    fs::path file = DATA_PATH / "test.txt";
-    std::vector<std::string> queryNames = loadNames(file);
-    BOOST_FOREACH(const std::string& name, queryNames) {
-        names->append( QString(name.c_str()) );
-    }
 }
 
 void
@@ -92,73 +72,3 @@ DemoGui::setQueryType(QAbstractButton* button) {
     qDebug() << "queryType: " << queryType;
 }
 
-void
-DemoGui::loadIndex() {
-    fs::path loadfile = indexFile(DATA_PATH, category, queryType);
-    if (not fs::exists(loadfile)) {
-        qDebug() << "index not found!";
-        return;
-    }
-    index.reset(vis::Index::load(loadfile));
-}
-
-void
-DemoGui::loadVocabulary() {
-    fs::path loadfile = vocabularyFile(DATA_PATH, category);
-    if (not fs::exists(loadfile)) {
-        qDebug() << "vocabulary not found!";
-        return;
-    }
-    vocabulary.reset(vis::Vocabulary::load(loadfile));
-}
-
-void
-DemoGui::showAll() {
-    // TODO
-    qDebug() << "show all";
-}
-
-void
-DemoGui::search() {
-    // TODO
-    qDebug() << "search";
-}
-
-void
-DemoGui::recomputeIndex() {
-    // TODO
-    qDebug() << "recompute index";
-}
-
-void
-DemoGui::recomputeDescriptors() {
-    // TODO
-    qDebug() << "recompute descriptors";
-}
-
-void
-DemoGui::recomputeVocabulary() {
-    if (not confirmMessageBox("Recompute vocabulary")) {
-        qDebug() << "canceled";
-        return;
-    }
-
-    QProgressDialog* progress = progressDialog("Computing vocabulary ...", this, 0, 10);
-    progress->setValue(3);
-
-    fs::path file = categoryFile(DATA_PATH, category);
-    qDebug() << "file: " << file.string().c_str();
-    fs::path dir = categoryDir(DATA_PATH, category);
-    qDebug() << "dir: " << dir.string().c_str();
-    std::vector<fs::path> names = loadNames(file, dir);
-    names = vis::subset(names, 100, vis::UNIFORM);
-    vocabulary.reset(vis::Vocabulary::fromImageList(category.toStdString(), names));
-    progress->setValue(6);
-
-    fs::path savefile = vocabularyFile(DATA_PATH, category);
-    vocabulary->save(savefile);
-    progress->setValue(10);
-
-    qDebug() << "vocabulary done!";
-    delete progress;
-}
