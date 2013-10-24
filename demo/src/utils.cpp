@@ -61,7 +61,7 @@ vocabularyFile(const fs::path& dataDir, const QString& category) {
 fs::path
 descriptorsFile(const fs::path& dataDir, const QString& category, const QString& type) {
     QString file = "descriptors_";
-    file.append(type).append("_").append(category);
+    file.append(category).append("_").append(type);
     file.append(DATA_EXT);
     return dataDir / file.toStdString();
 }
@@ -69,7 +69,7 @@ descriptorsFile(const fs::path& dataDir, const QString& category, const QString&
 fs::path
 indexFile(const fs::path& dataDir, const QString& category, const QString& type) {
     QString file = "index_";
-    file.append(type).append("_").append(category);
+    file.append(category).append("_").append(type);
     file.append(DATA_EXT);
     return dataDir / file.toStdString();
 }
