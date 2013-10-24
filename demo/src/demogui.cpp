@@ -64,7 +64,6 @@ DemoGui::~DemoGui() {
 void
 DemoGui::setQueryNames(QAbstractButton* button) {
     category = button->text();
-    qDebug() << "category: " << category;
     QStringList queryNames = names->filter(QRegExp("^" + category));
 
     queryList->clear();
@@ -80,7 +79,6 @@ DemoGui::showQueryImage(int row) {
     }
 
     QString name = queryList->item(row)->text();
-    //qDebug() << "query: " << name;
     fs::path file = DATA_PATH / "test" / name.toStdString();
     setImage(queryImage, file);
 }
@@ -88,7 +86,6 @@ DemoGui::showQueryImage(int row) {
 void
 DemoGui::setQueryType(QAbstractButton* button) {
     queryType = button->text();
-    qDebug() << "queryType: " << queryType;
 }
 
 void

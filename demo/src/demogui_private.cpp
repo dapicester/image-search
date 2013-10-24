@@ -33,14 +33,13 @@ bool checkType(const Container& c, const QString& type) {
 void
 DemoGui::loadImageNames() {
     QList<QRadioButton*> labels = categoryBox->findChildren<QRadioButton*>();
-    qDebug() << "labels: " << labels;
     for (QList<QRadioButton*>::iterator it = labels.begin(); it != labels.end(); ++it) {
         QString category = (*it)->text();
 
         fs::path file = categoryFile(DATA_PATH, category);
         fs::path dir = categoryDir(DATA_PATH, category);
         imagesMap[category] = loadNames(file, dir);
-        qDebug() << "loaded " << imagesMap[category].size() << " images for " << category;
+        qDebug() << "loaded" << imagesMap[category].size() << "images for" << category;
     }
 }
 
@@ -53,14 +52,14 @@ DemoGui::loadIndex() {
 
     fs::path loadfile = indexFile(DATA_PATH, category, queryType);
     if (not fs::exists(loadfile)) {
-        qDebug() << "index not found: " << str(loadfile);
+        qDebug() << "index not found:" << str(loadfile);
         messageBox("No index file found, please recompute index.", QMessageBox::Warning);
         descriptors.reset();
         return false;
     }
     index.reset(vis::Index::load(loadfile));
 
-    qDebug() << "index loaded from: " << str(loadfile);
+    qDebug() << "index loaded from:" << str(loadfile);
     Q_ASSERT_X(str(index->getCategory()) == category, "loadIndex", "index category mismatch");
     Q_ASSERT_X(decodeType(index->getType()) == queryType, "loadIndex", "index type mismatch");
 
@@ -76,14 +75,14 @@ DemoGui::loadDescriptors() {
 
     fs::path loadfile = descriptorsFile(DATA_PATH, category, queryType);
     if (not fs::exists(loadfile)) {
-        qDebug() << "descriptors not found: " << str(loadfile);
+        qDebug() << "descriptors not found:" << str(loadfile);
         messageBox("No descriptors file found, please recompute descriptors.", QMessageBox::Warning);
         descriptors.reset();
         return false;
     }
     descriptors.reset(vis::Descriptors::load(loadfile));
 
-    qDebug() << "descriptors loaded from: " << str(loadfile);
+    qDebug() << "descriptors loaded from:" << str(loadfile);
     Q_ASSERT_X(str(descriptors->getCategory()) == category, "loadDescriptors", "descriptors category mismatch");
     Q_ASSERT_X(decodeType(descriptors->getType()) == queryType, "loadDescriptors", "descriptors type mismatch");
 
@@ -99,14 +98,14 @@ DemoGui::loadQueries() {
 
     fs::path loadfile = descriptorsFile(DATA_PATH, "test", queryType);
     if (not fs::exists(loadfile)) {
-        qDebug() << "queries not found: " << str(loadfile);
+        qDebug() << "queries not found:" << str(loadfile);
         messageBox("No queries file found, please recompute queries.", QMessageBox::Warning);
         queries.reset();
         return false;
     }
     queries.reset(vis::Descriptors::load(loadfile));
 
-    qDebug() << "queries loaded from: " << str(loadfile);
+    qDebug() << "queries loaded from:" << str(loadfile);
     Q_ASSERT_X(decodeType(queries->getType()) == queryType, "loadQueries", "queries type mismatch");
 
     return true;
@@ -121,13 +120,13 @@ DemoGui::loadVocabulary() {
 
     fs::path loadfile = vocabularyFile(DATA_PATH, category);
     if (not fs::exists(loadfile)) {
-        qDebug() << "vocabulary not found: " << str(loadfile);
+        qDebug() << "vocabulary not found:" << str(loadfile);
         messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Warning);
         vocabulary.reset();
         return false;
     }
     vocabulary.reset(vis::Vocabulary::load(loadfile));
-    qDebug() << "vocabulary loaded from: " << str(loadfile);
+    qDebug() << "vocabulary loaded from:" << str(loadfile);
     return true;
 }
 

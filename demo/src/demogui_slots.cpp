@@ -34,7 +34,6 @@ DemoGui::search() {
     qDebug() << "search " << category << " by " << queryType;
 
     int queryId = queryList->currentRow();
-    qDebug() << "queryId: " << queryId;
     cv::Mat query = queries->get().col(queryId);
 
     std::vector<vis::Index::id_type> matches;
