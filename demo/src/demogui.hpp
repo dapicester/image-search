@@ -15,6 +15,7 @@
 #include <QScopedPointer>
 
 class QAbstractButton;
+template <typename T> class QList;
 class QListWidgetItem;
 class QStringList;
 
@@ -85,6 +86,8 @@ private:
     QScopedPointer<vis::Descriptors> descriptors;
     QScopedPointer<vis::Descriptors> queries;
     QScopedPointer<vis::Vocabulary> vocabulary;
+
+    QScopedPointer< QList<QLabel*> > results;
 };
 
 #endif /* DEMO_HPP */

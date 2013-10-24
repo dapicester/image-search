@@ -10,9 +10,29 @@
 #define connectbtn(BTN, FUNC) connect(BTN, SIGNAL(clicked()), this, SLOT(FUNC))
 
 DemoGui::DemoGui() :
-        names(new QStringList) {
+        names(new QStringList), results(new QList<QLabel*>) {
     setupUi(this);
     this->setFixedSize(this->size());
+
+    // XXX very quick'n dirty (TM)
+    results->append(queryResult_1);
+    results->append(queryResult_2);
+    results->append(queryResult_3);
+    results->append(queryResult_4);
+    results->append(queryResult_5);
+    results->append(queryResult_6);
+    results->append(queryResult_7);
+    results->append(queryResult_8);
+    results->append(queryResult_9);
+    results->append(queryResult_10);
+    results->append(queryResult_11);
+    results->append(queryResult_12);
+    results->append(queryResult_13);
+    results->append(queryResult_14);
+    results->append(queryResult_15);
+
+    for (int i = 0; i < results->size(); i++)
+        results->at(i)->setText(QString::number(i));
 
     // connect signals-slots
     connectbtn(searchButton, search());

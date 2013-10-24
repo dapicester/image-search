@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>768</height>
+    <width>1015</width>
+    <height>683</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -187,7 +187,7 @@
       <x>160</x>
       <y>10</y>
       <width>831</width>
-      <height>631</height>
+      <height>531</height>
      </rect>
     </property>
     <property name="title">
@@ -197,7 +197,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>610</y>
+       <y>500</y>
        <width>101</width>
        <height>19</height>
       </rect>
@@ -206,12 +206,477 @@
       <string>show ranks</string>
      </property>
     </widget>
+    <widget class="QLabel" name="queryResult_1">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_2">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>20</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_3">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>20</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_4">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>20</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_5">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>20</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_7">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>180</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_8">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>180</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_9">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>180</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_10">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>180</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_6">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>180</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_12">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>340</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_13">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>340</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_14">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>340</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_15">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>340</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="queryResult_11">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>340</y>
+       <width>151</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Images similar to this will be retrieved</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 1px solid gray</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="midLineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>850</x>
-      <y>700</y>
+      <x>860</x>
+      <y>610</y>
       <width>111</width>
       <height>16</height>
      </rect>
@@ -224,7 +689,7 @@
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>650</y>
+      <y>580</y>
       <width>411</width>
       <height>61</height>
      </rect>
@@ -310,6 +775,9 @@
     <property name="toolTip">
      <string>Images similar to this will be retrieved</string>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid gray</string>
+    </property>
     <property name="text">
      <string>TextLabel</string>
     </property>
@@ -326,7 +794,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>1015</width>
      <height>22</height>
     </rect>
    </property>
@@ -336,7 +804,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="categoryGroup"/>
   <buttongroup name="queryTypeGroup"/>
+  <buttongroup name="categoryGroup"/>
  </buttongroups>
 </ui>
