@@ -8,6 +8,7 @@
 #include "utils.hpp"
 #include <boost/filesystem/operations.hpp>
 #include <boost/foreach.hpp>
+#include <QMessageBox>
 #include <QDebug>
 
 void
@@ -24,7 +25,8 @@ DemoGui::loadIndex() {
     fs::path loadfile = indexFile(DATA_PATH, category, queryType);
     if (not fs::exists(loadfile)) {
         qDebug() << "index not found: " << str(loadfile);
-        // TODO alert box and/or recompute index
+        messageBox("No index file found, please recompute index.", QMessageBox::Warning);
+        descriptors.reset();
         return;
     }
     index.reset(vis::Index::load(loadfile));
@@ -36,7 +38,8 @@ DemoGui::loadDescriptors() {
     fs::path loadfile = descriptorsFile(DATA_PATH, category, queryType);
     if (not fs::exists(loadfile)) {
         qDebug() << "descriptors not found: " << str(loadfile);
-        // TODO alert box and/or recompute descriptors;
+        messageBox("No descriptors file found, please recompute descriptors.", QMessageBox::Warning);
+        descriptors.reset();
         return;
     }
     descriptors.reset(vis::Descriptors::load(loadfile));
@@ -48,7 +51,8 @@ DemoGui::loadVocabulary() {
     fs::path loadfile = vocabularyFile(DATA_PATH, category);
     if (not fs::exists(loadfile)) {
         qDebug() << "vocabulary not found: " << str(loadfile);
-        // TODO alert box and/or recompute vocabulary;
+        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Warning);
+        vocabulary.reset();
         return;
     }
     vocabulary.reset(vis::Vocabulary::load(loadfile));

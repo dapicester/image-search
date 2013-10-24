@@ -7,6 +7,7 @@
 #ifndef DEMO_UTILS_HPP
 #define DEMO_UTILS_HPP
 
+#include <QMessageBox>
 #include <QString>
 #include <boost/filesystem/path.hpp>
 #include <vector>
@@ -61,6 +62,9 @@ indexFile(const boost::filesystem::path& dataDir, const QString& category, const
 
 /// Display a confirmation message box.
 bool confirmMessageBox(const QString& message);
+
+/// Display a message box.
+void messageBox(const QString& message, QMessageBox::Icon icon = QMessageBox::NoIcon);
 
 /// Progress dialog box.
 QProgressDialog* progressDialog(const QString& title, QWidget* parent, int min, int max);

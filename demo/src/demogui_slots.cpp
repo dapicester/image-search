@@ -13,12 +13,14 @@ void
 DemoGui::showAll() {
     // TODO
     qDebug() << "show all";
+    messageBox("TODO");
 }
 
 void
 DemoGui::search() {
     // TODO
     qDebug() << "search";
+    messageBox("TODO");
 }
 
 void

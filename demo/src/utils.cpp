@@ -89,6 +89,14 @@ confirmMessageBox(const QString& message) {
     }
 }
 
+void
+messageBox(const QString& message, QMessageBox::Icon icon) {
+    QMessageBox msg;
+    msg.setText(message);
+    msg.setIcon(icon);
+    msg.exec();
+}
+
 QProgressDialog*
 progressDialog(const QString& title, QWidget* parent, int min, int max) {
     QProgressDialog* dialog = new QProgressDialog(title, "Cancel", min, max, parent);
