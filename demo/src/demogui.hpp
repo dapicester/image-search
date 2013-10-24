@@ -27,6 +27,7 @@ namespace {
 
 typedef std::vector<fs::path> PathList;
 
+/// @brief GUI for the demo application of the Visual Image Search.
 class DemoGui : public QMainWindow, private Ui::MainWindow {
     Q_OBJECT
 
@@ -85,18 +86,18 @@ private:
     bool loadVocabulary();
 
 private:
-    QScopedPointer<QStringList> names;
-    QMap<QString, PathList> imagesMap;
+    QScopedPointer<QStringList> names;              ///< Names of the query images.
+    QMap<QString, PathList> imagesMap;              ///< Full path to indexed images by category.
 
-    QString category;
-    QString queryType;
+    QString category;                               ///< Currently selected category.
+    QString queryType;                              ///< Currently selected query type.
 
-    QScopedPointer<vis::Index> index;
-    QScopedPointer<vis::Descriptors> descriptors;
-    QScopedPointer<vis::Descriptors> queries;
-    QScopedPointer<vis::Vocabulary> vocabulary;
+    QScopedPointer<vis::Index> index;               ///< Index for the current category and query type.
+    QScopedPointer<vis::Descriptors> descriptors;   ///< Descriptors for the current category and query type.
+    QScopedPointer<vis::Descriptors> queries;       ///< Query descriptors for the current category and query type.
+    QScopedPointer<vis::Vocabulary> vocabulary;     ///< Vocabulary for the current category and query type.
 
-    QScopedPointer< QList<QLabel*> > results;
+    QScopedPointer< QList<QLabel*> > results;       ///< Pointers to result labels displaying matching images.
 };
 
 #endif /* DEMO_HPP */
