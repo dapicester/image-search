@@ -12,6 +12,7 @@
 DemoGui::DemoGui() :
         names(new QStringList) {
     setupUi(this);
+    this->setFixedSize(this->size());
 
     // connect signals-slots
     connectbtn(searchButton, search());
