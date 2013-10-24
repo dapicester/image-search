@@ -33,9 +33,6 @@ DemoGui::DemoGui() :
     setQueryType(queryTypeGroup->checkedButton());
 
     // other initializations
-    loadIndex();
-    loadDescriptors();
-    loadVocabulary();
 }
 
 DemoGui::~DemoGui() {

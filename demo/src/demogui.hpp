@@ -59,13 +59,13 @@ private:
     void loadQueryNames();
 
     /// Load index.
-    void loadIndex();
+    bool loadIndex();
 
     /// Load descriptors.
-    void loadDescriptors();
+    bool loadDescriptors();
 
     /// Load visual word vocabulary.
-    void loadVocabulary();
+    bool loadVocabulary();
 
 private:
     QScopedPointer<QStringList> names;

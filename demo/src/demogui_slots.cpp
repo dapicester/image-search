@@ -25,21 +25,28 @@ DemoGui::search() {
 
 void
 DemoGui::recomputeIndex() {
-    if (not confirmMessageBox("Recompute descriptors")) {
+    if (not confirmMessageBox("Recompute index")) {
         qDebug() << "canceled";
         return;
     }
 
-    fs::path file = categoryFile(DATA_PATH, category);
-    fs::path dir = categoryDir(DATA_PATH, category);
+    QScopedPointer<QProgressDialog> progress(progressDialog("Computing index ...", this, 1, 10));
 
-    // TODO load descriptors matrix, build index;
-    //index.reset(new vis::Index);
+    if (not loadDescriptors()) {
+        messageBox("No descriptors file found, please recompute descriptors.", QMessageBox::Critical);
+        return;
+    }
+    progress->setValue(3);
 
-    //fs::path savefile = indexFile(DATA_PATH, category, queryType);
-    //index->save(savefile);
+    index.reset(new vis::Index);
+    index->build(category.toStdString(), *descriptors);
+    progress->setValue(6);
 
-    qDebug() << "vocabulary done!";
+    fs::path savefile = indexFile(DATA_PATH, category, queryType);
+    index->save(savefile);
+    progress->setValue(10);
+
+    qDebug() << "index done!";
 }
 
 void
@@ -49,12 +56,13 @@ DemoGui::recomputeDescriptors() {
         return;
     }
 
-    QProgressDialog* progress = progressDialog("Computing descriptors ...", this, 1, 10);
+    QScopedPointer<QProgressDialog> progress(progressDialog("Computing descriptors ...", this, 1, 10));
 
-    if (!vocabulary) {
-        loadVocabulary();
-        progress->setValue(3);
+    if (not loadVocabulary()) {
+        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
+        return;
     }
+    progress->setValue(3);
 
     fs::path file = categoryFile(DATA_PATH, category);
     fs::path dir = categoryDir(DATA_PATH, category);
@@ -81,7 +89,6 @@ DemoGui::recomputeDescriptors() {
     progress->setValue(10);
 
     qDebug() << "descriptors done!";
-    delete progress;
 }
 
 void
@@ -91,7 +98,7 @@ DemoGui::recomputeVocabulary() {
         return;
     }
 
-    QProgressDialog* progress = progressDialog("Computing vocabulary ...", this, 0, 10);
+    QScopedPointer<QProgressDialog> progress(progressDialog("Computing vocabulary ...", this, 0, 10));
     progress->setValue(3);
 
     fs::path file = categoryFile(DATA_PATH, category);
@@ -106,6 +113,5 @@ DemoGui::recomputeVocabulary() {
     progress->setValue(10);
 
     qDebug() << "vocabulary done!";
-    delete progress;
 }
 
