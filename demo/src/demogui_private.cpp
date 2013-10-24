@@ -20,8 +20,32 @@ DemoGui::loadQueryNames() {
     }
 }
 
+template <typename Container>
+bool checkCategory(const Container& c, const QString& category) {
+    return str(c.getCategory()) == category;
+}
+
+void
+DemoGui::loadImageNames() {
+    QList<QRadioButton*> labels = categoryBox->findChildren<QRadioButton*>();
+    qDebug() << "labels: " << labels;
+    for (QList<QRadioButton*>::iterator it = labels.begin(); it != labels.end(); ++it) {
+        QString category = (*it)->text();
+
+        fs::path file = categoryFile(DATA_PATH, category);
+        fs::path dir = categoryDir(DATA_PATH, category);
+        imagesMap[category] = loadNames(file, dir);
+        qDebug() << "loaded " << imagesMap[category].size() << " images for " << category;
+    }
+}
+
 bool
 DemoGui::loadIndex() {
+    if (index and checkCategory(*index, category)) {
+        qDebug() << "index already loaded";
+        return true;
+    }
+
     fs::path loadfile = indexFile(DATA_PATH, category, queryType);
     if (not fs::exists(loadfile)) {
         qDebug() << "index not found: " << str(loadfile);
@@ -36,6 +60,11 @@ DemoGui::loadIndex() {
 
 bool
 DemoGui::loadDescriptors() {
+    if (descriptors and checkCategory(*descriptors, category)) {
+        qDebug() << "descriptors already loaded";
+        return true;
+    }
+
     fs::path loadfile = descriptorsFile(DATA_PATH, category, queryType);
     if (not fs::exists(loadfile)) {
         qDebug() << "descriptors not found: " << str(loadfile);
@@ -50,6 +79,11 @@ DemoGui::loadDescriptors() {
 
 bool
 DemoGui::loadQueries() {
+    if (queries) {
+        qDebug() << "queries already loaded";
+        return true;
+    }
+
     fs::path loadfile = descriptorsFile(DATA_PATH, "test", queryType);
     if (not fs::exists(loadfile)) {
         qDebug() << "queries not found: " << str(loadfile);
@@ -64,6 +98,11 @@ DemoGui::loadQueries() {
 
 bool
 DemoGui::loadVocabulary() {
+    if (vocabulary and checkCategory(*vocabulary, category)) {
+        qDebug() << "vocabulary already loaded";
+        return true;
+    }
+
     fs::path loadfile = vocabularyFile(DATA_PATH, category);
     if (not fs::exists(loadfile)) {
         qDebug() << "vocabulary not found: " << str(loadfile);

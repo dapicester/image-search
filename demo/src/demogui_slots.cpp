@@ -64,9 +64,7 @@ DemoGui::recomputeDescriptors() {
     }
     progress->setValue(3);
 
-    fs::path file = categoryFile(DATA_PATH, category);
-    fs::path dir = categoryDir(DATA_PATH, category);
-    std::vector<fs::path> names = loadNames(file, dir);
+    const PathList& names = imagesMap[category];
     progress->setValue(6);
 
     vis::Descriptors descriptors;
@@ -108,10 +106,10 @@ DemoGui::recomputeQueries() {
 
     static fs::path file = categoryFile(DATA_PATH, "test");
     static fs::path dir = categoryDir(DATA_PATH, "test");
-    static std::vector<fs::path> allnames = loadNames(file, dir);
-    std::vector<fs::path> names;
+    static PathList allnames = loadNames(file, dir);
+    PathList names;
     QRegExp re("\\b" + category + "\\d");
-    for (std::vector<fs::path>::iterator it = allnames.begin(); it != allnames.end(); ++it) {
+    for (PathList::iterator it = allnames.begin(); it != allnames.end(); ++it) {
         qDebug() << it->c_str();
         if (str(*it).contains(re)) {
             names.push_back(*it);
@@ -152,10 +150,7 @@ DemoGui::recomputeVocabulary() {
     QScopedPointer<QProgressDialog> progress(progressDialog("Computing vocabulary ...", this, 0, 10));
     progress->setValue(3);
 
-    fs::path file = categoryFile(DATA_PATH, category);
-    fs::path dir = categoryDir(DATA_PATH, category);
-    std::vector<fs::path> names = loadNames(file, dir);
-    names = vis::subset(names, 100, vis::UNIFORM);
+    PathList names = vis::subset(imagesMap[category], 100, vis::UNIFORM);
     vocabulary.reset(vis::Vocabulary::fromImageList(category.toStdString(), names));
     progress->setValue(6);
 

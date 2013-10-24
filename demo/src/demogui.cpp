@@ -51,6 +51,7 @@ DemoGui::DemoGui() :
 
     // other gui initializations
     loadQueryNames();
+    loadImageNames();
     setQueryNames(categoryGroup->checkedButton());
     setQueryType(queryTypeGroup->checkedButton());
 

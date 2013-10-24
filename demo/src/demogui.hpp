@@ -25,6 +25,8 @@ namespace {
     static const fs::path DATA_PATH = fs::path(DATA_DIR);
 }
 
+typedef std::vector<fs::path> PathList;
+
 class DemoGui : public QMainWindow, private Ui::MainWindow {
     Q_OBJECT
 
@@ -64,6 +66,9 @@ private:
     /// Load query image names.
     void loadQueryNames();
 
+    /// Load image names.
+    void loadImageNames();
+
     /// Load index.
     bool loadIndex();
 
@@ -78,6 +83,7 @@ private:
 
 private:
     QScopedPointer<QStringList> names;
+    QMap<QString, PathList> imagesMap;
 
     QString category;
     QString queryType;
