@@ -7,6 +7,7 @@
 #ifndef VIS_CALLBACKS_HPP
 #define VIS_CALLBACKS_HPP
 
+#include "descriptors_type.hpp"
 #include "hog.hpp"
 #include "hsv.hpp"
 
@@ -35,6 +36,8 @@ private:
 struct HogBagOfWordsCallback {
     HogBagOfWordsCallback(const Vocabulary* v);
     cv::Mat operator()(const cv::Mat& image) const;
+
+    static const DescriptorsType type = vis::HOG;
 private:
     BagOfWords bow;
     HogExtractor hog;
@@ -45,14 +48,19 @@ struct HsvHistogramsCallback {
     HsvHistogramsCallback();
     cv::Mat operator()(const cv::Mat& image) const;
     size_t getNumBins() const;
+
+    static const DescriptorsType type = vis::HSV;
 private:
     HsvExtractor hsv;
 };
 
+/// Compute both HOG bag-of-words and HSV color histogram.
 struct CompositeCallback {
     CompositeCallback(const Vocabulary* v);
     cv::Mat operator()(const cv::Mat& image) const;
     size_t getNumBins() const;
+
+    static const DescriptorsType type = vis::HOG_HSV;
 private:
     HogBagOfWordsCallback hog;
     HsvHistogramsCallback hsv;

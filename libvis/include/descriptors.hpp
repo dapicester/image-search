@@ -17,11 +17,13 @@
 
 namespace vis {
 
+/// @brief Wrapper to descriptors container.
 class Descriptors {
 public:
     Descriptors();
     ~Descriptors();
 
+    /// @brief Compute descriptors using the given callback.
     template <typename Callback>
     void compute(const std::string& category,
                  const std::vector<boost::filesystem::path>& files,
@@ -32,8 +34,12 @@ public:
 
     const cv::Mat& get() const;
 
+    vis::DescriptorsType getType() const;
+
+    /// @brief Load descriptors from file.
     static Descriptors* load(const boost::filesystem::path& file);
 
+    /// @brief Save descriptors to file.
     void save(const boost::filesystem::path& file) const;
 
 private:
@@ -46,6 +52,7 @@ private:
 private:
     std::string category;
     boost::scoped_ptr<cv::Mat> descriptors;
+    vis::DescriptorsType type;
 };
 
 inline std::string
@@ -58,11 +65,17 @@ Descriptors::get() const {
     return *descriptors;
 }
 
+inline vis::DescriptorsType
+Descriptors::getType() const {
+    return type;
+}
+
 template <typename Archive>
 void
 Descriptors::serialize(Archive& ar, const unsigned int version) {
     ar & category;
     ar & descriptors;
+    ar & type;
 }
 
 template <typename Callback>
@@ -72,6 +85,7 @@ Descriptors::compute(const std::string& category,
         const Callback& cb, LoadImage flag) {
     this->category = category;
     this->descriptors.reset(new cv::Mat);
+    this->type = cb.type;
     vis::extract(files, *descriptors, cb, flag);
 }
 

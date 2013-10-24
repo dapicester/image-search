@@ -28,7 +28,7 @@ vis::Vocabulary* loadVocabulary() {
 
 BOOST_FIXTURE_TEST_SUITE(test_descriptors, test::ImageDir)
 
-BOOST_AUTO_TEST_CASE(bow) {
+BOOST_AUTO_TEST_CASE(hog) {
     boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
     vis::HogBagOfWordsCallback cb(vocabulary.get());
 
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(bow) {
     descriptors.compute("test", files, cb, vis::GRAYSCALE);
 
     BOOST_CHECK_EQUAL(expectedSize, descriptors.get().size());
-    // TODO check type
+    BOOST_CHECK_EQUAL(vis::HOG, descriptors.getType());
 #endif
 }
 
@@ -61,11 +61,11 @@ BOOST_AUTO_TEST_CASE(hsv) {
     histograms.compute("test", files, cb);
 
     BOOST_CHECK_EQUAL(expectedSize, histograms.get().size());
-    // TODO check type
+    BOOST_CHECK_EQUAL(vis::HSV, histograms.getType());
 #endif
 }
 
-BOOST_AUTO_TEST_CASE(bow_hsv) {
+BOOST_AUTO_TEST_CASE(hog_hsv) {
     boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
 
     /*
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(bow_hsv) {
     descriptors.compute("test", files, cb);
 
     BOOST_CHECK_EQUAL(expectedSize, descriptors.get().size());
-    // TODO check type
+    BOOST_CHECK_EQUAL(vis::HOG_HSV, descriptors.getType());
 #endif
 }
 
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(serialization) {
     vis::Descriptors* loaded = vis::Descriptors::load(file);
     BOOST_CHECK_EQUAL(histograms.getCategory(), loaded->getCategory());
     BOOST_CHECK(test::equals(histograms.get(), loaded->get()));
-    // TODO check type
+    BOOST_CHECK_EQUAL(histograms.getType(), loaded->getType());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
