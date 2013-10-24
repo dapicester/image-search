@@ -49,6 +49,20 @@ DemoGui::loadDescriptors() {
 }
 
 bool
+DemoGui::loadQueries() {
+    fs::path loadfile = descriptorsFile(DATA_PATH, "test", queryType);
+    if (not fs::exists(loadfile)) {
+        qDebug() << "queries not found: " << str(loadfile);
+        messageBox("No queries file found, please recompute queries.", QMessageBox::Warning);
+        queries.reset();
+        return false;
+    }
+    queries.reset(vis::Descriptors::load(loadfile));
+    qDebug() << "queries loaded from: " << str(loadfile);
+    return true;
+}
+
+bool
 DemoGui::loadVocabulary() {
     fs::path loadfile = vocabularyFile(DATA_PATH, category);
     if (not fs::exists(loadfile)) {

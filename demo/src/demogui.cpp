@@ -19,6 +19,7 @@ DemoGui::DemoGui() :
     connectbtn(showAllButton, showAll());
     connectbtn(recomputeIndexButton, recomputeIndex());
     connectbtn(recomputeDescriptorsButton, recomputeDescriptors());
+    connectbtn(recomputeQueriesButton, recomputeQueries());
     connectbtn(recomputeVocabularyButton, recomputeVocabulary());
 
     connect(categoryGroup, SIGNAL(buttonClicked(QAbstractButton*)),

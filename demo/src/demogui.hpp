@@ -33,6 +33,8 @@ public:
 
 public slots:
     void showAll();
+
+    /// Search images.
     void search();
 
     /// Recompute index for selected category and query type.
@@ -40,6 +42,9 @@ public slots:
 
     /// Recompute descriptors for selected category and query type.
     void recomputeDescriptors();
+
+    /// Recompute query descriptors for selected category and query type.
+    void recomputeQueries();
 
     /// Recompute vocabulary for selected category.
     void recomputeVocabulary();
@@ -55,7 +60,7 @@ public slots:
 
 private:
 
-    /// Load image queries from file.
+    /// Load query image names.
     void loadQueryNames();
 
     /// Load index.
@@ -64,16 +69,21 @@ private:
     /// Load descriptors.
     bool loadDescriptors();
 
+    /// Load query descriptors.
+    bool loadQueries();
+
     /// Load visual word vocabulary.
     bool loadVocabulary();
 
 private:
     QScopedPointer<QStringList> names;
+
     QString category;
     QString queryType;
 
     QScopedPointer<vis::Index> index;
     QScopedPointer<vis::Descriptors> descriptors;
+    QScopedPointer<vis::Descriptors> queries;
     QScopedPointer<vis::Vocabulary> vocabulary;
 };
 

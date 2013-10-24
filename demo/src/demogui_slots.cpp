@@ -92,6 +92,57 @@ DemoGui::recomputeDescriptors() {
 }
 
 void
+DemoGui::recomputeQueries() {
+    if (not confirmMessageBox("Recompute queries")) {
+        qDebug() << "canceled";
+        return;
+    }
+
+    QScopedPointer<QProgressDialog> progress(progressDialog("Computing queries ...", this, 1, 10));
+
+    if (not loadVocabulary()) {
+        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
+        return;
+    }
+    progress->setValue(3);
+
+    static fs::path file = categoryFile(DATA_PATH, "test");
+    static fs::path dir = categoryDir(DATA_PATH, "test");
+    static std::vector<fs::path> allnames = loadNames(file, dir);
+    std::vector<fs::path> names;
+    QRegExp re("\\b" + category + "\\d");
+    for (std::vector<fs::path>::iterator it = allnames.begin(); it != allnames.end(); ++it) {
+        qDebug() << it->c_str();
+        if (str(*it).contains(re)) {
+            names.push_back(*it);
+            qDebug() << "pushed";
+        }
+    }
+    progress->setValue(6);
+
+    vis::Descriptors queries;
+    // XXX quick'n dirty (TM)
+    if (queryType == "color") {
+        vis::HsvHistogramsCallback cb;
+        queries.compute("test", names, cb);
+    }
+    else if (queryType == "shape") {
+        vis::HogBagOfWordsCallback cb(vocabulary.data());
+        queries.compute("test", names, cb);
+    }
+    else if (queryType == "combined") {
+        vis::CompositeCallback cb(vocabulary.data());
+        queries.compute("test", names, cb);
+    }
+
+    fs::path savefile = descriptorsFile(DATA_PATH, "test", queryType);
+    queries.save(savefile);
+    progress->setValue(10);
+
+    qDebug() << "queries done!";
+}
+
+void
 DemoGui::recomputeVocabulary() {
     if (not confirmMessageBox("Recompute vocabulary")) {
         qDebug() << "canceled";

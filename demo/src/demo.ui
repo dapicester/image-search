@@ -225,7 +225,7 @@
      <rect>
       <x>160</x>
       <y>650</y>
-      <width>311</width>
+      <width>411</width>
       <height>61</height>
      </rect>
     </property>
@@ -269,6 +269,19 @@
      </property>
      <property name="text">
       <string>Vocabulary</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="recomputeQueriesButton">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>20</y>
+       <width>91</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Queries</string>
      </property>
     </widget>
    </widget>
