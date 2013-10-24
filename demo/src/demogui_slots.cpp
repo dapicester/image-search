@@ -8,6 +8,7 @@
 #include "utils.hpp"
 #include <QDebug>
 #include <QProgressDialog>
+#include <opencv2/core/core.hpp>
 
 void
 DemoGui::showAll() {
@@ -18,9 +19,34 @@ DemoGui::showAll() {
 
 void
 DemoGui::search() {
-    // TODO
-    qDebug() << "search";
-    messageBox("TODO");
+    if (not loadIndex()) {
+        messageBox("No index file found, please recompute index.", QMessageBox::Critical);
+        return;
+    }
+    if (not loadQueries()) {
+        messageBox("No queries file found, please recompute queries.", QMessageBox::Critical);
+        return;
+    }
+
+    Q_ASSERT(category == str(index->getCategory()));
+    Q_ASSERT(queryType == decodeType(index->getType()));
+    Q_ASSERT(queryType == decodeType(queries->getType()));
+    qDebug() << "search " << category << " by " << queryType;
+
+    int queryId = queryList->currentRow();
+    qDebug() << "queryId: " << queryId;
+    cv::Mat query = queries->get().col(queryId);
+
+    std::vector<vis::Index::id_type> matches;
+    index->query(query, matches, results->size());
+
+    const PathList& images = imagesMap[category];
+    for (int n = 0; n < results->size(); n++) {
+        vis::Index::id_type i = matches[n];
+        const fs::path& file = images[i];
+        qDebug() << "(" << i << ")" << str(file);
+        setImage(results->at(n), file);
+    }
 }
 
 void

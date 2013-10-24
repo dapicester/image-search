@@ -9,6 +9,7 @@
 
 #include <QMessageBox>
 #include <QString>
+#include <descriptors_type.hpp>
 #include <boost/filesystem/path.hpp>
 #include <vector>
 
@@ -25,6 +26,16 @@ str(const std::string string) {
 inline QString
 str(const boost::filesystem::path& path) {
     return QString(path.string().c_str());
+}
+
+/// Decode type to string.
+inline QString
+decodeType(vis::DescriptorsType type) {
+    switch (type) {
+    case vis::HOG: return "shape";
+    case vis::HSV: return "color";
+    case vis::HOG_HSV: return "combined";
+    }
 }
 
 /// Load file content.
