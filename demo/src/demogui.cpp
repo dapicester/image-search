@@ -82,13 +82,18 @@ DemoGui::showQueryImage(int row) {
     QString name = queryList->item(row)->text();
     //qDebug() << "query: " << name;
     fs::path file = DATA_PATH / "test" / name.toStdString();
-    QPixmap image(file.string().c_str());
-    queryImage->setPixmap(image.scaled(queryImage->size(), Qt::KeepAspectRatio));
+    setImage(queryImage, file);
 }
 
 void
 DemoGui::setQueryType(QAbstractButton* button) {
     queryType = button->text();
     qDebug() << "queryType: " << queryType;
+}
+
+void
+DemoGui::setImage(QLabel* label, const fs::path& file) {
+    QPixmap image(file.string().c_str());
+    label->setPixmap(image.scaled(label->size(), Qt::KeepAspectRatio));
 }
 

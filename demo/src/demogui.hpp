@@ -61,6 +61,9 @@ public slots:
     /// Set the query type according to the selected option.
     void setQueryType(QAbstractButton*);
 
+    /// Display image into label.
+    void setImage(QLabel* label, const fs::path& file);
+
 private:
 
     /// Load query image names.
