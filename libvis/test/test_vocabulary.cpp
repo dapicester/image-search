@@ -43,6 +43,7 @@ BOOST_AUTO_TEST_CASE(test_serialization) {
     BOOST_CHECK(vocabulary.get());
     // check it's the same
     const VlKDForest* forest = vocabulary->getKDTree()->getForest();
+    BOOST_CHECK_EQUAL("test", vocabulary->getCategory());
     BOOST_CHECK_EQUAL(300, vocabulary->getNumWords());
     BOOST_CHECK_EQUAL(cv::Size(300,28), vocabulary->getWords().size());
     BOOST_CHECK_EQUAL(1, vl_kdforest_get_num_trees(forest));

@@ -47,6 +47,8 @@ public:
 
     size_t getNumWords() const;
 
+    std::string getCategory() const;
+
 private:
     Vocabulary(const std::string category, const cv::Mat& data, size_t numWords);
 
@@ -71,6 +73,11 @@ public:
 inline size_t
 Vocabulary::getNumWords() const {
     return numWords;
+}
+
+inline std::string
+Vocabulary::getCategory() const {
+    return category;
 }
 
 template <typename Archive>
