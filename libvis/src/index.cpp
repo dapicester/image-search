@@ -26,6 +26,13 @@ Index::build(const std::string& cat, const cv::Mat& data, DescriptorsType t) {
 }
 
 void
+Index::build(const std::string& cat, const Descriptors& descriptors) {
+    category = cat;
+    type = descriptors.getType();
+    kdtree.reset(new KDTree<float>(descriptors.get()));
+}
+
+void
 Index::query(const cv::Mat& data, std::vector<id_type>& results, size_t numResults) {
     std::vector<KDTreeIndex> items = kdtree->search<KDTreeIndex>(data, numResults);
     BOOST_FOREACH(const KDTreeIndex& item, items) {

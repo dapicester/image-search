@@ -26,6 +26,8 @@ vis::Vocabulary* loadVocabulary() {
     return vp;
 };
 
+#define USE_OLD_API 0
+
 BOOST_FIXTURE_TEST_SUITE(test_descriptors, test::ImageDir)
 
 BOOST_AUTO_TEST_CASE(hog) {
@@ -33,7 +35,7 @@ BOOST_AUTO_TEST_CASE(hog) {
     vis::HogBagOfWordsCallback cb(vocabulary.get());
 
     const cv::Size expectedSize(files.size(), vocabulary->getNumWords());
-#if 0
+#if USE_OLD_API
     cv::Mat descriptors;
     vis::extract(files, descriptors, cb, vis::GRAYSCALE);
 
@@ -51,7 +53,7 @@ BOOST_AUTO_TEST_CASE(hsv) {
     vis::HsvHistogramsCallback cb;
 
     const cv::Size expectedSize(files.size(), cb.getNumBins());
-#if 0
+#if USE_OLD_API
     cv::Mat histograms;
     vis::extract(files, histograms, cb);
 
@@ -87,7 +89,7 @@ BOOST_AUTO_TEST_CASE(hog_hsv) {
     vis::CompositeCallback cb(vocabulary.get());
 
     const cv::Size expectedSize(files.size(), cb.getNumBins() + vocabulary->getNumWords());
-#if 0
+#if USE_OLD_API
     cv::Mat descriptors;
     vis::extract(files, descriptors, cb);
 

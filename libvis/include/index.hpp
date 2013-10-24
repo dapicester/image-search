@@ -8,6 +8,7 @@
 #define VIS_INDEX_HPP
 
 #include "descriptors_type.hpp"
+#include "descriptors.hpp"
 #include <opencv2/core/core.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -35,6 +36,8 @@ public:
     void build(const std::string& category,
                const cv::Mat& data,
                DescriptorsType type);
+
+    void build(const std::string& category, const Descriptors& descriptors);
 
     /// @brief Type of the returned id used for querying.
     typedef size_t id_type;
