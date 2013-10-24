@@ -10,7 +10,12 @@ find_package(Qt4 4.8 REQUIRED QtCore QtGui)
 include(${QT_USE_FILE})
 list(APPEND libraries ${QT_LIBRARIES})
 
-file(GLOB demo_SRCS src/*.c src/*.cpp)
+set(demo_SRCS
+    src/demogui.cpp
+    src/demogui_private.cpp
+    src/demogui_slots.cpp
+    src/utils.cpp
+    src/main.cpp)
 
 set(demo_UIS src/demo.ui)
 qt4_wrap_ui(demo_UIS_H ${demo_UIS})
