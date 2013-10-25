@@ -7,16 +7,15 @@
 #include "demogui.hpp"
 #include "utils.hpp"
 #include <boost/filesystem/operations.hpp>
-#include <boost/foreach.hpp>
 #include <QMessageBox>
 #include <QDebug>
 
 void
 DemoGui::loadQueryNames() {
     fs::path file = DATA_PATH / "test.txt";
-    std::vector<std::string> queryNames = loadNames(file);
-    BOOST_FOREACH(const std::string& name, queryNames) {
-        names->append( QString(name.c_str()) );
+    std::vector<std::string> names = loadNames(file);
+    foreach(const std::string& name, names) {
+        queryNames << QString(name.c_str());
     }
 }
 

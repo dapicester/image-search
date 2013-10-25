@@ -34,18 +34,18 @@ DemoGui::search() {
     qDebug() << "search " << category << " by " << queryType;
 
     int queryId = queryList->currentRow();
-    qDebug() << "query:" << queryId << names->at(queryId);
+    qDebug() << "query:" << queryId << queryNames[queryId];
     cv::Mat query = queries->get().col(queryId);
 
     std::vector<vis::Index::id_type> matches;
-    index->query(query, matches, results->size());
+    index->query(query, matches, results.size());
 
     const PathList& images = imagesMap[category];
-    for (int n = 0; n < results->size(); n++) {
+    for (int n = 0; n < results.size(); n++) {
         vis::Index::id_type i = matches[n];
         const fs::path& file = images[i];
         qDebug() << "(" << i << ")" << str(file);
-        setImage(results->at(n), file);
+        setImage(results[n], file);
     }
 }
 

@@ -62,10 +62,10 @@ public slots:
     /// Set the query type according to the selected option.
     void setQueryType(QAbstractButton*);
 
+private:
+
     /// Display image into label.
     void setImage(QLabel* label, const fs::path& file);
-
-private:
 
     /// Load query image names.
     void loadQueryNames();
@@ -86,7 +86,7 @@ private:
     bool loadVocabulary();
 
 private:
-    QScopedPointer<QStringList> names;              ///< Names of the query images.
+    QStringList queryNames;                         ///< Names of the query images.
     QMap<QString, PathList> imagesMap;              ///< Full path to indexed images by category.
 
     QString category;                               ///< Currently selected category.
@@ -97,7 +97,7 @@ private:
     QScopedPointer<vis::Descriptors> queries;       ///< Query descriptors for the current category and query type.
     QScopedPointer<vis::Vocabulary> vocabulary;     ///< Vocabulary for the current category and query type.
 
-    QScopedPointer< QList<QLabel*> > results;       ///< Pointers to result labels displaying matching images.
+    QList<QLabel*> results;                         ///< Pointers to result labels displaying matching images.
 };
 
 #endif /* DEMO_HPP */
