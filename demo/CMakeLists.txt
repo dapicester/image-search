@@ -38,5 +38,9 @@ target_link_libraries(demo ${libraries})
 
 set_target_properties(demo PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
 
+if(ENABLE_CTAGS)
+    add_ctags_target()
+endif()
+
 #add_notes_target() FIXME conflicts with target in libvis
 

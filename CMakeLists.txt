@@ -7,6 +7,7 @@ include(MacroBuildInfo)
 include(MacroOutOfSourceBuild)
 macro_ensure_out_of_source_build("Project ${PROJECT_NAME} requires an out of source build.")
 include(MacroAddUnitTest)
+include(MacroCtagsTarget)
 include(MacroNotesTarget)
 
 option(ENABLE_TESTING "Enables tests" ON)
@@ -20,9 +21,10 @@ if(BUILD_STATIC_LIBRARIES)
 endif()
 
 option(ENABLE_CTAGS "Enable CTags" OFF)
-if(ENABLE_CTAGS)
-    include(MacroCtagsTarget)
-endif()
 
 add_subdirectory(libvis)
 add_subdirectory(demo)
+
+if(ENABLE_CTAGS)
+    add_ctags_for(libvis demo)
+endif()
