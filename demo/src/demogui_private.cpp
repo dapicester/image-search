@@ -7,7 +7,6 @@
 #include "demogui.hpp"
 #include "utils.hpp"
 #include <boost/filesystem/operations.hpp>
-#include <QMessageBox>
 #include <QDebug>
 
 void
@@ -52,7 +51,6 @@ DemoGui::loadIndex() {
     fs::path loadfile = indexFile(DATA_PATH, category, queryType);
     if (not fs::exists(loadfile)) {
         qDebug() << "index not found:" << str(loadfile);
-        messageBox("No index file found, please recompute index.", QMessageBox::Warning);
         descriptors.reset();
         return false;
     }
@@ -75,7 +73,6 @@ DemoGui::loadDescriptors() {
     fs::path loadfile = descriptorsFile(DATA_PATH, category, queryType);
     if (not fs::exists(loadfile)) {
         qDebug() << "descriptors not found:" << str(loadfile);
-        messageBox("No descriptors file found, please recompute descriptors.", QMessageBox::Warning);
         descriptors.reset();
         return false;
     }
@@ -98,7 +95,6 @@ DemoGui::loadQueries() {
     fs::path loadfile = descriptorsFile(DATA_PATH, "test", queryType);
     if (not fs::exists(loadfile)) {
         qDebug() << "queries not found:" << str(loadfile);
-        messageBox("No queries file found, please recompute queries.", QMessageBox::Warning);
         queries.reset();
         return false;
     }
@@ -120,7 +116,6 @@ DemoGui::loadVocabulary() {
     fs::path loadfile = vocabularyFile(DATA_PATH, category);
     if (not fs::exists(loadfile)) {
         qDebug() << "vocabulary not found:" << str(loadfile);
-        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Warning);
         vocabulary.reset();
         return false;
     }
