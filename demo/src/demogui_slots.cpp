@@ -34,6 +34,7 @@ DemoGui::search() {
     qDebug() << "search " << category << " by " << queryType;
 
     int queryId = queryList->currentRow();
+    qDebug() << "query:" << queryId << names->at(queryId);
     cv::Mat query = queries->get().col(queryId);
 
     std::vector<vis::Index::id_type> matches;
@@ -92,23 +93,23 @@ DemoGui::recomputeDescriptors() {
     const PathList& names = imagesMap[category];
     progress->setValue(6);
 
-    vis::Descriptors descriptors;
+    descriptors.reset(new vis::Descriptors);
     // XXX quick'n dirty (TM)
     if (queryType == "color") {
         vis::HsvHistogramsCallback cb;
-        descriptors.compute(category.toStdString(), names, cb);
+        descriptors->compute(category.toStdString(), names, cb);
     }
     else if (queryType == "shape") {
         vis::HogBagOfWordsCallback cb(vocabulary.data());
-        descriptors.compute(category.toStdString(), names, cb);
+        descriptors->compute(category.toStdString(), names, cb);
     }
     else if (queryType == "combined") {
         vis::CompositeCallback cb(vocabulary.data());
-        descriptors.compute(category.toStdString(), names, cb);
+        descriptors->compute(category.toStdString(), names, cb);
     }
 
     fs::path savefile = descriptorsFile(DATA_PATH, category, queryType);
-    descriptors.save(savefile);
+    descriptors->save(savefile);
     progress->setValue(10);
 
     qDebug() << "descriptors done!";
@@ -143,23 +144,23 @@ DemoGui::recomputeQueries() {
     }
     progress->setValue(6);
 
-    vis::Descriptors queries;
+    queries.reset(new vis::Descriptors);
     // XXX quick'n dirty (TM)
     if (queryType == "color") {
         vis::HsvHistogramsCallback cb;
-        queries.compute("test", names, cb);
+        queries->compute("test", names, cb);
     }
     else if (queryType == "shape") {
         vis::HogBagOfWordsCallback cb(vocabulary.data());
-        queries.compute("test", names, cb);
+        queries->compute("test", names, cb);
     }
     else if (queryType == "combined") {
         vis::CompositeCallback cb(vocabulary.data());
-        queries.compute("test", names, cb);
+        queries->compute("test", names, cb);
     }
 
     fs::path savefile = descriptorsFile(DATA_PATH, "test", queryType);
-    queries.save(savefile);
+    queries->save(savefile);
     progress->setValue(10);
 
     qDebug() << "queries done!";
