@@ -10,6 +10,11 @@ find_package(Qt4 4.8 REQUIRED QtCore QtGui)
 include(${QT_USE_FILE})
 list(APPEND libraries ${QT_LIBRARIES})
 
+set(recompute_SRCS
+    src/utils.cpp
+    src/recompute.cpp
+    src/recompute_main.cpp)
+
 set(demo_SRCS
     src/demogui.cpp
     src/demogui_private.cpp
@@ -33,10 +38,16 @@ configure_file(src/directories.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/directories.hp
 message(STATUS "Test paths written to: ${CMAKE_CURRENT_BINARY_DIR}/directories.hpp")
 
 include_directories(${includes})
+
+add_executable(recompute ${recompute_SRCS})
+target_link_libraries(recompute ${libraries})
+
 add_executable(demo ${demo_SRCS} ${demo_UIS_H} ${demo_MOCS_SRCS})
 target_link_libraries(demo ${libraries})
 
+# remove warnings in Qt
 set_target_properties(demo PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
+set_target_properties(recompute PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
 
 if(ENABLE_CTAGS)
     add_ctags_target()
