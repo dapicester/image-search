@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1015</width>
-    <height>683</height>
+    <width>1000</width>
+    <height>635</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -78,7 +78,7 @@
      </attribute>
     </widget>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="queryListLabel">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -94,17 +94,17 @@
    <widget class="QPushButton" name="showAllButton">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>450</y>
-      <width>131</width>
-      <height>41</height>
+      <x>160</x>
+      <y>530</y>
+      <width>121</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>Show All</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox_2">
+   <widget class="QGroupBox" name="queryBox">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -116,7 +116,7 @@
     <property name="title">
      <string>Query Type</string>
     </property>
-    <widget class="QRadioButton" name="radioButton">
+    <widget class="QRadioButton" name="colorButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -135,7 +135,7 @@
       <string notr="true">queryTypeGroup</string>
      </attribute>
     </widget>
-    <widget class="QRadioButton" name="radioButton_2">
+    <widget class="QRadioButton" name="shapePutton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -151,7 +151,7 @@
       <string notr="true">queryTypeGroup</string>
      </attribute>
     </widget>
-    <widget class="QRadioButton" name="radioButton_3">
+    <widget class="QRadioButton" name="combinedButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -172,7 +172,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>600</y>
+      <y>450</y>
       <width>131</width>
       <height>41</height>
      </rect>
@@ -181,31 +181,18 @@
      <string>Search</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox_3">
+   <widget class="QGroupBox" name="resultsBox">
     <property name="geometry">
      <rect>
       <x>160</x>
       <y>10</y>
       <width>831</width>
-      <height>531</height>
+      <height>501</height>
      </rect>
     </property>
     <property name="title">
      <string>Query Results</string>
     </property>
-    <widget class="QCheckBox" name="checkBox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>500</y>
-       <width>101</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>show ranks</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="queryResult_1">
      <property name="geometry">
       <rect>
@@ -672,11 +659,11 @@
      </property>
     </widget>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="authorLabel">
     <property name="geometry">
      <rect>
-      <x>860</x>
-      <y>610</y>
+      <x>880</x>
+      <y>570</y>
       <width>111</width>
       <height>16</height>
      </rect>
@@ -685,11 +672,11 @@
      <string>Paolo D'Apice 2013</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox_4">
+   <widget class="QGroupBox" name="recomputeBox">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>580</y>
+      <x>300</x>
+      <y>530</y>
       <width>411</width>
       <height>61</height>
      </rect>
@@ -788,13 +775,26 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QCheckBox" name="realtimeCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>570</y>
+      <width>131</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>realtime query</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1015</width>
+     <width>1000</width>
      <height>22</height>
     </rect>
    </property>
@@ -802,7 +802,24 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>realtimeCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>recomputeQueriesButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>634</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>516</x>
+     <y>587</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <buttongroups>
   <buttongroup name="queryTypeGroup"/>
   <buttongroup name="categoryGroup"/>
