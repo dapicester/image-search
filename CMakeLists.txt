@@ -28,3 +28,6 @@ add_subdirectory(demo)
 if(ENABLE_CTAGS)
     add_ctags_for(libvis demo)
 endif()
+
+add_notes_for(libvis demo)
+

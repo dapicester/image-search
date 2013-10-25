@@ -42,5 +42,5 @@ if(ENABLE_CTAGS)
     add_ctags_target()
 endif()
 
-#add_notes_target() FIXME conflicts with target in libvis
+add_notes_target()
 
