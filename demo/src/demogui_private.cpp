@@ -87,12 +87,12 @@ DemoGui::loadDescriptors() {
 
 bool
 DemoGui::loadQueries() {
-    if (queries and checkType(*queries, queryType)) {
+    if (queries and checkCategory(*queries, category) and checkType(*queries, queryType)) {
         qDebug() << "queries already loaded";
         return true;
     }
 
-    fs::path loadfile = descriptorsFile(DATA_PATH, "test", queryType);
+    fs::path loadfile = queryFile(DATA_PATH, category, queryType);
     if (not fs::exists(loadfile)) {
         qDebug() << "queries not found:" << str(loadfile);
         queries.reset();

@@ -51,6 +51,10 @@ loadNames(const boost::filesystem::path& file);
 std::vector<boost::filesystem::path>
 loadNames(const boost::filesystem::path& file, const boost::filesystem::path& prefix);
 
+/// Get query images for the given category.
+std::vector<boost::filesystem::path>
+queryNames(const std::vector<boost::filesystem::path>& all, const QString& category);
+
 /// Get the path to the text file containing images for the given category.
 /// @return path to \c dataDir/category.txt
 boost::filesystem::path
@@ -66,10 +70,15 @@ categoryDir(const boost::filesystem::path& dataDir, const QString& category);
 boost::filesystem::path
 vocabularyFile(const boost::filesystem::path& dataDir, const QString& category);
 
-/// Get the path to the descriptors file for the given category.
+/// Get the path to the descriptors file for the given category and query type.
 /// @return path to \c dataDir/descriptors_category_type.dgz
 boost::filesystem::path
 descriptorsFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
+
+/// Get the path to the query file for the given category and query type.
+/// @return path to \c dataDir/query_category_type.dgz
+boost::filesystem::path
+queryFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
 
 /// Get the path to the index file for the given category.
 /// @return path to \c dataDir/index_category_type.dgz
@@ -77,7 +86,7 @@ boost::filesystem::path
 indexFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
 
 void
-computeDescriptors(const QString& category, const QString& queryType,
+extractDescriptors(const QString& category, const QString& queryType,
         const std::vector<boost::filesystem::path>& names,
         vis::Descriptors* descriptors, vis::Vocabulary* vocabulary);
 

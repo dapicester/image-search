@@ -27,8 +27,8 @@ DemoGui::search() {
         messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
         return;
     }
-    if (queryType != "color")
-        Q_ASSERT(category == str(vocabulary->getCategory()));
+
+    if (queryType != "color") Q_ASSERT(category == str(vocabulary->getCategory()));
     Q_ASSERT(category == str(index->getCategory()));
     Q_ASSERT(queryType == decodeType(index->getType()));
     qDebug() << "search " << category << " by " << queryType;
@@ -38,7 +38,7 @@ DemoGui::search() {
         qDebug() << "computing descriptors ...";
 
         vis::Descriptors descriptors;
-        computeDescriptors(category, queryType, PathList(1, queryImagePath), &descriptors, vocabulary.data());
+        extractDescriptors(category, queryType, PathList(1, queryImagePath), &descriptors, vocabulary.data());
         descriptors.get().copyTo(query);
 
         qDebug() << "descriptors computed";
@@ -115,7 +115,7 @@ DemoGui::recomputeDescriptors() {
     progress->setValue(6);
 
     descriptors.reset(new vis::Descriptors);
-    computeDescriptors(category, queryType, names, descriptors.data(), vocabulary.data());
+    extractDescriptors(category, queryType, names, descriptors.data(), vocabulary.data());
 
     fs::path savefile = descriptorsFile(DATA_PATH, category, queryType);
     descriptors->save(savefile);
@@ -142,33 +142,13 @@ DemoGui::recomputeQueries() {
     static fs::path file = categoryFile(DATA_PATH, "test");
     static fs::path dir = categoryDir(DATA_PATH, "test");
     static PathList allnames = loadNames(file, dir);
-    PathList names;
-    QRegExp re("\\b" + category + "\\d");
-    for (PathList::iterator it = allnames.begin(); it != allnames.end(); ++it) {
-        qDebug() << it->c_str();
-        if (str(*it).contains(re)) {
-            names.push_back(*it);
-            qDebug() << "pushed";
-        }
-    }
-    progress->setValue(6);
+    PathList names = ::queryNames(allnames, category);
 
     queries.reset(new vis::Descriptors);
-    // XXX quick'n dirty (TM)
-    if (queryType == "color") {
-        vis::HsvHistogramsCallback cb;
-        queries->compute("test", names, cb);
-    }
-    else if (queryType == "shape") {
-        vis::HogBagOfWordsCallback cb(vocabulary.data());
-        queries->compute("test", names, cb);
-    }
-    else if (queryType == "combined") {
-        vis::CompositeCallback cb(vocabulary.data());
-        queries->compute("test", names, cb);
-    }
+    extractDescriptors(category, queryType, names, queries.data(), vocabulary.data());
+    progress->setValue(6);
 
-    fs::path savefile = descriptorsFile(DATA_PATH, "test", queryType);
+    fs::path savefile = queryFile(DATA_PATH, category, queryType);
     queries->save(savefile);
     progress->setValue(10);
 

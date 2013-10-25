@@ -52,6 +52,18 @@ categoryDir(const fs::path& dataDir, const QString& category) {
     return dataDir / category.toStdString();
 }
 
+vector<fs::path>
+queryNames(const vector<fs::path>& all, const QString& category) {
+    vector<fs::path> names;
+    QRegExp re("\\b" + category + "\\d");
+    for (vector<fs::path>::const_iterator it = all.begin(); it != all.end(); ++it) {
+        if (str(*it).contains(re)) {
+            names.push_back(*it);
+        }
+    }
+    return names;
+}
+
 fs::path
 vocabularyFile(const fs::path& dataDir, const QString& category) {
     QString file = "vocabulary_";
@@ -69,6 +81,14 @@ descriptorsFile(const fs::path& dataDir, const QString& category, const QString&
 }
 
 fs::path
+queryFile(const fs::path& dataDir, const QString& category, const QString& type) {
+    QString file = "query_";
+    file.append(category).append("_").append(type);
+    file.append(DATA_EXT);
+    return dataDir / file.toStdString();
+}
+
+fs::path
 indexFile(const fs::path& dataDir, const QString& category, const QString& type) {
     QString file = "index_";
     file.append(category).append("_").append(type);
@@ -77,7 +97,7 @@ indexFile(const fs::path& dataDir, const QString& category, const QString& type)
 }
 
 void
-computeDescriptors(const QString& category, const QString& queryType,
+extractDescriptors(const QString& category, const QString& queryType,
         const std::vector<boost::filesystem::path>& names,
         vis::Descriptors* descriptors, vis::Vocabulary* vocabulary) {
     // XXX quick'n dirty (TM)
