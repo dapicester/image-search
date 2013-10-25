@@ -5,6 +5,8 @@
  */
 
 #include "utils.hpp"
+#include <descriptors.hpp>
+#include <callbacks.hpp>
 #include <boost/foreach.hpp>
 #include <QMessageBox>
 #include <QProgressDialog>
@@ -72,6 +74,25 @@ indexFile(const fs::path& dataDir, const QString& category, const QString& type)
     file.append(category).append("_").append(type);
     file.append(DATA_EXT);
     return dataDir / file.toStdString();
+}
+
+void
+computeDescriptors(const QString& category, const QString& queryType,
+        const std::vector<boost::filesystem::path>& names,
+        vis::Descriptors* descriptors, vis::Vocabulary* vocabulary) {
+    // XXX quick'n dirty (TM)
+    if (queryType == "color") {
+        vis::HsvHistogramsCallback cb;
+        descriptors->compute(category.toStdString(), names, cb);
+    }
+    else if (queryType == "shape") {
+        vis::HogBagOfWordsCallback cb(vocabulary);
+        descriptors->compute(category.toStdString(), names, cb);
+    }
+    else if (queryType == "combined") {
+        vis::CompositeCallback cb(vocabulary);
+        descriptors->compute(category.toStdString(), names, cb);
+    }
 }
 
 bool

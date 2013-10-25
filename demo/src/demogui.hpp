@@ -91,6 +91,7 @@ private:
 
     QString category;                               ///< Currently selected category.
     QString queryType;                              ///< Currently selected query type.
+    fs::path queryImagePath;
 
     QScopedPointer<vis::Index> index;               ///< Index for the current category and query type.
     QScopedPointer<vis::Descriptors> descriptors;   ///< Descriptors for the current category and query type.

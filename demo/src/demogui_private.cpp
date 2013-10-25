@@ -12,7 +12,7 @@
 
 void
 DemoGui::loadQueryNames() {
-    fs::path file = DATA_PATH / "test.txt";
+    fs::path file = categoryFile(DATA_PATH, "test");
     std::vector<std::string> names = loadNames(file);
     foreach(const std::string& name, names) {
         queryNames << QString(name.c_str());

@@ -16,6 +16,11 @@
 class QProgressDialog;
 class QWidget;
 
+namespace vis {
+    class Descriptors;
+    class Vocabulary;
+}
+
 /// Get QString string from std::string.
 inline QString
 str(const std::string string) {
@@ -70,6 +75,11 @@ descriptorsFile(const boost::filesystem::path& dataDir, const QString& category,
 /// @return path to \c dataDir/index_category_type.dgz
 boost::filesystem::path
 indexFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
+
+void
+computeDescriptors(const QString& category, const QString& queryType,
+        const std::vector<boost::filesystem::path>& names,
+        vis::Descriptors* descriptors, vis::Vocabulary* vocabulary);
 
 /// Display a confirmation message box.
 bool confirmMessageBox(const QString& message);

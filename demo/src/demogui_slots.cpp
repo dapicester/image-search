@@ -23,19 +23,38 @@ DemoGui::search() {
         messageBox("No index file found, please recompute index.", QMessageBox::Critical);
         return;
     }
-    if (not loadQueries()) {
-        messageBox("No queries file found, please recompute queries.", QMessageBox::Critical);
+    if (queryType != "color" and not loadVocabulary()) {
+        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
         return;
     }
-
+    if (queryType != "color")
+        Q_ASSERT(category == str(vocabulary->getCategory()));
     Q_ASSERT(category == str(index->getCategory()));
     Q_ASSERT(queryType == decodeType(index->getType()));
-    Q_ASSERT(queryType == decodeType(queries->getType()));
     qDebug() << "search " << category << " by " << queryType;
 
-    int queryId = queryList->currentRow();
-    qDebug() << "query:" << queryId << queryNames[queryId];
-    cv::Mat query = queries->get().col(queryId);
+    cv::Mat query;
+    if (realtimeCheckBox->isChecked()) {
+        qDebug() << "computing descriptors ...";
+
+        vis::Descriptors descriptors;
+        computeDescriptors(category, queryType, PathList(1, queryImagePath), &descriptors, vocabulary.data());
+        descriptors.get().copyTo(query);
+
+        qDebug() << "descriptors computed";
+    }
+    else {
+        if (not loadQueries()) {
+            messageBox("No queries file found, please recompute queries.", QMessageBox::Critical);
+            return;
+        }
+        Q_ASSERT(queryType == decodeType(queries->getType()));
+
+        int queryId = queryList->currentRow();
+        qDebug() << "query:" << queryId << queryNames[queryId];
+        query = queries->get().col(queryId);
+    }
+    Q_ASSERT(query.cols == 1);
 
     std::vector<vis::Index::id_type> matches;
     index->query(query, matches, results.size());
@@ -47,6 +66,8 @@ DemoGui::search() {
         qDebug() << "(" << i << ")" << str(file);
         setImage(results[n], file);
     }
+
+    qDebug() << "search done";
 }
 
 void
@@ -94,19 +115,7 @@ DemoGui::recomputeDescriptors() {
     progress->setValue(6);
 
     descriptors.reset(new vis::Descriptors);
-    // XXX quick'n dirty (TM)
-    if (queryType == "color") {
-        vis::HsvHistogramsCallback cb;
-        descriptors->compute(category.toStdString(), names, cb);
-    }
-    else if (queryType == "shape") {
-        vis::HogBagOfWordsCallback cb(vocabulary.data());
-        descriptors->compute(category.toStdString(), names, cb);
-    }
-    else if (queryType == "combined") {
-        vis::CompositeCallback cb(vocabulary.data());
-        descriptors->compute(category.toStdString(), names, cb);
-    }
+    computeDescriptors(category, queryType, names, descriptors.data(), vocabulary.data());
 
     fs::path savefile = descriptorsFile(DATA_PATH, category, queryType);
     descriptors->save(savefile);

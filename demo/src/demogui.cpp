@@ -5,6 +5,7 @@
  */
 
 #include "demogui.hpp"
+#include "utils.hpp"
 #include <QDebug>
 
 #define connectbtn(BTN, FUNC) connect(BTN, SIGNAL(clicked()), this, SLOT(FUNC))
@@ -78,8 +79,9 @@ DemoGui::showQueryImage(int row) {
     }
 
     QString name = queryList->item(row)->text();
-    fs::path file = DATA_PATH / "test" / name.toStdString();
-    setImage(queryImage, file);
+    static fs::path dir = categoryDir(DATA_PATH, "test");
+    queryImagePath = dir / name.toStdString();
+    setImage(queryImage, queryImagePath);
 }
 
 void
