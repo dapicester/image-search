@@ -47,8 +47,12 @@ public:
      * @param[in] data Query data.
      * @param[out] results Container for results.
      * @param[in] numResults Number of query results requested.
+     * @param[in] maxNumComparisons Maximum number of comparisons (ANN), \c 0 means unbounded.
      */
-    void query(const cv::Mat& data, std::vector<id_type>& results, size_t numResults = 1) const;
+    void query(const cv::Mat& data,
+               std::vector<id_type>& results,
+               size_t numResults = 1,
+               size_t maxNumComparisons = 0) const;
 
     std::string getCategory() const;
 
