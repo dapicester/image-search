@@ -52,6 +52,11 @@ add_unit_test(NAME test_serialization
     SOURCES test_serialization.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_posixtimer
+    SOURCES test_posixtimer.cpp
+    DISABLED true
+    LINK_LIBRARIES ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
