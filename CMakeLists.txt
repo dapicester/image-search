@@ -15,6 +15,8 @@ if(ENABLE_TESTING)
     enable_testing()
 endif()
 
+option(ENABLE_PERFTEST "Enables performace test" ON)
+
 option(BUILD_STATIC_LIBRARIES "Build static libraries" OFF)
 if(BUILD_STATIC_LIBRARIES)
     message(STATUS "Building static libraries")

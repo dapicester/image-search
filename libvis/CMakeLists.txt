@@ -43,5 +43,9 @@ if(ENABLE_TESTING)
     add_subdirectory(test)
 endif()
 
+if (ENABLE_PERFTEST)
+    add_subdirectory(perf)
+endif()
+
 add_notes_target()
 
