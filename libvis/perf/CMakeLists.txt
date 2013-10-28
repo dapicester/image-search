@@ -23,6 +23,10 @@ message(STATUS "Performance tests:")
 include_directories(${libvis_SOURCE_DIR}/test)
 
 add_perf_test(NAME perf_index_build
-    SOURCES perf_index_build.cpp
+    SOURCES perf_index_build.cpp perf_index.cpp
+    LINK_LIBRARIES vis)
+
+add_perf_test(NAME perf_index_query
+    SOURCES perf_index_query.cpp perf_index.cpp
     LINK_LIBRARIES vis)
 

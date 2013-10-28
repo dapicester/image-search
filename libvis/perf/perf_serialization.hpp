@@ -13,10 +13,9 @@
 #include <boost/serialization/vector.hpp>
 #include <fstream>
 
-#define ADD_BOOST_SERIALIZATION \
-
 namespace perf {
 
+/// Save results to XML.
 template <typename Object>
 void save(const std::string& filename, Object obj) {
     std::ofstream file(filename.c_str());
