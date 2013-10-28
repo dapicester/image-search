@@ -13,8 +13,8 @@
 namespace perf {
 
 cv::Mat
-getRandomData(const cv::Size& size, float min, float max) {
-    cv::Mat data(size, cv::DataType<float>::type);
+getRandomData(size_t rows, size_t cols, float min = 0., float max = 1.) {
+    cv::Mat data(rows, cols, cv::DataType<float>::type);
     cv::randu(data, min, max);
     return data;
 }

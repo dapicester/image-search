@@ -42,6 +42,21 @@ BOOST_AUTO_TEST_CASE(opencv_traits) {
     BOOST_CHECK(mat.depth() == DataType<float>::type);
 }
 
+BOOST_AUTO_TEST_CASE(matrix_random) {
+    Mat data(10, 10, CV_32F);
+
+    {
+        // uniform distribution
+        randu(data, Scalar(0), Scalar(1)); // min/max
+        print(data);
+        BOOST_CHECK(test::hasMinMax(data, 0., 1.));
+    }
+    {
+        randn(data, Scalar(0), Scalar(1)); // mean/variance
+        print(data);
+    }
+}
+
 BOOST_AUTO_TEST_CASE(matrix_push_back) {
     Mat row = Mat::ones(2, 3, CV_32F);
 

@@ -1,6 +1,6 @@
 /**
- * @file perf_index_build.cpp
- * @brief Simple benchmark on index building performance.
+ * @file perf_index_query.cpp
+ * @brief Simple benchmark on index querying performance.
  * @author Paolo D'Apice
  */
 
@@ -15,7 +15,7 @@ int main(int, char**) {
     IndexTimingsVector results;
     results.resize(SIZES.size());
 
-    for(int i = 0; i < SIZES.size(); i++) {
+    for (int i = 0; i < SIZES.size(); i++) {
         IndexTimings t;
         t.size = SIZES[i];
         t.type = vis::HOG_HSV;
@@ -24,10 +24,13 @@ int main(int, char**) {
 
         cv::Mat data = getRandomData(length, t.size);
 
-        t.timings = perfBuildIndex(data, t.type);
+        vis::Index index;
+        index.build("benchmark", data, t.type);
+
+        t.timings = perfQueryIndex(index, data);
 
         results[i] = t;
     }
 
-    perf::save("build_index.xml", results);
+    perf::save("query_index.xml", results);
 }
