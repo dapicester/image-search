@@ -48,7 +48,7 @@ public:
      * @param[out] results Container for results.
      * @param[in] numResults Number of query results requested.
      */
-    void query(const cv::Mat& data, std::vector<id_type>& results, size_t numResults = 1);
+    void query(const cv::Mat& data, std::vector<id_type>& results, size_t numResults = 1) const;
 
     std::string getCategory() const;
 
