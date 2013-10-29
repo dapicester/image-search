@@ -18,7 +18,7 @@ typedef std::vector<timestamp_t> TimestampVector;
 typedef std::map<std::string, std::string> ParamsMap;
 
 /// @brief Execution times for a single index configuration.
-struct IndexTimings {
+struct Timings {
     ParamsMap params;        ///< Test parameters.
     TimestampVector timings; ///< Execution times.
 
@@ -43,7 +43,7 @@ private:
 };
 
 /// @brief Shortcut.
-typedef std::vector<IndexTimings> IndexTimingsVector;
+typedef std::vector<Timings> TimingsVector;
 
 } /* namespace perf */
 

@@ -18,14 +18,14 @@ static const std::string SAVE_FILE     = "query_index_ann.xml";
 
 /// @brief Index query time vs. max number of comparisons.
 int main(int, char**) {
-    perf::IndexTimingsVector results;
+    perf::TimingsVector results;
 
     cv::Mat data = perf::getRandomData(LEN, NUM_DATA);
     vis::Index index;
     index.build("benchmark", data, TYPE, NUM_TREES);
 
     BOOST_FOREACH(size_t maxComparisons, perf::MAX_COMPARISONS) {
-        perf::IndexTimings t;
+        perf::Timings t;
         t.addParam("numData", NUM_DATA);
         t.addParam("length", LEN);
         t.addParam("numTrees", NUM_TREES);

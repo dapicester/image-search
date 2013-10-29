@@ -15,10 +15,10 @@ static const std::string SAVE_FILE     = "query_index.xml";
 
 /// @brief Index query time vs. number of records.
 int main(int, char**) {
-    perf::IndexTimingsVector results;
+    perf::TimingsVector results;
 
     BOOST_FOREACH(size_t numData, perf::NUM_DATA) {
-        perf::IndexTimings t;
+        perf::Timings t;
         t.addParam("numData", numData);
         t.addParam("length", LEN);
 

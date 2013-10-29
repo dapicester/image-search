@@ -16,14 +16,14 @@ static const std::string SAVE_FILE     = "query_index_neighbors.xml";
 
 /// @brief Index query time vs. number of neighbors.
 int main(int, char**) {
-    perf::IndexTimingsVector results;
+    perf::TimingsVector results;
 
     cv::Mat data = perf::getRandomData(LEN, NUM_DATA);
     vis::Index index;
     index.build("benchmark", data, TYPE);
 
     BOOST_FOREACH(size_t numNeighbors, perf::NUM_NEIGHBORS) {
-        perf::IndexTimings t;
+        perf::Timings t;
         t.addParam("numData", NUM_DATA);
         t.addParam("length", LEN);
         t.addParam("numNeigbors", numNeighbors);
