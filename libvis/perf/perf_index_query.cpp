@@ -1,36 +1,36 @@
 /**
  * @file perf_index_query.cpp
- * @brief Simple benchmark on index querying performance.
+ * @brief Simple benchmark on index querying.
  * @author Paolo D'Apice
  */
 
 #include "perf_data.hpp"
 #include "perf_index.hpp"
 #include "perf_utils.hpp"
-#include <cstdio>
 
 using namespace perf;
 
+static const vis::DescriptorsType TYPE = vis::HOG_HSV;
+static const size_t LEN = getLength(TYPE);
+static const std::string SAVE_FILE = "query_index.xml";
+
+/// @brief Index query time vs. number of records.
 int main(int, char**) {
     IndexTimingsVector results;
-    results.resize(SIZES.size());
 
-    for (int i = 0; i < SIZES.size(); i++) {
+    BOOST_FOREACH(size_t size, SIZES) {
         IndexTimings t;
-        t.size = SIZES[i];
-        t.type = vis::HOG_HSV;
+        t.addParam("size", size);
 
-        size_t length = getLength(t.type);
-
-        cv::Mat data = getRandomData(length, t.size);
+        cv::Mat data = getRandomData(LEN, size);
 
         vis::Index index;
-        index.build("benchmark", data, t.type);
+        index.build("benchmark", data, TYPE);
 
-        t.timings = perfQueryIndex(index, data);
+        t.setTimings(perfQueryIndex(index, data));
 
-        results[i] = t;
+        results.push_back(t);
     }
 
-    perf::save("query_index.xml", results);
+    perf::save(SAVE_FILE, results);
 }

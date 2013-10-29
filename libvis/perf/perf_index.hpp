@@ -11,6 +11,7 @@
 #include "index.hpp"
 #include "utils/posixtimer.hpp"
 #include <boost/array.hpp>
+#include <boost/foreach.hpp>
 
 namespace perf {
 

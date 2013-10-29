@@ -7,7 +7,6 @@
 #include "perf_data.hpp"
 #include "perf_index.hpp"
 #include "perf_utils.hpp"
-#include <boost/foreach.hpp>
 
 using namespace perf;
 
