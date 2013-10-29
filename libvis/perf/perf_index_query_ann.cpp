@@ -11,6 +11,7 @@
 static const size_t NUM_DATA           = 1e5;
 static const vis::DescriptorsType TYPE = vis::HOG_HSV;
 static const size_t LEN                = perf::getLength(TYPE);
+static const size_t NUM_TREES          = 4;
 static const size_t NUM_NEIGHBORS      = 15;
 
 static const std::string SAVE_FILE     = "query_index_ann.xml";
@@ -21,12 +22,13 @@ int main(int, char**) {
 
     cv::Mat data = perf::getRandomData(LEN, NUM_DATA);
     vis::Index index;
-    index.build("benchmark", data, TYPE);
+    index.build("benchmark", data, TYPE, NUM_TREES);
 
     BOOST_FOREACH(size_t maxComparisons, perf::MAX_COMPARISONS) {
         perf::IndexTimings t;
         t.addParam("numData", NUM_DATA);
         t.addParam("length", LEN);
+        t.addParam("numTrees", NUM_TREES);
         t.addParam("numNeigbors", NUM_NEIGHBORS);
         t.addParam("maxComparisons", maxComparisons);
         t.setTimings(perf::queryIndex(index, data, NUM_NEIGHBORS, maxComparisons));
