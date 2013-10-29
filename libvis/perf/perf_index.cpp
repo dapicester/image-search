@@ -28,7 +28,8 @@ perfBuildIndex(const cv::Mat& data, vis::DescriptorsType type) {
 }
 
 std::vector<timestamp_t>
-perfQueryIndex(const vis::Index& index, const cv::Mat& data, size_t neighbors) {
+perfQueryIndex(const vis::Index& index, const cv::Mat& data,
+        size_t neighbors, size_t maxComparisons) {
     srand(time(NULL));
     PosixTimer timer;
     std::vector<timestamp_t> timings;
@@ -40,7 +41,7 @@ perfQueryIndex(const vis::Index& index, const cv::Mat& data, size_t neighbors) {
 
         timer.tic();
         std::vector<vis::Index::id_type> matches;
-        index.query(query, matches, neighbors);
+        index.query(query, matches, neighbors, maxComparisons);
         timer.toc();
 
         timestamp_t elapsed = timer.getMillis();

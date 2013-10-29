@@ -34,3 +34,7 @@ add_perf_test(NAME perf_index_query_neighbors
     SOURCES perf_index_query_neighbors.cpp perf_index.cpp
     LINK_LIBRARIES vis)
 
+add_perf_test(NAME perf_index_query_ann
+    SOURCES perf_index_query_ann.cpp perf_index.cpp
+    LINK_LIBRARIES vis)
+

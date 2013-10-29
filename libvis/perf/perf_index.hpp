@@ -33,7 +33,8 @@ perfBuildIndex(const cv::Mat& data, vis::DescriptorsType type);
 
 /// @brief Query index with given descriptors matrix.
 std::vector<timestamp_t>
-perfQueryIndex(const vis::Index& index, const cv::Mat& data, size_t neighbors = 15);
+perfQueryIndex(const vis::Index& index, const cv::Mat& data,
+               size_t neighbors = 15, size_t maxComparisons = 0);
 
 } /* namespace perf */
 
