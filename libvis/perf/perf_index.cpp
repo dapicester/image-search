@@ -9,7 +9,7 @@
 namespace perf {
 
 std::vector<timestamp_t>
-perfBuildIndex(const cv::Mat& data, vis::DescriptorsType type) {
+buildIndex(const cv::Mat& data, vis::DescriptorsType type) {
     PosixTimer timer;
     std::vector<timestamp_t> timings;
 
@@ -28,7 +28,7 @@ perfBuildIndex(const cv::Mat& data, vis::DescriptorsType type) {
 }
 
 std::vector<timestamp_t>
-perfQueryIndex(const vis::Index& index, const cv::Mat& data,
+queryIndex(const vis::Index& index, const cv::Mat& data,
         size_t neighbors, size_t maxComparisons) {
     srand(time(NULL));
     PosixTimer timer;
