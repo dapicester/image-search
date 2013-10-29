@@ -32,12 +32,22 @@ public:
      * @param category A string identifier for this index.
      * @param data Matrix containing N rows where the \a n-th row corresponds to \a n-th indexed image.
      * @param type Descriptors type.
+     * @param numTree Number of trees in the KD-forest.
      */
     void build(const std::string& category,
                const cv::Mat& data,
-               DescriptorsType type);
+               DescriptorsType type,
+               size_t numTrees = 1);
 
-    void build(const std::string& category, const Descriptors& descriptors);
+    /**
+     * @brief Build an index.
+     * @param category A string identifier for this index.
+     * @param type Descriptors wrapper.
+     * @param numTree Number of trees in the KD-forest.
+     */
+    void build(const std::string& category,
+               const Descriptors& descriptors,
+               size_t numTrees = 1);
 
     /// @brief Type of the returned id used for querying.
     typedef size_t id_type;

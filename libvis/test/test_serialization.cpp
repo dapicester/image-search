@@ -114,10 +114,12 @@ BOOST_AUTO_TEST_CASE(kdtree_serialization) {
     int numData = 100;
     cv::Mat data = test::getTestData<float>(dimension, numData);
 
+    int numTrees = 2;
+
     {
         vis::BinarySerializer<Tree>::Saver saver;
 
-        Tree tree(data);
+        Tree tree(data, numTrees);
         saver("kdtree.dat", tree);
     }
     {
@@ -125,6 +127,8 @@ BOOST_AUTO_TEST_CASE(kdtree_serialization) {
 
         Tree tree;
         loader("kdtree.dat", tree);
+
+        BOOST_CHECK_EQUAL(numTrees, tree.getNumTrees());
 
         // query
         srand(time(NULL));

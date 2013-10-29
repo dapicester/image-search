@@ -39,6 +39,8 @@ public:
 
     ~KDTree();
 
+    vl_size getNumTrees() const;
+
     /// @brief Queries a KD-tree.
     template <typename Record>
     std::vector<Record> search(const cv::Mat& query,

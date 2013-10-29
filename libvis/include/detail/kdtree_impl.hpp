@@ -79,6 +79,12 @@ KDTree<T>::~KDTree() {
     if (dataPtr != NULL) vl_free(dataPtr);
 }
 
+template <typename T>
+vl_size
+KDTree<T>::getNumTrees() const {
+    return vl_kdforest_get_num_trees(forest);
+}
+
 // template function declaration
 template <typename T, typename N>
 void

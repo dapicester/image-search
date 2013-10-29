@@ -19,17 +19,17 @@ Index::Index() {}
 Index::~Index() {}
 
 void
-Index::build(const std::string& cat, const cv::Mat& data, DescriptorsType t) {
+Index::build(const std::string& cat, const cv::Mat& data, DescriptorsType t, size_t numTrees) {
     category = cat;
     type = t;
-    kdtree.reset(new KDTree<float>(data));
+    kdtree.reset(new KDTree<float>(data, numTrees));
 }
 
 void
-Index::build(const std::string& cat, const Descriptors& descriptors) {
+Index::build(const std::string& cat, const Descriptors& descriptors, size_t numTrees) {
     category = cat;
     type = descriptors.getType();
-    kdtree.reset(new KDTree<float>(descriptors.get()));
+    kdtree.reset(new KDTree<float>(descriptors.get(), numTrees));
 }
 
 void
