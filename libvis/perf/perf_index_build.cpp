@@ -1,33 +1,34 @@
 /**
  * @file perf_index_build.cpp
- * @brief Simple benchmark on index building performance.
+ * @brief Simple benchmark on index building.
  * @author Paolo D'Apice
  */
 
 #include "perf_data.hpp"
 #include "perf_index.hpp"
 #include "perf_utils.hpp"
-#include <cstdio>
+#include <boost/foreach.hpp>
 
 using namespace perf;
 
+static const vis::DescriptorsType TYPE = vis::HOG_HSV;
+static const size_t LEN = getLength(TYPE);
+static const std::string SAVE_FILE = "build_index.xml";
+
+/// @brief Index build time vs. number of records.
 int main(int, char**) {
     IndexTimingsVector results;
-    results.resize(SIZES.size());
 
-    for(int i = 0; i < SIZES.size(); i++) {
+    BOOST_FOREACH(size_t size, SIZES) {
         IndexTimings t;
-        t.size = SIZES[i];
-        t.type = vis::HOG_HSV;
+        t.addParam("size", size);
 
-        size_t length = getLength(t.type);
+        cv::Mat data = getRandomData(LEN, size);
+        t.setTimings(perfBuildIndex(data, TYPE));
 
-        cv::Mat data = getRandomData(length, t.size);
-
-        t.timings = perfBuildIndex(data, t.type);
-
-        results[i] = t;
+        results.push_back(t);
     }
 
-    perf::save("build_index.xml", results);
+    perf::save(SAVE_FILE, results);
 }
+

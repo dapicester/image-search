@@ -16,10 +16,15 @@ namespace perf {
 
 /// Number of times a single test is executed.
 static const int NUM_EXECUTIONS = 10;
-/// Data numbers.
-static const boost::array<size_t,3> SIZES = { 1e4, 1e5, 1e6 };
 
-//static const boost::array<vis::DescriptorsType,3> TYPES = { vis::HSV, vis::HOG, vis::HOG_HSV };
+/// Number of data samples.
+static const boost::array<size_t,4> SIZES = { 1e3, 1e4, 1e5, 1e6 };
+
+/// Number of neighbors returned by query.
+static const boost::array<size_t,5> NUM_NEIGHBORS = { 1, 5, 10, 20, 50 };
+
+/// Max comparisons for ANN.
+static const boost::array<size_t,5> MAX_COMPARISONS = { 0, 10, 100, 1000, 10000 };
 
 /// @brief Build index on given descriptors matrix.
 std::vector<timestamp_t>

@@ -10,14 +10,26 @@
 #include "descriptors_type.hpp"
 #include "perf_serialization.hpp"
 #include "utils/posixtimer.hpp"
+#include <boost/lexical_cast.hpp>
 
 namespace perf {
 
+typedef std::vector<timestamp_t> TimestampVector;
+typedef std::map<std::string, std::string> ParamsMap;
+
 /// @brief Execution times for a single index configuration.
 struct IndexTimings {
-    size_t size;                      ///< Number of records.
-    vis::DescriptorsType type;        ///< Actual descriptor.
-    std::vector<timestamp_t> timings; ///< Execution times.
+    ParamsMap params;        ///< Test parameters.
+    TimestampVector timings; ///< Execution times.
+
+    template <typename T>
+    void addParam(const std::string& name, T value) {
+        params[name] = boost::lexical_cast<std::string>(value);
+    }
+
+    void setTimings(const TimestampVector& values) {
+        timings = values;
+    }
 
 private:
     friend class boost::serialization::access;
@@ -25,9 +37,8 @@ private:
     /// XML serialization.
     template <typename Archive>
     void serialize(Archive& ar, const unsigned int version) {
-        ar & boost::serialization::make_nvp("size", size);
-        ar & boost::serialization::make_nvp("type", type);
-        ar & boost::serialization::make_nvp("timings", timings);
+        ar & BOOST_SERIALIZATION_NVP(params);
+        ar & BOOST_SERIALIZATION_NVP(timings);
     }
 };
 
