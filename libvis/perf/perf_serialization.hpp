@@ -18,7 +18,7 @@ namespace perf {
 
 /// Save results to XML.
 template <typename Object>
-void save(const std::string& filename, Object results) {
+void save(const std::string& filename, const Object& results) {
     std::ofstream file(filename.c_str());
     {
         boost::archive::xml_oarchive ar(file, boost::archive::no_header);
