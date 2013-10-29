@@ -17,7 +17,7 @@ extern "C" {
 BOOST_SERIALIZATION_SPLIT_FREE(VlKDForest)
 
 /// Taken from VLFeat's toolbox/misc/kdtree.h
-inline void
+static void
 restore_parent_recursively(VlKDTree* tree, int nodeIndex, int* numNodesToVisit) {
     VlKDTreeNode* node = tree->nodes + nodeIndex;
     int lowerChild = node->lowerChild;

@@ -193,7 +193,7 @@ enum NormalizeMode {
  * @brief Equivalent of Matlab hist function.
  * Works only with floats!
  */
-inline
+static
 cv::Mat
 hist(const cv::Mat& in, int numbins, NormalizeMode normalize = NONE) {
     BOOST_ASSERT_MSG(in.type() == cv::DataType<float>::type, "Support only float data type");

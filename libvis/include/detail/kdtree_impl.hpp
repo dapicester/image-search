@@ -33,7 +33,7 @@ printInfo(const VlKDForest* forest, vl_size numSamples) {
             vl_get_vector_comparison_type_name(kdtree::distance));
 }
 
-inline void
+static void
 printTreeInfo(const VlKDForest* forest) {
     for (vl_uindex ti = 0; ti < vl_kdforest_get_num_trees(forest); ++ti) {
         printf("vl_kdforestbuild: tree %llu: depth %llu, num nodes %llu\n",

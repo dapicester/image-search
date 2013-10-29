@@ -33,7 +33,7 @@ operator<<(std::ostream& os, const std::vector<T>& v) {
 }
 
 /// Print multidimensional matrix (OpenCV does not support it)
-inline
+static
 void
 printMat3(const cv::Mat& mat, const int* dims, bool showindices = false) {
     if (not showindices) std::cout << '[';
