@@ -1,0 +1,13 @@
+/**
+ * @file dir.h
+ * @brief Fullpath to image dir used during performance tests (preprocessed by CMake).
+ * @author Paolo D'Apice
+ */
+
+#ifndef TEST_DIR_H
+#define TEST_DIR_H
+
+#define DATA_DIR    "${DATA_DIR}"
+
+#endif
+
