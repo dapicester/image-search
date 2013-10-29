@@ -21,6 +21,9 @@ static const int NUM_EXECUTIONS = 10;
 /// Number of data samples.
 static const boost::array<size_t,4> NUM_DATA = { 1e3, 1e4, 1e5, 1e6 };
 
+/// Number of trees in the kd-forest.
+static const boost::array<size_t,4> NUM_TREES = { 1, 2, 4, 8 };
+
 /// Number of neighbors returned by query.
 static const boost::array<size_t,5> NUM_NEIGHBORS = { 1, 5, 10, 20, 50 };
 
@@ -29,7 +32,7 @@ static const boost::array<size_t,5> MAX_COMPARISONS = { 0, 10, 100, 1000, 10000 
 
 /// @brief Build index on given descriptors matrix.
 std::vector<timestamp_t>
-buildIndex(const cv::Mat& data, vis::DescriptorsType type);
+buildIndex(const cv::Mat& data, vis::DescriptorsType type, size_t numTrees = 1);
 
 /// @brief Query index with given descriptors matrix.
 std::vector<timestamp_t>

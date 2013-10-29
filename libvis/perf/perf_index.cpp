@@ -9,14 +9,14 @@
 namespace perf {
 
 std::vector<timestamp_t>
-buildIndex(const cv::Mat& data, vis::DescriptorsType type) {
+buildIndex(const cv::Mat& data, vis::DescriptorsType type, size_t numTrees) {
     PosixTimer timer;
     std::vector<timestamp_t> timings;
 
     for (int i = 0; i < NUM_EXECUTIONS; i++) {
         timer.tic();
         vis::Index index;
-        index.build("benchmark", data, type);
+        index.build("benchmark", data, type, numTrees);
         timer.toc();
 
         timestamp_t elapsed = timer.getMillis();
