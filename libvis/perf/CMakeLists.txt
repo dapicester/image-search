@@ -53,3 +53,7 @@ add_perf_test(NAME perf_descriptors
     SOURCES perf_descriptors.cpp
     LINK_LIBRARIES vis)
 
+add_executable(perf_results perf_results.cpp)
+target_link_libraries(perf_results ${Boost_LIBRARIES})
+message(STATUS "  added performance results tool: perf_results")
+

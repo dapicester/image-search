@@ -7,6 +7,7 @@
 #ifndef VIS_PERF_SERIALIZATION_HPP
 #define VIS_PERF_SERIALIZATION_HPP
 
+#include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/map.hpp>
@@ -27,6 +28,19 @@ void save(const std::string& filename, const Object& results) {
     file.close();
 
     std::cout << "Results saved to file: " << filename << std::endl;
+}
+
+/// Load results from XML.
+template <typename Object>
+void load(const std::string& filename, Object& results) {
+    std::ifstream file(filename.c_str());
+    {
+        boost::archive::xml_iarchive ar(file, boost::archive::no_header);
+        ar >> BOOST_SERIALIZATION_NVP(results);
+    }
+    file.close();
+
+    std::cout << "Results loaded from file: " << filename << std::endl;
 }
 
 } /* namespace perf */
