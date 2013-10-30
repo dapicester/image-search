@@ -83,7 +83,21 @@ private:
         ar & BOOST_SERIALIZATION_NVP(mean);
         ar & BOOST_SERIALIZATION_NVP(stdev);
     }
+
+    friend std::ostream& operator<<(std::ostream&, const Record&);
 };
+
+template <typename T>
+std::ostream&
+operator<<(std::ostream& os, const std::vector<T>& v) {
+    std::copy(v.begin(), v.end(), std::ostream_iterator<T>(os, "\n"));
+    return os;
+}
+
+std::ostream&
+operator<<(std::ostream& os, const Record& r) {
+    return os << r.value << ' ' << r.mean << ' ' << r.stdev;
+}
 
 /// @brief Performance test results.
 struct ResultsTable {

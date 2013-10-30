@@ -8,6 +8,7 @@
 #define TEST_DIR_H
 
 #define DATA_DIR    "${DATA_DIR}"
+#define PLOT_DIR    "${PLOT_DIR}"
 
 #endif
 
