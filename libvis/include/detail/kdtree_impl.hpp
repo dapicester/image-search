@@ -75,7 +75,7 @@ KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees, bool verbose) {
 
 template <typename T>
 KDTree<T>::~KDTree() {
-    vl_kdforest_delete(forest);
+    if (forest  != NULL) vl_kdforest_delete(forest);
     if (dataPtr != NULL) vl_free(dataPtr);
 }
 
