@@ -22,8 +22,6 @@ static const fs::path imageDir(IMAGES_DIR);
 static const std::string LENA = (imageDir / "lena.png").string();       ///< Full path to lena.png
 static const std::string PEPPERS = (imageDir / "peppers.png").string(); ///< Full path to peppers.png
 
-namespace {
-
 /**
  * @brief Load and standardize an image.
  * @param[in] name Full path to image file.
@@ -63,8 +61,6 @@ struct ImageFixture {
 struct DirFixture {
     std::vector<fs::path> files;
 };
-
-} /* anonymous namespace */
 
 /// @brief Test fixture loading the lena image.
 struct Lena : ImageFixture {
