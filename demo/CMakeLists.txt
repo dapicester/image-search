@@ -19,13 +19,18 @@ set(demo_SRCS
     src/demogui.cpp
     src/demogui_private.cpp
     src/demogui_slots.cpp
+    src/demogui_images.cpp
     src/utils.cpp
     src/main.cpp)
 
-set(demo_UIS src/demo.ui)
-qt4_wrap_ui(demo_UIS_H ${demo_UIS})
+set(demo_UIS
+    src/demo.ui
+    src/images.ui)
 
-set(demo_MOCS src/demogui.hpp)
+set(demo_MOCS
+    src/demogui.hpp)
+
+qt4_wrap_ui(demo_UIS_H ${demo_UIS})
 qt4_wrap_cpp(demo_MOCS_SRCS ${demo_MOCS})
 
 list(APPEND includes ${CMAKE_CURRENT_BINARY_DIR})

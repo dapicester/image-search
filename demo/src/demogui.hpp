@@ -36,6 +36,7 @@ public:
     ~DemoGui();
 
 public slots:
+    /// Show all images in category.
     void showAll();
 
     /// Search images.

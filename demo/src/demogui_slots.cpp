@@ -11,13 +11,6 @@
 #include <opencv2/core/core.hpp>
 
 void
-DemoGui::showAll() {
-    // TODO
-    qDebug() << "show all";
-    messageBox("TODO");
-}
-
-void
 DemoGui::search() {
     if (not loadIndex()) {
         messageBox("No index file found, please recompute index.", QMessageBox::Critical);
