@@ -27,7 +27,7 @@ macro(add_unit_test)
     endif()
 
     if (UNIT_TEST_DISABLED)
-        message(STATUS "  skipped test: ${testName}")
+        message(STATUS "* skipped test: ${testName}")
     else()
         add_test(NAME ${testName}
                  WORKING_DIRECTORY ${UNIT_TEST_WORKING_DIRECTORY}
