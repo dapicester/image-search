@@ -6,10 +6,11 @@
 #                      [ARGS arg1 arg2 ...]
 #                      [TAG tag])
 # It makes available the variable UNIT_TEST_TARGETS containing all the unit tests
-include(MacroParseArguments)
 macro(add_unit_test)
-    parse_arguments(UNIT_TEST "NAME;SOURCES;DISABLED;LINK_LIBRARIES;WORKING_DIRECTORY;ARGS;TAG" ${ARGN})
-    list(GET UNIT_TEST_DEFAULT_ARGS 0 UNIT_TEST_NAME)
+    set(options DISABLED)
+    set(oneValueArgs NAME WORKING_DIRECTORY TAG)
+    set(multiValueArgs SOURCES LINK_LIBRARIES ARGS)
+    cmake_parse_arguments(UNIT_TEST "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if(NOT UNIT_TEST_NAME)
         message(FATAL_ERROR "must specify the test name")
