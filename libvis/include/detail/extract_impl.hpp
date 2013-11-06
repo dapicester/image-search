@@ -24,9 +24,8 @@ extract(const std::vector<boost::filesystem::path>& names,
     // TODO openmp parfor
     size_t numImages = names.size();
     size_t i = 0;
-    std::vector<boost::filesystem::path>::const_iterator it = names.begin(), end = names.end();
 
-    for (; it != end; ++it) {
+    for (auto it = names.begin(); it != names.end(); ++it) {
         const std::string& name = it->string();
         printf("  Extracting features from %s (%lu/%lu)\n", name.c_str(), i+1, numImages);
 
