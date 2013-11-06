@@ -11,7 +11,7 @@
 #include "utils/data.hpp"
 #include "utils/print.hpp"
 #include <iostream>
-#include <cstdlib>
+#include <random>
 
 using cv::Mat;
 using vis::KDTree;
@@ -32,7 +32,6 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
     Mat queries(dimension, numQueries, data.type());
 
     // pick random records within data
-    srand(time(NULL));
     for (int i = 0; i < numQueries; i++) {
         int index = rand() % numData;
         indices.at<int>(i) = index;

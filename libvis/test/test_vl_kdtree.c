@@ -8,7 +8,7 @@
 #include <vl/kdtree.h>
 #include <stdlib.h>
 
-#define PRINT 1
+#define PRINT 0
 
 int main(int argc, char** argv) {
     vl_size numDimensions = 2;
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
         for (i = 0; i < numDimensions * numSamples; ++i) {
             *Xi++ = vl_rand_real1(rand);
         }
-#if 0
+#if PRINT
         VL_PRINTF("data:\n");
         for (i = 0; i < numDimensions; ++i) {
             VL_PRINTF("[");
@@ -112,3 +112,4 @@ int main(int argc, char** argv) {
 
     return 0 ;
 }
+

@@ -32,13 +32,16 @@ struct KDTreeIndex {
 template <typename T>
 class KDTree {
 public:
+    /// Default constructor.
     KDTree();
 
-    /// @brief Builds a new KD-Tree retaining a copy of the input matrix.
-    KDTree(const cv::Mat& data, vl_size numTrees = 1, bool verbose = true);
-
+    /// Default destructor.
     ~KDTree();
 
+    /// @brief Builds a new KD-Tree retaining a copy of the input matrix.
+    KDTree(const cv::Mat& data, vl_size numTrees = 1, bool verbose = false); // TODO add setVerbose(bool)
+
+    /// @return The actual number of trees.
     vl_size getNumTrees() const;
 
     /// @brief Queries a KD-tree.
