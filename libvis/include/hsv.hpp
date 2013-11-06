@@ -19,16 +19,19 @@ namespace hsv {
 /// @brief Extracts HSV color histogram.
 class HsvExtractor : private boost::noncopyable {
 public:
+    /// Constructor.
     HsvExtractor(const cv::Vec3i& levels = hsv::levels, bool medfilt = true);
+
+    /// Default destructor.
     ~HsvExtractor();
 
     /// @brief Extracts HSV color histogram from a color single-precision image.
-    // XXX gcc doesn't like cv::OutputArray& while for clang there is no problem
-    cv::Mat extract(const cv::Mat& image, bool normalize = true, cv::OutputArray quantized = cv::noArray()) const;
+    cv::Mat extract(const cv::Mat& image, bool normalize = true, cv::OutputArray& quantized = cv::noArray()) const;
 
     /// @brief Render the histogram to a displayable image.
     cv::Mat render(const cv::Mat& histogram) const;
 
+    /// @return The number of bins in the histogram.
     size_t getNumBins() const;
 
 private:
