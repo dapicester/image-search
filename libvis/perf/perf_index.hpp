@@ -19,7 +19,7 @@ namespace perf {
 static const int NUM_EXECUTIONS = 10;
 
 /// Number of data samples.
-static const boost::array<size_t,4> NUM_DATA = { 1e3, 1e4, 1e5, 1e6 };
+static const boost::array<size_t,4> NUM_DATA = { 1000, 10000, 100000, 1000000 };
 
 /// Number of trees in the kd-forest.
 static const boost::array<size_t,4> NUM_TREES = { 1, 2, 4, 8 };
@@ -28,7 +28,7 @@ static const boost::array<size_t,4> NUM_TREES = { 1, 2, 4, 8 };
 static const boost::array<size_t,5> NUM_NEIGHBORS = { 1, 5, 10, 20, 50 };
 
 /// Max comparisons for ANN.
-static const boost::array<size_t,5> MAX_COMPARISONS = { 0, 1e6, 1e5, 1e4, 1e3 };
+static const boost::array<size_t,5> MAX_COMPARISONS = { 0, 1000000, 100000, 10000, 100 };
 
 /// @brief Build index on given descriptors matrix.
 std::vector<timestamp_t>

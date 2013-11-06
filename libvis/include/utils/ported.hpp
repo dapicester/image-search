@@ -200,7 +200,7 @@ hist(const cv::Mat& in, int numbins, NormalizeMode normalize = NONE) {
 
     double min, max;
     cv::minMaxIdx(in, &min, &max);
-    float range[] = { min, max + 0.1}; // XXX verify that range is correct
+    float range[] = { static_cast<float>(min), static_cast<float>(max + 0.1)}; // XXX verify that range is correct
     const float* histRange = { range };
 
     cv::Mat histogram;
