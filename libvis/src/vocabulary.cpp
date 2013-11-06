@@ -9,7 +9,7 @@
 #include "extract.hpp"
 #include "kmeans.hpp"
 #include "serialization.hpp"
-#include <cstdio>
+#include <iostream>
 
 namespace vis {
 
@@ -40,7 +40,7 @@ Vocabulary::fromImageList(
     HogVocabularyCallback cb(numFeatures);
     extract(names, descriptors, cb);
 
-    printf("Computing visual words and kdtree ...\n");
+    std::cout << "Computing visual words and kdtree ..." << std::endl;
     Vocabulary* vocabulary = new Vocabulary(category, descriptors, numWords);
 
     return vocabulary;
@@ -60,17 +60,17 @@ Vocabulary::quantize(const Mat& descriptors) const {
 
 Vocabulary*
 Vocabulary::load(const fs::path& file) {
-    printf("Loading vocabulary from file %s ... ", file.string().c_str());
+    std::cout << "Loading vocabulary from file " << file << " ... ";
     Vocabulary* vocabulary = vis::load<Vocabulary, BinarySerializer>(file);
-    printf("done\n");
+    std::cout << "done" << std::endl;
     return vocabulary;
 }
 
 void
 Vocabulary::save(const fs::path& file) const {
-    printf("Saving vocabulary to file %s ... ", file.string().c_str());
+    std::cout << "Saving vocabulary to file " << file << " ... ";
     vis::save<Vocabulary, BinarySerializer>(file, *this);
-    printf("done\n");
+    std::cout << "done" << std::endl;
 }
 
 } /* namespace vis */

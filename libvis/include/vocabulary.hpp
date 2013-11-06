@@ -27,7 +27,10 @@ namespace vocabulary {
 /// @brief Vocabulary of visual words of HOG descriptors.
 class Vocabulary : private boost::noncopyable {
 public:
+    /// Default constructor.
     Vocabulary();
+
+    /// Default destructor.
     ~Vocabulary();
 
     /// @brief Computes vocabulary for the given image file paths.
@@ -45,8 +48,10 @@ public:
     /// @brief Quantize the input descriptors into words.
     cv::Mat quantize(const cv::Mat& descriptors) const;
 
+    /// @return The actual number of words in dictionary.
     size_t getNumWords() const;
 
+    /// @return The category for which the dictionary has been built.
     std::string getCategory() const;
 
 private:
