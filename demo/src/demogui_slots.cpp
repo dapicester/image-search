@@ -45,7 +45,12 @@ DemoGui::search() {
 
         int queryId = queryList->currentRow();
         qDebug() << "query:" << queryId << queryNames[queryId];
-        query = queries->get().col(queryId);
+        try {
+            query = queries->get().col(queryId);
+        } catch (...) {
+            messageBox("Query file found, please recompute queries.", QMessageBox::Critical);
+            return;
+        }
     }
     Q_ASSERT(query.cols == 1);
 
