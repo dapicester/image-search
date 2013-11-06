@@ -18,7 +18,10 @@ namespace vis {
 template <typename T>
 class KMeans {
 public:
-    KMeans(bool verbose = true);
+    /// Default constructor.
+    KMeans(bool verbose = false); // TODO add setVerbose(bool)
+
+    /// Default destructor.
     ~KMeans();
 
     /**
