@@ -14,8 +14,6 @@
 
 namespace vis {
 
-// TODO move non-template implementations to cpp file
-
 enum ColonDimension {
     ROWS,
     COLUMNS,
@@ -38,7 +36,7 @@ colon(const cv::Mat& in, const cv::Mat& indices, ColonDimension dim) {
     const int length = std::max(indices.rows, indices.cols);
     cv::Mat out;
 
-    cv::MatConstIterator_<T> it = indices.begin<T>(), end = indices.end<T>();
+    auto it = indices.begin<T>(), end = indices.end<T>();
     // TODO: switch on channels too
     switch (dim) {
     case COLUMNS:
@@ -92,13 +90,13 @@ linspace(T min, T max, size_t n) {
 /// @brief Round to the nearest integer
 template <typename T>
 double round(T in) {
-    return boost::math::round(in); // TODO use cvRound
+    return boost::math::round(in);
 }
 
 /// @brief Round to the nearest integer
 template <typename T>
 int iround(T in) {
-    return boost::math::iround(in); // TODO use cvRound
+    return boost::math::iround(in);
 }
 
 /**
@@ -108,7 +106,7 @@ template <typename T>
 cv::Mat
 round(const cv::Mat& in) {
     cv::Mat out = in.clone();
-    cv::MatIterator_<T> it = out.begin<T>(), end = out.end<T>();
+    auto it = out.begin<T>(), end = out.end<T>();
     for (; it != end; ++it) {
         *it = round(*it);
     }
@@ -165,12 +163,13 @@ subset(const std::vector<T>& in, size_t num, SubsetMode mode) {
         // FIXME
         throw "not yet implemented!";
     }
-    for( cv::MatConstIterator_<int> it = idx.begin<int>(); it != idx.end<int>(); ++it) {
+
+    for (auto it = idx.begin<int>(); it != idx.end<int>(); ++it) {
         out.push_back(in[*it]);
     }
     BOOST_ASSERT(out.size() == n);
-    return out;
 
+    return out;
 }
 
 /**
@@ -243,6 +242,7 @@ imquantize(const cv::Mat& in, const cv::Mat& levels) {
     return index;
 }
 
+#if 0
 /// Convert row-major index to column-major index.
 inline
 int
@@ -260,6 +260,7 @@ c2r(int index, int rows, int columns) {
     // TODO support more than 2 dimensions
     return r2c(index, columns, rows);
 }
+#endif
 
 /**
  * @brief Equivalent of Matlab ind2sub for a 3-dimensional input.

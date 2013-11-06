@@ -254,6 +254,7 @@ BOOST_AUTO_TEST_CASE(test_imquantize) {
     BOOST_CHECK(test::equals(expected, actual));
 }
 
+#if 0
 typedef int(*func)(int, int, int);
 
 void testOrder(func f, int rows, int cols, int* expected, int num) {
@@ -269,12 +270,15 @@ BOOST_AUTO_TEST_CASE(test_rc) {
     testOrder(vis::c2r, rows, cols, col2row, 6);
     testOrder(vis::r2c, rows, cols, row2col, 6);
 }
+#endif
 
+#if 0
 int at(const Mat& mat, const Vec3i& index) {
     int idx[3];
     for (int i=0; i<3;i++) idx[i] = index[i];
     return mat.at<int>(idx) ;
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(test_ind2sub) {
     {
@@ -293,12 +297,14 @@ BOOST_AUTO_TEST_CASE(test_ind2sub) {
         Mat mat(3, sz, DataType<int>::type, data);
         printMat3(mat, sz, true);
 
+#if 0
         // TODO OpenCV row-major order
-        //BOOST_CHECK_EQUAL(0, mat.at<int>(0,0,0));
-        //BOOST_CHECK_EQUAL(2, mat.at<int>(2,0,0));
-        //BOOST_CHECK_EQUAL(4, mat.at<int>(1,1,0));
-        //BOOST_CHECK_EQUAL(8, mat.at<int>(2,0,1));
-        //BOOST_CHECK_EQUAL(11, mat.at<int>(2,1,1));
+        BOOST_CHECK_EQUAL(0, mat.at<int>(0,0,0));
+        BOOST_CHECK_EQUAL(2, mat.at<int>(2,0,0));
+        BOOST_CHECK_EQUAL(4, mat.at<int>(1,1,0));
+        BOOST_CHECK_EQUAL(8, mat.at<int>(2,0,1));
+        BOOST_CHECK_EQUAL(11, mat.at<int>(2,1,1));
+#endif
     }
 }
 
