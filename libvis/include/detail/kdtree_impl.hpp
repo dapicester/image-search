@@ -176,7 +176,7 @@ KDTree<T>::load(Archive& ar, const unsigned int version) {
     ar & dataSize;
     BOOST_ASSERT_MSG(dataSize > 0, "KDTree has no data");
 
-    dataPtr = new T[dataSize];
+    dataPtr = (T*) vl_calloc(sizeof(T), dataSize);
 
     ar & boost::serialization::make_array(dataPtr, dataSize);
     BOOST_ASSERT_MSG(dataPtr != NULL, "dataPtr is NULL");
