@@ -111,12 +111,12 @@ load(InputArchive& ar, VlKDForest& forest, const unsigned int version) {
 
     VlKDForest* f = vl_kdforest_new(dataType, dimension, numTrees, distance);
     f->numData = numData;
-    f->trees = (VlKDTree**) vl_malloc(sizeof(VlKDTree*) * numTrees);
+    f->trees = (VlKDTree**) vl_calloc(numTrees, sizeof(VlKDTree*));
 
     vl_size maxNumNodes = 0;
 
     for (vl_uindex ti = 0; ti < numTrees; ++ti) {
-        VlKDTree* tree = (VlKDTree*) vl_malloc(sizeof(VlKDTree));
+        VlKDTree* tree = (VlKDTree*) vl_calloc(1, sizeof(VlKDTree));
 
         vl_size numUsedNodes;
         ar & numUsedNodes;
@@ -126,8 +126,8 @@ load(InputArchive& ar, VlKDForest& forest, const unsigned int version) {
         tree->numAllocatedNodes = numUsedNodes;
         tree->numUsedNodes = numUsedNodes;
 
-        tree->nodes = (VlKDTreeNode*) vl_malloc(sizeof(VlKDTreeNode) * numUsedNodes);
-        tree->dataIndex = (VlKDTreeDataIndexEntry*) vl_malloc(sizeof(VlKDTreeDataIndexEntry) * numData);
+        tree->nodes = (VlKDTreeNode*) vl_calloc(numUsedNodes, sizeof(VlKDTreeNode));
+        tree->dataIndex = (VlKDTreeDataIndexEntry*) vl_calloc(numData, sizeof(VlKDTreeDataIndexEntry));
 
         for (vl_uindex ni = 0; ni < numUsedNodes; ++ni) {
             VlKDTreeNode* node = tree->nodes + ni;
@@ -151,7 +151,7 @@ load(InputArchive& ar, VlKDForest& forest, const unsigned int version) {
     }
 
     f->maxNumNodes = maxNumNodes;
-    f->data = NULL;
+    f->data = nullptr;
 
     forest = *f;
 }

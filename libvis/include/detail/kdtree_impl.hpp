@@ -58,7 +58,7 @@ KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees, bool verbose) {
     vl_size numSamples = d.cols;
 
     dataSize = numDimensions * numSamples;
-    dataPtr = (T*) vl_calloc(sizeof(T), dataSize);
+    dataPtr = (T*) vl_calloc(dataSize, sizeof(T));
 
     cv::Mat dt = d.t();
     std::copy(dt.begin<T>(), dt.end<T>(), dataPtr);
@@ -96,8 +96,8 @@ template <typename T>
 void
 getResults(VlKDForest* forest, const T* query, vl_size numQueries,
         vl_size numNeighbors, std::vector<KDTreeNeighbor>& results) {
-    vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
-    double* distances = (double*) vl_calloc(sizeof(double), numNeighbors * numQueries);
+    vl_uint32* indexes = (vl_uint32*) vl_calloc(numNeighbors * numQueries, sizeof(vl_uint32));
+    double* distances = (double*) vl_calloc(numNeighbors * numQueries, sizeof(double));
 
     vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, distances, query);
 
@@ -118,7 +118,7 @@ template <typename T>
 void
 getResults(VlKDForest* forest, const T* query, vl_size numQueries,
         vl_size numNeighbors, std::vector<KDTreeIndex>& results) {
-    vl_uint32* indexes = (vl_uint32*) vl_calloc(sizeof(vl_uint32), numNeighbors * numQueries);
+    vl_uint32* indexes = (vl_uint32*) vl_calloc(numNeighbors * numQueries, sizeof(vl_uint32));
 
     vl_kdforest_query_with_array(forest, indexes, numNeighbors, numQueries, 0, query);
 
@@ -142,7 +142,7 @@ KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComp
     BOOST_ASSERT_MSG(query.rows == vl_kdforest_get_data_dimension(forest), "Query has wrong data dimension");
 
     vl_size numQueries = query.cols;
-    T* queryPtr = (T*) vl_calloc(sizeof(T), numQueries * query.rows);
+    T* queryPtr = (T*) vl_calloc(numQueries * query.rows, sizeof(T));
 
     cv::Mat temp = query.t(); // data is stored by rows, we need columns
     std::copy(temp.begin<T>(), temp.end<T>(), queryPtr);
@@ -176,7 +176,7 @@ KDTree<T>::load(Archive& ar, const unsigned int version) {
     ar & dataSize;
     BOOST_ASSERT_MSG(dataSize > 0, "KDTree has no data");
 
-    dataPtr = (T*) vl_calloc(sizeof(T), dataSize);
+    dataPtr = (T*) vl_calloc(dataSize, sizeof(T));
 
     ar & boost::serialization::make_array(dataPtr, dataSize);
     BOOST_ASSERT_MSG(dataPtr != NULL, "dataPtr is NULL");

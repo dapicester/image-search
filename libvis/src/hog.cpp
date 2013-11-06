@@ -12,7 +12,7 @@ namespace vis {
 
 HogDescriptors::HogDescriptors(vl_size w, vl_size h, vl_size d)
         : width(w), height(h), dimension(d) {
-    data = (float*) vl_malloc(width * height * dimension * sizeof(float));
+    data = (float*) vl_calloc(width * height * dimension, sizeof(float));
 }
 
 HogDescriptors::~HogDescriptors() {
