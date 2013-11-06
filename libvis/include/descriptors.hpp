@@ -20,7 +20,10 @@ namespace vis {
 /// @brief Wrapper to descriptors container.
 class Descriptors {
 public:
+    /// Default constructor.
     Descriptors();
+
+    /// Default destructor.
     ~Descriptors();
 
     /// @brief Compute descriptors using the given callback.
@@ -30,10 +33,13 @@ public:
                  const Callback& cb, // TODO use pointer to function instead of callback object
                  LoadImage flag = vis::COLORS);
 
+    /// @return The actual category.
     std::string getCategory() const;
 
+    /// @return A reference to the descriptor matrix.
     const cv::Mat& get() const;
 
+    /// @return The actual descriptor type.
     vis::DescriptorsType getType() const;
 
     /// @brief Load descriptors from file.

@@ -16,17 +16,17 @@ Descriptors::~Descriptors() {}
 
 Descriptors*
 Descriptors::load(const fs::path& file) {
-    printf("Loading descriptors from file %s ... ", file.string().c_str());
+    std::cout << "Loading descriptors from file " << file << " ... ";
     Descriptors* descriptors = vis::load<Descriptors, BinarySerializer>(file);
-    printf("done\n");
+    std::cout << "done" << std::endl;
     return descriptors;
 }
 
 void
 Descriptors::save(const fs::path& file) const {
-    printf("Saving descriptors to file %s ... ", file.string().c_str());
+    std::cout << "Saving descriptors to file " << file << " ... ";
     vis::save<Descriptors, BinarySerializer>(file, *this);
-    printf("done\n");
+    std::cout << "done" << std::endl;
 }
 
 } /* namespace vis */
