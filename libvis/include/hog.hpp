@@ -19,20 +19,21 @@ class HogExtractor;
 
 /// @brief HOG descriptors data structure.
 struct HogDescriptors {
-    HogDescriptors(vl_size width, vl_size height, vl_size dimension);
-    ~HogDescriptors();
 
-    vl_size getWidth() const { return width; }
-    vl_size getHeight() const { return height; }
-    vl_size getDimension() const { return dimension; }
+    /// Constructor.
+    HogDescriptors(vl_size width, vl_size height, vl_size dimension);
+
+    /// Default destructor.
+    ~HogDescriptors();
 
     /// @brief Convert to OpenCV Mat.
     cv::Mat toMat() const;
 
-private:
     const vl_size width;
     const vl_size height;
     const vl_size dimension;
+
+private:
     float* data;
 
     friend class HogExtractor;
@@ -41,7 +42,10 @@ private:
 /// @brief Extracts HOG.
 class HogExtractor : private boost::noncopyable {
 public:
-    HogExtractor(int cellSize = 8, int numOrientations = 8); // TODO numOrientations = 9
+    /// Constructor.
+    HogExtractor(int cellSize = 8, int numOrientations = 8); // TODO numOrientations = 9 ?
+
+    /// Default destructor.
     ~HogExtractor();
 
     /// @brief Extracts HOG from a gray-scale single-precision image.

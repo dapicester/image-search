@@ -23,9 +23,9 @@ BOOST_FIXTURE_TEST_CASE(compute_hog, test::Lena) {
     vis::HogExtractor extractor;
 
     vis::HogDescriptors descriptors = extractor.extract(image);
-    BOOST_CHECK_EQUAL(descriptors.getWidth(), 16);
-    BOOST_CHECK_EQUAL(descriptors.getHeight(), 16);
-    BOOST_CHECK_EQUAL(descriptors.getDimension(), 3*8+4);
+    BOOST_CHECK_EQUAL(descriptors.width, 16);
+    BOOST_CHECK_EQUAL(descriptors.height, 16);
+    BOOST_CHECK_EQUAL(descriptors.dimension, 3*8+4);
 
     Mat hogMatrix = descriptors.toMat();
     Size size = hogMatrix.size();
