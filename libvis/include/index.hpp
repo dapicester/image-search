@@ -19,13 +19,16 @@ namespace vis {
 
 template <typename T> class KDTree;
 
-/// Index structure.
+/// @brief Image index using a kd-tree.
 class Index {
 public:
     /// Default constructor.
     Index();
 
+    /// Destructor
     ~Index();
+
+     // TODO add setVerbose(bool)
 
     /**
      * @brief Build an index.
@@ -64,8 +67,10 @@ public:
                size_t numResults = 1,
                size_t maxNumComparisons = 0) const;
 
+    /// @return The category of indexed images.
     std::string getCategory() const;
 
+    /// @return The descriptor type used to build the index.
     DescriptorsType getType() const;
 
     /// @brief Read index from file.
@@ -77,7 +82,7 @@ public:
 private:
     std::string category;
     DescriptorsType type;
-    boost::scoped_ptr< KDTree<float> > kdtree;
+    boost::scoped_ptr<KDTree<float>> kdtree;
 
 private:
     friend class boost::serialization::access;
