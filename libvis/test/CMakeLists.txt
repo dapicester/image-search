@@ -22,6 +22,10 @@ add_unit_test(NAME opencv_usage
     SOURCES opencv_usage.cpp
     LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_unit_test(NAME armadillo_usage
+    SOURCES armadillo_usage.cpp
+    LINK_LIBRARIES ${ARMADILLO_LIBRARIES} ${Boost_LIBRARIES})
+
 add_unit_test(NAME vlfeat_usage
     SOURCES vlfeat_usage.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${Boost_LIBRARIES})
