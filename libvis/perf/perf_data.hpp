@@ -10,7 +10,6 @@
 #include "descriptors_type.hpp"
 #include "perf_serialization.hpp"
 #include "utils/timer.hpp"
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <numeric>
 
@@ -107,7 +106,7 @@ struct ResultsTable {
     ResultsTable() {}
     ResultsTable(const std::string& name, const TimingsVector& timings) {
         title = name;
-        BOOST_FOREACH(const Timings& t, timings) {
+        for (const Timings& t : timings) {
             double value = boost::lexical_cast<double>(t.params.at(name));
             std::pair<double, double> ms = meanStDev(t.timings);
             records.push_back(Record(value, ms.first, ms.second));

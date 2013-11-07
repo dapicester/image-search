@@ -20,7 +20,7 @@ int main(int, char**) {
 
     cv::Mat data = perf::getRandomData(LEN, NUM_DATA);
 
-    BOOST_FOREACH(size_t numTrees, perf::NUM_TREES) {
+    for (size_t numTrees : perf::NUM_TREES) {
         perf::Timings t;
         t.addParam("numData", NUM_DATA);
         t.addParam("length", LEN);

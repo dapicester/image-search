@@ -22,7 +22,7 @@ int main(int, char**) {
     vis::Index index;
     index.build("benchmark", data, TYPE);
 
-    BOOST_FOREACH(size_t numNeighbors, perf::NUM_NEIGHBORS) {
+    for (size_t numNeighbors : perf::NUM_NEIGHBORS) {
         perf::Timings t;
         t.addParam("numData", NUM_DATA);
         t.addParam("length", LEN);

@@ -24,7 +24,7 @@ int main(int, char**) {
     vis::Index index;
     index.build("benchmark", data, TYPE, NUM_TREES);
 
-    BOOST_FOREACH(size_t maxComparisons, perf::MAX_COMPARISONS) {
+    for (size_t maxComparisons : perf::MAX_COMPARISONS) {
         perf::Timings t;
         t.addParam("numData", NUM_DATA);
         t.addParam("length", LEN);

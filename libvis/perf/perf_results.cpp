@@ -19,7 +19,7 @@ static const fs::path XML_DIR = fs::path(DATA_DIR) / "perf";
 
 typedef std::pair<std::string, std::string> FileVariablePair;
 
-static const boost::array<FileVariablePair, 6> PAIRS = {
+static const std::array<FileVariablePair, 6> PAIRS = {
         std::make_pair("build_index.xml", "numData"),
         std::make_pair("build_index_numtrees.xml", "numTrees"),
         std::make_pair("query_index.xml", "numData"),
@@ -76,7 +76,7 @@ void process(const std::string& input, const std::string& name) {
 }
 
 int main(int, char**) {
-    BOOST_FOREACH(const FileVariablePair& pair, PAIRS) {
+    for (const FileVariablePair& pair : PAIRS) {
         process(pair.first, pair.second);
     }
 }

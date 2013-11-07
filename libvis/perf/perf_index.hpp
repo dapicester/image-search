@@ -11,7 +11,6 @@
 #include "index.hpp"
 #include "utils/timer.hpp"
 #include <boost/array.hpp>
-#include <boost/foreach.hpp>
 
 namespace perf {
 
@@ -19,16 +18,16 @@ namespace perf {
 static const int NUM_EXECUTIONS = 10;
 
 /// Number of data samples.
-static const boost::array<size_t,4> NUM_DATA = { 1000, 10000, 100000, 1000000 };
+static const std::array<size_t,4> NUM_DATA = { 1000, 10000, 100000, 1000000 };
 
 /// Number of trees in the kd-forest.
-static const boost::array<size_t,4> NUM_TREES = { 1, 2, 4, 8 };
+static const std::array<size_t,4> NUM_TREES = { 1, 2, 4, 8 };
 
 /// Number of neighbors returned by query.
-static const boost::array<size_t,5> NUM_NEIGHBORS = { 1, 5, 10, 20, 50 };
+static const std::array<size_t,5> NUM_NEIGHBORS = { 1, 5, 10, 20, 50 };
 
 /// Max comparisons for ANN.
-static const boost::array<size_t,5> MAX_COMPARISONS = { 0, 1000000, 100000, 10000, 100 };
+static const std::array<size_t,5> MAX_COMPARISONS = { 0, 1000000, 100000, 10000, 100 };
 
 /// @brief Build index on given descriptors matrix.
 std::vector<Timer::timestamp_t>

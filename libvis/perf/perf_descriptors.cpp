@@ -9,15 +9,13 @@
 
 #include "perf_data.hpp"
 #include "perf_utils.hpp"
-#include <boost/array.hpp>
-#include <boost/foreach.hpp>
 #include <boost/scoped_ptr.hpp>
 
 /// Number of times a single test is executed.
 static const int NUM_EXECUTIONS = 10;
 
 /// Available descriptors.
-static const boost::array<vis::DescriptorsType,3> TYPES = { vis::HSV, vis::HOG, vis::HOG_HSV };
+static const std::array<vis::DescriptorsType,3> TYPES = { vis::HSV, vis::HOG, vis::HOG_HSV };
 
 static const std::string SAVE_FILE = "descriptors.xml";
 
@@ -42,7 +40,7 @@ int main(int, char**) {
 
     perf::TimingsVector results;
 
-    BOOST_FOREACH(vis::DescriptorsType type, TYPES) {
+    for (vis::DescriptorsType type : TYPES) {
         size_t length = perf::getLength(type);
 
         perf::Timings t;
@@ -70,9 +68,9 @@ vis::Vocabulary* loadVocabulary() {
 };
 
 std::vector<fs::path> getFiles() {
-    boost::array<std::string,4> categories = { "bag", "shoe", "woman_shoe", "test" };
+    std::array<std::string,4> categories = { "bag", "shoe", "woman_shoe", "test" };
     std::vector<fs::path> files;
-    BOOST_FOREACH(const std::string& category, categories) {
+    for (const std::string& category : categories) {
         fs::path dir = fs::path(DATA_DIR) / category;
         std::vector<fs::path> images = vis::getImageFiles(dir);
         std::copy(images.begin(), images.end(), std::back_inserter(files));

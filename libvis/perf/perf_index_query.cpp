@@ -17,7 +17,7 @@ static const std::string SAVE_FILE     = "query_index.xml";
 int main(int, char**) {
     perf::TimingsVector results;
 
-    BOOST_FOREACH(size_t numData, perf::NUM_DATA) {
+    for (size_t numData : perf::NUM_DATA) {
         perf::Timings t;
         t.addParam("numData", numData);
         t.addParam("length", LEN);
