@@ -33,7 +33,7 @@ std::vector<fs::path> getFiles();
 void extractDescriptors(vis::DescriptorsType, const std::vector<fs::path>&, const vis::Vocabulary*);
 
 /// idem
-std::vector<timestamp_t> computeDescriptors(vis::DescriptorsType, std::vector<fs::path>&, const vis::Vocabulary*);
+std::vector<Timer::timestamp_t> computeDescriptors(vis::DescriptorsType, std::vector<fs::path>&, const vis::Vocabulary*);
 
 /// @brief Process time vs. descriptor type.
 int main(int, char**) {
@@ -105,10 +105,10 @@ inline void extractDescriptors(vis::DescriptorsType type,
     }
 }
 
-std::vector<timestamp_t> computeDescriptors(vis::DescriptorsType type,
+std::vector<Timer::timestamp_t> computeDescriptors(vis::DescriptorsType type,
         std::vector<fs::path>& files, const vis::Vocabulary* vocabulary) {
-    PosixTimer timer;
-    std::vector<timestamp_t> timings;
+    Timer timer;
+    std::vector<Timer::timestamp_t> timings;
 
     for (int i = 0; i < NUM_EXECUTIONS; i++) {
         std::random_shuffle(files.begin(), files.end());
@@ -118,7 +118,7 @@ std::vector<timestamp_t> computeDescriptors(vis::DescriptorsType type,
         extractDescriptors(type, names, vocabulary);
         timer.toc();
 
-        timestamp_t elapsed = timer.getMillis();
+        Timer::timestamp_t elapsed = timer.getMillis();
         printf("Process time (%d): %llu ms\n", i, elapsed);
         timings.push_back(elapsed);
     }

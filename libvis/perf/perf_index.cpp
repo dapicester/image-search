@@ -8,10 +8,10 @@
 
 namespace perf {
 
-std::vector<timestamp_t>
+std::vector<Timer::timestamp_t>
 buildIndex(const cv::Mat& data, vis::DescriptorsType type, size_t numTrees) {
-    PosixTimer timer;
-    std::vector<timestamp_t> timings;
+    Timer timer;
+    std::vector<Timer::timestamp_t> timings;
 
     for (int i = 0; i < NUM_EXECUTIONS; i++) {
         timer.tic();
@@ -19,7 +19,7 @@ buildIndex(const cv::Mat& data, vis::DescriptorsType type, size_t numTrees) {
         index.build("benchmark", data, type, numTrees);
         timer.toc();
 
-        timestamp_t elapsed = timer.getMillis();
+        Timer::timestamp_t elapsed = timer.getMillis();
         printf("Build time (%d): %llu ms\n", i, elapsed);
         timings.push_back(elapsed);
     }
@@ -27,12 +27,11 @@ buildIndex(const cv::Mat& data, vis::DescriptorsType type, size_t numTrees) {
     return timings;
 }
 
-std::vector<timestamp_t>
+std::vector<Timer::timestamp_t>
 queryIndex(const vis::Index& index, const cv::Mat& data,
         size_t neighbors, size_t maxComparisons) {
-    srand(time(NULL));
-    PosixTimer timer;
-    std::vector<timestamp_t> timings;
+    Timer timer;
+    std::vector<Timer::timestamp_t> timings;
 
     for (int i = 0; i < NUM_EXECUTIONS; i++) {
         // query = random select one row
@@ -44,7 +43,7 @@ queryIndex(const vis::Index& index, const cv::Mat& data,
         index.query(query, matches, neighbors, maxComparisons);
         timer.toc();
 
-        timestamp_t elapsed = timer.getMillis();
+        Timer::timestamp_t elapsed = timer.getMillis();
         printf("Query time (%d): %llu ms\n", i, elapsed);
         timings.push_back(elapsed);
     }

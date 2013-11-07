@@ -9,14 +9,14 @@
 
 #include "descriptors_type.hpp"
 #include "perf_serialization.hpp"
-#include "utils/posixtimer.hpp"
+#include "utils/timer.hpp"
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <numeric>
 
 namespace perf {
 
-typedef std::vector<timestamp_t> TimestampVector;
+typedef std::vector<Timer::timestamp_t> TimestampVector;
 typedef std::map<std::string, std::string> ParamsMap;
 
 /// @brief Execution times for a single index configuration.
