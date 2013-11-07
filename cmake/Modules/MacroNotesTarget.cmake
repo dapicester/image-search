@@ -9,7 +9,7 @@ macro(add_notes_target)
         set(command "${ACK} -i '(todo|fixme|xxx):?[[:space:]]+(.*)' --nopager --output=' $1 $2' ${CMAKE_CURRENT_SOURCE_DIR}")
     endif()
     message(STATUS "Will generate notes for project ${PROJECT_NAME}")
-    add_custom_target(${PROJECT_NAME}_notes
+    add_custom_target(notes_${PROJECT_NAME}
         COMMAND sh -c ${command} && echo
         VERBATIM
         COMMENT "Showing notes")
@@ -26,7 +26,7 @@ endmacro()
 macro(add_notes_for)
     message(STATUS "Will generate notes for projects: ${ARGN}.")
     foreach(arg ${ARGN})
-        list(APPEND dependencies ${arg}_notes)
+        list(APPEND dependencies notes_${arg})
     endforeach()
     add_custom_target(notes DEPENDS ${dependencies})
 endmacro()

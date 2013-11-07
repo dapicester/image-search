@@ -7,7 +7,7 @@ macro(add_ctags_target)
     set_source_files_properties(tags PROPERTIES GENERATED true)
     set(dependencies ${ARGN})
     message(STATUS "Will generate tags for project ${PROJECT_NAME}")
-    add_custom_target(${PROJECT_NAME}_tags
+    add_custom_target(tags_${PROJECT_NAME}
         DEPENDS ${dependencies}
         COMMAND ${CTAGS} -R ${CMAKE_CURRENT_SOURCE_DIR}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -25,7 +25,7 @@ endmacro()
 macro(add_ctags_for)
     message(STATUS "Will generate tags for projects: ${ARGN}.")
     foreach(arg ${ARGN})
-        list(APPEND dependencies ${arg}_tags)
+        list(APPEND dependencies tags_${arg})
     endforeach()
     add_custom_target(tags DEPENDS ${dependencies})
 endmacro()
