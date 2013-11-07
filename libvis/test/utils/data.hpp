@@ -28,10 +28,9 @@ getTestDataPtr(int rows, int columns) {
 template <typename T>
 cv::Mat
 getTestData(int rows, int columns) {
-    T* data = getTestDataPtr<T>(rows, columns);
-    cv::Mat mat = cv::Mat(rows, columns, cv::DataType<T>::type, data).clone();
-    delete[] data;
-    return mat;
+    cv::Mat data(rows, columns, cv::DataType<T>::type);
+    cv::randu(data, cv::Scalar(0), cv::Scalar(1));
+    return data;
 }
 
 } /* namespace test */

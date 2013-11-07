@@ -30,7 +30,7 @@ public:
     template <typename Callback>
     void compute(const std::string& category,
                  const std::vector<boost::filesystem::path>& files,
-                 const Callback& cb, // TODO use pointer to function instead of callback object
+                 const Callback& cb,
                  LoadImage flag = vis::COLORS);
 
     /// @return The actual category.

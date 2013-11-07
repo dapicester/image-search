@@ -8,8 +8,8 @@ message(STATUS "Tests:")
 
 set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/images)
 set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
-configure_file(images.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/images.hpp)
-message(STATUS "Test paths written to: ${CMAKE_CURRENT_BINARY_DIR}/images.hpp")
+configure_file(images.h.in ${CMAKE_CURRENT_BINARY_DIR}/images.h)
+message(STATUS "Test paths written to: ${CMAKE_CURRENT_BINARY_DIR}/images.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_unit_test(NAME opencv_usage

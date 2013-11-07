@@ -7,7 +7,7 @@
 #ifndef VIS_TEST_FIXTURES_HPP
 #define VIS_TEST_FIXTURES_HPP
 
-#include "images.hpp"
+#include "images.h"
 #include "standardize.hpp"
 #include "utils/filesystem.hpp"
 #include <opencv2/highgui/highgui.hpp>

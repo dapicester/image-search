@@ -15,8 +15,6 @@ namespace vis {
 
 template <class T> struct VlType;
 
-// TODO add more specializations when needed
-
 template <>
 struct VlType<int> {
     static const vl_type type = VL_TYPE_INT32;
