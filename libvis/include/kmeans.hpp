@@ -19,7 +19,7 @@ template <typename T>
 class KMeans {
 public:
     /// Default constructor.
-    KMeans(bool verbose = false); // TODO add setVerbose(bool)
+    KMeans();
 
     /// Default destructor.
     ~KMeans();
@@ -32,8 +32,11 @@ public:
      */
     cv::Mat cluster(const cv::Mat& data, vl_size numCenters);
 
+    /// Set verbosity.
+    void setVerbose(bool val) { verbose = val; }
+
 private:
-    bool verbose;
+    bool verbose = false;
     VlKMeans* kmeans;
 };
 

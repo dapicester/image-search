@@ -28,8 +28,6 @@ public:
     /// Destructor
     ~Index();
 
-     // TODO add setVerbose(bool)
-
     /**
      * @brief Build an index.
      * @param category A string identifier for this index.

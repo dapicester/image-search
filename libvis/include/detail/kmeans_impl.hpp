@@ -24,7 +24,7 @@ namespace kmeans {
 }
 
 template <typename T>
-KMeans<T>::KMeans(bool verb) : verbose(verb) {
+KMeans<T>::KMeans() {
     kmeans = vl_kmeans_new(VlType<T>::type, kmeans::distance);
     vl_kmeans_set_algorithm(kmeans, kmeans::algorithm);
     vl_kmeans_set_initialization (kmeans, kmeans::initialization) ;

@@ -51,7 +51,7 @@ KDTree<T>::KDTree() {
 }
 
 template <typename T>
-KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees, bool verbose) {
+KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees) {
     BOOST_ASSERT_MSG(d.depth() == cv::DataType<T>::type, "Data is not of type T");
 
     vl_size numDimensions = d.rows;

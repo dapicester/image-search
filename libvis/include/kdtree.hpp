@@ -39,7 +39,7 @@ public:
     ~KDTree();
 
     /// @brief Builds a new KD-Tree retaining a copy of the input matrix.
-    KDTree(const cv::Mat& data, vl_size numTrees = 1, bool verbose = false); // TODO add setVerbose(bool)
+    KDTree(const cv::Mat& data, vl_size numTrees = 1);
 
     /// @return The actual number of trees.
     vl_size getNumTrees() const;
@@ -49,6 +49,9 @@ public:
     std::vector<Record> search(const cv::Mat& query,
                                vl_size numNeighbors = 1,
                                vl_size maxNumComparisons = 0);
+
+    /// Set verbosity.
+    void setVerbose(bool val) { verbose = val; }
 
 private:
 
@@ -63,6 +66,7 @@ private:
     BOOST_SERIALIZATION_SPLIT_MEMBER();
 
 private:
+    bool verbose = false;
     VlKDForest* forest;
     T* dataPtr;
     vl_size dataSize;
