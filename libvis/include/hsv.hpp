@@ -35,7 +35,8 @@ public:
     size_t getNumBins() const;
 
 private:
-    const cv::Vec3i levels;
+    const cv::Vec3i levels;    ///< Quantization levels as passed to constructor.
+    const cv::Vec3i hsvlevels; ///< Actual HSV quantization levels.
     const bool medfilt;
 };
 

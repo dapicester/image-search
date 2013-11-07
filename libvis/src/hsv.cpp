@@ -137,7 +137,7 @@ computeHistogram(const Mat& quantized, const Vec3i& levels, bool normalize) {
 }
 
 HsvExtractor::HsvExtractor(const Vec3i& l, bool f)
-        : levels(l), medfilt(f) {}
+        : levels(l), hsvlevels(l + Vec3i(0,1,1)), medfilt(f) {}
 
 HsvExtractor::~HsvExtractor() {}
 
@@ -149,7 +149,7 @@ HsvExtractor::getNumBins() const {
 Mat
 HsvExtractor::extract(const Mat& image, bool normalize, OutputArray& qimage) const {
     Mat hsv = toHsv(image);
-    Mat quantized = quantize(hsv, levels + Vec3i(0,1,1));
+    Mat quantized = quantize(hsv, hsvlevels);
 
     if (medfilt) {
         quantized = medfilt2<float>(quantized);
@@ -158,17 +158,8 @@ HsvExtractor::extract(const Mat& image, bool normalize, OutputArray& qimage) con
     BOOST_ASSERT(quantized.size() == image.size());
 
     if (qimage.needed()) {
-        // TODO use toBgr() here
-
-        vector<Mat> planes;
-        split(quantized, planes);
-
-        Vec3i l = levels + Vec3i(0, 1, 1);
-        for (int i = 0; i < 3; i++)
-            planes[i] /= l[i];
-        planes[0] *= 360.;
-        merge(planes, qimage);
-        cvtColor(qimage, qimage, CV_HSV2BGR);
+        Mat render = toBgr(quantized, hsvlevels);
+        render.copyTo(qimage);
     }
 
     return computeHistogram<float>(quantized, levels, normalize);
