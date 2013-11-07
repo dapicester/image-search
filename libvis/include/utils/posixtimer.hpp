@@ -7,6 +7,8 @@
 #ifndef VIS_UTILS_POSIXTIMER_HPP
 #define VIS_UTILS_POSIXTIMER_HPP
 
+#warning "This class has been deprecated"
+
 #include <sys/time.h>
 
 /// @brief Type used for timestamps.

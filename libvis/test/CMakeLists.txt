@@ -57,6 +57,11 @@ add_unit_test(NAME test_posixtimer
     DISABLED true
     LINK_LIBRARIES ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_timer
+    SOURCES test_timer.cpp
+    DISABLED true
+    LINK_LIBRARIES ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
