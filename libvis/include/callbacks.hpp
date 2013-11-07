@@ -13,8 +13,18 @@
 
 namespace vis {
 
+class Vocabulary;
+
+/// @brief Base class for callbacks.
+template <typename Derived>
+struct Callback {
+    cv::Mat operator()(const cv::Mat& image) const {
+        return static_cast<Derived*>(this)->operator()(image);
+    }
+};
+
 /// Compute HOGs for constructing a word vocabulary.
-struct HogVocabularyCallback {
+struct HogVocabularyCallback : Callback<HogVocabularyCallback> {
     HogVocabularyCallback(size_t numFeatures);
     cv::Mat operator()(const cv::Mat& image) const;
 private:
@@ -22,10 +32,8 @@ private:
     HogExtractor hog;
 };
 
-class Vocabulary;
-
 /// Compute bag-of-words using the given vocabulary.
-struct BagOfWords {
+struct BagOfWords : Callback<BagOfWords> {
     BagOfWords(const Vocabulary* vocabulary);
     cv::Mat operator()(const cv::Mat& descriptors) const;
 private:
@@ -33,7 +41,7 @@ private:
 };
 
 /// Compute HOG bag-of-words.
-struct HogBagOfWordsCallback {
+struct HogBagOfWordsCallback : Callback<BagOfWords> {
     HogBagOfWordsCallback(const Vocabulary* v);
     cv::Mat operator()(const cv::Mat& image) const;
 
@@ -44,7 +52,7 @@ private:
 };
 
 /// Compute HSV color histogram.
-struct HsvHistogramsCallback {
+struct HsvHistogramsCallback : Callback<HsvHistogramsCallback> {
     HsvHistogramsCallback();
     cv::Mat operator()(const cv::Mat& image) const;
     size_t getNumBins() const;
@@ -55,7 +63,7 @@ private:
 };
 
 /// Compute both HOG bag-of-words and HSV color histogram.
-struct CompositeCallback {
+struct CompositeCallback : Callback<CompositeCallback> {
     CompositeCallback(const Vocabulary* v);
     cv::Mat operator()(const cv::Mat& image) const;
     size_t getNumBins() const;
