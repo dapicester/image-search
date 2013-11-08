@@ -19,7 +19,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
         #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --std=c++0x")
         message(WARNING "Compiler supports only --std=c++0x.")
     else()
-        message(ERROR "Compiler does not support --std=c++11 or --std=c++0x.")
+        message(FATAL_ERROR "Compiler does not support --std=c++11 or --std=c++0x.")
     endif()
 endif()
 
