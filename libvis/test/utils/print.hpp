@@ -7,6 +7,7 @@
 #ifndef VIS_UTILS_PRINT_HPP
 #define VIS_UTILS_PRINT_HPP
 
+#include "utils/ostream.hpp"
 #include <opencv2/core/core.hpp>
 #include <iostream>
 #include <vector>

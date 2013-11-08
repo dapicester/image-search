@@ -184,19 +184,6 @@ KDTree<T>::load(Archive& ar, const unsigned int version) {
     forest->data = dataPtr;
 }
 
-inline
-std::ostream&
-operator<<(std::ostream& os, const KDTreeNeighbor& n) {
-    os << "{" << n.index << "," << n.distance << "}";
-    return os;
-}
-
-inline
-std::ostream&
-operator<<(std::ostream& os, const KDTreeIndex& i) {
-    os << "{" << i.index << "}";
-    return os;
-}
 
 } /* namespace vis */
 
