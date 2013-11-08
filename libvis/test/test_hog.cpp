@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(hog_values) {
     Mat hog = extractor.extract(Mat::eye(16, 16, CV_32F)).toMat();
     BOOST_CHECK_EQUAL(Size(4, 28), hog.size()); // NOTE size is (cols, rows)
 
-    print(hog);
+    printmat(hog);
 
     // from Matlab
     Mat expected = (cv::Mat_<float>(28,4) <<
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(hog_values) {
             0.047140457, 0.047140457, 0.047140457, 0.047140457
         );
 
-    print(expected);
+    printmat(expected);
 
     BOOST_REQUIRE_EQUAL(expected.size(), hog.size());
     for (int i = 0; i < expected.rows ; i++)

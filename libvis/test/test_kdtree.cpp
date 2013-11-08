@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
         for (int i = 0; i < numQueries; i++) {
             KDTreeNeighbor record = results[i];
 
-            print(record);
+            printvar(record);
 
             BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
             BOOST_REQUIRE_EQUAL(0.0, record.distance);
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
         for (int i = 0; i < numQueries; i++) {
             KDTreeIndex record = results[i];
 
-            print(record);
+            printvar(record);
 
             BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
         }

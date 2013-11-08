@@ -10,9 +10,8 @@
 #include <opencv2/core/core.hpp>
 #include <iostream>
 #include <vector>
-#include <cstdio>
 
-#define print(X) std::cout << #X << ": " << X << std::endl
+#define printvar(X) std::cout << #X << ": " << X << std::endl
 #define printmat(X) std::cout << #X << ":\n" << X << std::endl
 #define println(X) std::cout << X << std::endl
 

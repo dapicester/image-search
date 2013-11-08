@@ -134,10 +134,10 @@ BOOST_AUTO_TEST_CASE(test_subset) {
     std::vector<std::string> v;
     for (int i=1; i<=100; i++)
         v.push_back(boost::lexical_cast<std::string>(i));
-    print(v);
+    printvar(v);
 
     std::vector<std::string> actual = vis::subset(v, 10, vis::UNIFORM);
-    print(actual);
+    printvar(actual);
 
     std::vector<std::string> expected;
     expected.push_back("1");
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(test_subset) {
     expected.push_back("78");
     expected.push_back("89");
     expected.push_back("100");
-    print(expected);
+    printvar(expected);
 
     BOOST_CHECK(std::equal(actual.begin(), actual.end(), expected.begin()));
 }
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(test_hist) {
         double sum = cv::sum(histogram)[0];
 
         printmat(histogram);
-        print(sum);
+        printvar(sum);
 
         BOOST_CHECK_EQUAL(cv::Size(1, numbins), histogram.size());
         BOOST_CHECK_EQUAL(numdata, sum);
@@ -323,9 +323,9 @@ BOOST_AUTO_TEST_CASE(test_medfilt2) {
 
     Mat actual = vis::medfilt2<float>(data.t()); // NOTE transposed wrt Matlab
 
-    print(data);
-    print(expected);
-    print(actual);
+    printmat(data);
+    printmat(expected);
+    printmat(actual);
 
     BOOST_CHECK(test::equals(expected, actual));
 }

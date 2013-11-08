@@ -77,7 +77,7 @@ BOOST_FIXTURE_TEST_CASE(test_histogram, test::Peppers) {
     Mat quantized;
     Mat histogram = extractor.extract(image, true, quantized);
 
-    print(histogram);
+    printmat(histogram);
 
     int numbins = extractor.getNumBins();
     BOOST_CHECK_EQUAL(Size(1, numbins), histogram.size()); // NOTE size is (cols, rows)
