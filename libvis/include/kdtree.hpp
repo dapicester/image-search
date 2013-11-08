@@ -10,9 +10,9 @@
 extern "C" {
 #include <vl/kdtree.h>
 }
+#include <armadillo>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/split_member.hpp>
-#include <opencv2/core/core.hpp>
 #include <vector>
 
 namespace vis {
@@ -39,16 +39,16 @@ public:
     ~KDTree();
 
     /// @brief Builds a new KD-Tree retaining a copy of the input matrix.
-    KDTree(const cv::Mat& data, vl_size numTrees = 1);
+    void build(const arma::Mat<T>& data, unsigned numTrees = 1);
 
     /// @return The actual number of trees.
     vl_size getNumTrees() const;
 
     /// @brief Queries a KD-tree.
     template <typename Record>
-    std::vector<Record> search(const cv::Mat& query,
-                               vl_size numNeighbors = 1,
-                               vl_size maxNumComparisons = 0);
+    std::vector<Record> search(const arma::Mat<T>& query,
+                               unsigned numNeighbors = 1,
+                               unsigned maxNumComparisons = 0);
 
     /// Set verbosity.
     void setVerbose(bool val) { verbose = val; }
@@ -67,9 +67,8 @@ private:
 
 private:
     bool verbose = false;
-    VlKDForest* forest;
-    T* dataPtr;
-    vl_size dataSize;
+    VlKDForest* forest = nullptr;
+    arma::Mat<T> data;
 
 #ifdef ENABLE_TESTING
 public:

@@ -13,7 +13,6 @@
 #include <iostream>
 #include <random>
 
-using cv::Mat;
 using vis::KDTree;
 using vis::KDTreeNeighbor;
 using vis::KDTreeIndex;
@@ -21,21 +20,22 @@ using vis::KDTreeIndex;
 BOOST_AUTO_TEST_CASE(test_kdtree) {
     int dimension = 2;
     int numData = 100;
-    Mat data = test::getTestData<double>(dimension, numData);
+    arma::mat data = test::testData<double>(dimension, numData);
 
     printmat(data);
 
-    KDTree<double> tree(data);
+    KDTree<double> tree;
+    tree.build(data);
 
     int numQueries = 2;
-    Mat indices(1, numQueries, cv::DataType<int>::type);
-    Mat queries(dimension, numQueries, data.type());
+    arma::ivec indices(numQueries);
+    arma::mat queries(dimension, numQueries);
 
     // pick random records within data
     for (int i = 0; i < numQueries; i++) {
         int index = rand() % numData;
-        indices.at<int>(i) = index;
-        data.col(index).copyTo(queries.col(i));
+        indices(i) = index;
+        queries.col(i) = data.col(index);
     }
 
     printmat(indices);
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
 
             printvar(record);
 
-            BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
+            BOOST_REQUIRE_EQUAL(indices(i), record.index);
             BOOST_REQUIRE_EQUAL(0.0, record.distance);
         }
     }
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
 
             printvar(record);
 
-            BOOST_REQUIRE_EQUAL(indices.at<int>(i), record.index);
+            BOOST_REQUIRE_EQUAL(indices.at(i), record.index);
         }
     }
 }
