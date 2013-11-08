@@ -10,19 +10,16 @@
 #include "kmeans.hpp"
 #include "utils/data.hpp"
 
-using cv::Mat;
-using vis::KMeans;
-
 BOOST_AUTO_TEST_CASE(test_quantize) {
     int dimension = 2;
     int numData = 100;
-    Mat data = test::getTestData<double>(dimension, numData);
+    arma::mat data = test::testData<double>(dimension, numData);
 
     int numClusters = 3;
-    KMeans<double> kmeans;
-    Mat centers = kmeans.cluster(data, numClusters);
+    vis::KMeans<double> kmeans;
+    arma::mat centers = kmeans.cluster(data, numClusters);
 
-    BOOST_CHECK_EQUAL(dimension, centers.rows);
-    BOOST_CHECK_EQUAL(numClusters, centers.cols);
+    BOOST_CHECK_EQUAL(dimension, centers.n_rows);
+    BOOST_CHECK_EQUAL(numClusters, centers.n_cols);
 }
 
