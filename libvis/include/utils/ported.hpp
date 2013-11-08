@@ -10,7 +10,6 @@
 #include <boost/assert.hpp>
 #include <boost/math/special_functions/round.hpp>
 #include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 
 namespace vis {
 
@@ -28,7 +27,7 @@ enum ColonDimension {
  */
 template <typename T>
 cv::Mat
-colon(const cv::Mat& in, const cv::Mat& indices, ColonDimension dim) {
+colon[[deprecated]](const cv::Mat& in, const cv::Mat& indices, ColonDimension dim) {
     BOOST_ASSERT_MSG((indices.rows == 1 && indices.cols > 1)
                  xor (indices.cols == 1 && indices.rows > 1),
                  "indices is not a column vector");
@@ -64,7 +63,7 @@ colon(const cv::Mat& in, const cv::Mat& indices, ColonDimension dim) {
  */
 inline
 cv::Mat
-colon(const cv::Mat& in) {
+colon[[deprecated]](const cv::Mat& in) {
     return in.reshape(0, 1);
 }
 
@@ -73,6 +72,7 @@ colon(const cv::Mat& in) {
  * Original code taken from:
  * http://dsj23.wordpress.com/2013/02/13/matlab-linspace-function-written-in-c/
  */
+// TODO move to hsv_aux
 template <typename T>
 cv::Mat
 linspace(T min, T max, size_t n) {
@@ -177,7 +177,7 @@ subset(const std::vector<T>& in, size_t num, SubsetMode mode) {
  */
 inline
 cv::Mat
-reshape(const cv::Mat& in, size_t cols) {
+reshape[[deprecated]](const cv::Mat& in, size_t cols) {
     cv::Mat out = in.t();
     return out.reshape(0, cols).t();
 }
@@ -194,7 +194,7 @@ enum NormalizeMode {
  */
 static
 cv::Mat
-hist(const cv::Mat& in, int numbins, NormalizeMode normalize = NONE) {
+hist[[deprecated]](const cv::Mat& in, int numbins, NormalizeMode normalize = NONE) {
     BOOST_ASSERT_MSG(in.type() == cv::DataType<float>::type, "Support only float data type");
 
     double min, max;
@@ -217,94 +217,6 @@ hist(const cv::Mat& in, int numbins, NormalizeMode normalize = NONE) {
     }
 
     return histogram;
-}
-
-/**
- * @brief Equivalent of Matlab imquantize function.
- * Input matrix must be transposed.
- */
-template <typename T>
-cv::Mat
-imquantize(const cv::Mat& in, const cv::Mat& levels) {
-    BOOST_ASSERT_MSG(cv::DataType<T>::type == in.type(), "input is not of type T");
-    BOOST_ASSERT_MSG(cv::DataType<T>::type == levels.type(), "levels is not of type T");
-
-    size_t N = levels.total();
-    cv::Mat index(in.size(), in.type(), cv::Scalar::all(1));
-
-    for (int i = 0; i < N; i++) {
-        cv::Mat temp = (in > levels.at<T>(i)) / 255;
-        temp = temp.t(); // Matlab store images by columns, OpenCV by rows
-        temp.convertTo(temp, cv::DataType<T>::type);
-        index += temp.t();
-    }
-
-    return index;
-}
-
-#if 0
-/// Convert row-major index to column-major index.
-inline
-int
-r2c(int index, int rows, int columns) {
-    // TODO support more than 2 dimensions
-    int row = index % rows;
-    int column = index / rows;
-    return row * columns + column;
-}
-
-/// Convert column-major index to row-major index.
-inline
-int
-c2r(int index, int rows, int columns) {
-    // TODO support more than 2 dimensions
-    return r2c(index, columns, rows);
-}
-#endif
-
-/**
- * @brief Equivalent of Matlab ind2sub for a 3-dimensional input.
- */
-template <typename T>
-cv::Vec<T,3>
-ind2sub(const cv::Vec<T,3>& size, T index) {
-    BOOST_ASSERT_MSG(index >=0 and index < size[0]*size[1]*size[2], "out of range");
-
-    // TODO refactor this
-
-    cv::Vec<T,3> out;
-    cv::Vec<T,3> k(1, size[0], size[0] * size[1]);
-
-    T vi, vj;
-    T n = index + 1; // 0-base index
-    for (int i = 2; i >= 0; i--) {
-        vi = (n - 1) % k[i] + 1;
-        vj = (n - vi) / k[i] + 1;
-
-        n = vi;
-        out(i) = vj - 1; // 0-base index
-
-        BOOST_ASSERT(n >= 0);
-        BOOST_ASSERT(out(i) >= 0);
-    }
-
-    return out;
-}
-
-/**
- * @brief Equivalent of Matlab medfilt2 function.
- * Input matrix must be transposed.
- */
-template <typename T>
-cv::Mat
-medfilt2(const cv::Mat& in) {
-    BOOST_ASSERT(in.depth() == cv::DataType<T>::type);
-    BOOST_ASSERT(in.isContinuous());
-
-    cv::Mat out(in.size(), in.type());
-    cv::medianBlur(in, out, 3); // 3x3 neighborhood
-
-    return out;
 }
 
 } /* namespace vis */
