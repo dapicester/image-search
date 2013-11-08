@@ -40,6 +40,7 @@ add_unit_test(NAME test_kmeans
 
 add_unit_test(NAME test_vl_kdtree
     SOURCES test_vl_kdtree.c
+    DISABLED true
     LINK_LIBRARIES ${VLFEAT_LIBRARIES})
 
 add_unit_test(NAME test_kdtree
