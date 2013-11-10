@@ -13,45 +13,59 @@
 #include "serialization.hpp"
 #include <opencv2/core/core.hpp>
 #include <fstream>
+#include <random>
 
 namespace ar = boost::archive;
 namespace io = boost::iostreams;
 
-template <typename InputArchive, typename OutputArchive>
-void doTest(const cv::Mat& input, const char* filename, bool compression) {
+template <typename InputArchive, typename OutputArchive, typename Matrix>
+void doTest(const Matrix& input, const char* filename, bool compression) {
     if (compression) {
-        static vis::compress_serializer<OutputArchive, cv::Mat, io::gzip_compressor> GzipSaver;
+        static vis::compress_serializer<OutputArchive, Matrix, io::gzip_compressor> GzipSaver;
         GzipSaver(filename, input);
     }
     else {
-        static vis::serializer<OutputArchive, cv::Mat> Saver;
+        static vis::serializer<OutputArchive, Matrix> Saver;
         Saver(filename, input);
     }
 
-    cv::Mat loaded;
+    Matrix loaded;
     if (compression) {
-        static vis::compress_deserializer<InputArchive, cv::Mat, io::gzip_decompressor> GzipLoader;
+        static vis::compress_deserializer<InputArchive, Matrix, io::gzip_decompressor> GzipLoader;
         GzipLoader(filename, loaded);
     }
     else {
-        static vis::deserializer<InputArchive, cv::Mat> Loader;
+        static vis::deserializer<InputArchive, Matrix> Loader;
         Loader(filename, loaded);
     }
 
     BOOST_CHECK(test::equals(loaded, input));
 }
 
-BOOST_AUTO_TEST_CASE(matrix_serialization) {
+BOOST_AUTO_TEST_CASE(cv_mat_serialization) {
     cv::Mat mat(4, 4, CV_32F);
     cv::randu(mat, cv::Scalar(0), cv::Scalar(255));
 
     // plain text
-    doTest<ar::text_iarchive, ar::text_oarchive>(mat, "matrix.txt", false);
-    doTest<ar::text_iarchive, ar::text_oarchive>(mat, "matrix.txt.gz", true);
+    doTest<ar::text_iarchive, ar::text_oarchive>(mat, "cv_matrix.txt", false);
+    doTest<ar::text_iarchive, ar::text_oarchive>(mat, "cv_matrix.txt.gz", true);
 
     // binary
-    doTest<ar::binary_iarchive, ar::binary_oarchive>(mat, "matrix.bin", false);
-    doTest<ar::binary_iarchive, ar::binary_oarchive>(mat, "matrix.bin.gz", true);
+    doTest<ar::binary_iarchive, ar::binary_oarchive>(mat, "cv_matrix.bin", false);
+    doTest<ar::binary_iarchive, ar::binary_oarchive>(mat, "cv_matrix.bin.gz", true);
+}
+
+BOOST_AUTO_TEST_CASE(arma_mat_serialization) {
+    arma::mat mat(4, 4);
+    mat.randu();
+
+    // plain text
+    doTest<ar::text_iarchive, ar::text_oarchive>(mat, "arma_matrix.txt", false);
+    doTest<ar::text_iarchive, ar::text_oarchive>(mat, "arma_matrix.txt.gz", true);
+
+    // binary
+    doTest<ar::binary_iarchive, ar::binary_oarchive>(mat, "arma_matrix.bin", false);
+    doTest<ar::binary_iarchive, ar::binary_oarchive>(mat, "arma_matrix.bin.gz", true);
 }
 
 BOOST_AUTO_TEST_CASE(vlkdforest_serialization) {
@@ -112,14 +126,15 @@ BOOST_AUTO_TEST_CASE(kdtree_serialization) {
 
     int dimension = 2;
     int numData = 100;
-    cv::Mat data = test::getTestData<float>(dimension, numData);
+    arma::fmat data = test::testData<float>(dimension, numData);
 
     int numTrees = 2;
 
     {
-        vis::BinarySerializer<Tree>::Saver saver;
+        Tree tree;
+        tree.build(data, numTrees);
 
-        Tree tree(data, numTrees);
+        vis::BinarySerializer<Tree>::Saver saver;
         saver("kdtree.dat", tree);
     }
     {
@@ -131,9 +146,8 @@ BOOST_AUTO_TEST_CASE(kdtree_serialization) {
         BOOST_CHECK_EQUAL(numTrees, tree.getNumTrees());
 
         // query
-        srand(time(NULL));
         int index = rand() % numData;
-        cv::Mat query = data.col(index).clone();
+        arma::fmat query = data.col(index);
 
         std::vector<vis::KDTreeNeighbor> results = tree.search<vis::KDTreeNeighbor>(query);
         BOOST_CHECK_EQUAL(1, results.size());
