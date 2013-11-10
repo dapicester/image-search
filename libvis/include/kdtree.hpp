@@ -76,6 +76,14 @@ public:
 #endif
 };
 
+/// Operator << for std::ostream and KDTreeNeighbor.
+std::ostream&
+operator<<(std::ostream& os, const KDTreeNeighbor& n);
+
+/// Operator << for std::ostream and KDTreeIndex.
+std::ostream&
+operator<<(std::ostream& os, const KDTreeIndex& i);
+
 } /* namespace vis */
 
 #include "detail/kdtree_impl.hpp"
