@@ -9,17 +9,16 @@
 
 #include "standardize.hpp"
 #include <opencv2/highgui/highgui.hpp>
-#include <cstdio>
+#include <iostream>
 
 namespace vis {
 
 template <typename Callback>
 void
 extract(const std::vector<boost::filesystem::path>& names,
-        cv::Mat& output,
+        arma::fmat& output,
         const Callback& cb,
         LoadImage flag) {
-    cv::Mat descriptors;
 
     // TODO openmp parfor
     size_t numImages = names.size();
@@ -27,19 +26,20 @@ extract(const std::vector<boost::filesystem::path>& names,
 
     for (auto it = names.begin(); it != names.end(); ++it) {
         const std::string& name = it->string();
-        printf("  Extracting features from %s (%lu/%lu)\n", name.c_str(), i+1, numImages);
 
-        cv::Mat input = cv::imread(name, flag == GRAYSCALE ? CV_LOAD_IMAGE_GRAYSCALE : CV_LOAD_IMAGE_COLOR);
+        // TODO control this verbosity
+        std::cout << "  Extracting features from " << name
+                  << " (" << i+1 << "/" << numImages << ")" << std::endl;
+
+        cv::Mat input = cv::imread(name, flag == GRAYSCALE ? CV_LOAD_IMAGE_GRAYSCALE
+                                                           : CV_LOAD_IMAGE_COLOR);
         BOOST_ASSERT(input.channels() == (flag == GRAYSCALE ? 1 : 3));
 
         cv::Mat image = standardizeImage(input);
-
-        cv::Mat m = cb(image);
-
-        descriptors.push_back(m);
+        arma::fmat m = cb(image);
+        output = arma::join_rows(output, m); // XXX slow
         ++i;
     }
-    output = descriptors.t(); // TODO avoid transpose
 }
 
 } /* namespace vis */
