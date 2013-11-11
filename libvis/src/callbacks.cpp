@@ -7,45 +7,44 @@
 #include "callbacks.hpp"
 #include "vocabulary.hpp"
 #include "utils/ported.hpp"
+#include <opencv2/imgproc/imgproc.hpp>
 
 namespace vis {
 
 HogVocabularyCallback::HogVocabularyCallback(size_t n)
         : numFeatures(n) {}
 
-cv::Mat
+arma::fmat
 HogVocabularyCallback::operator()(const cv::Mat& image) const {
-    cv::Mat d = hog.extract(image).toMat();
-    d = colsubset<float>(d, numFeatures, UNIFORM);
-    d = d.t(); // TODO avoid transpose
-    return d;
+    arma::fmat d = hog.extract(image);
+    return colsubset(d, numFeatures);
 }
 
 BagOfWords::BagOfWords(const Vocabulary* v)
         : vocabulary(v) {}
 
-cv::Mat
-BagOfWords::operator()(const cv::Mat& descriptors) const {
-    cv::Mat words = vocabulary->quantize(descriptors);
-    cv::Mat histogram = hist(words, vocabulary->getNumWords(), SUM1);
-    return histogram;
+arma::fmat
+BagOfWords::operator()(const arma::fmat& descriptors) const {
+    arma::fmat words = vocabulary->quantize(descriptors);
+    arma::fmat histogram = arma::conv_to<arma::fmat>::from(arma::hist(words, vocabulary->getNumWords()));
+    return histogram / arma::as_scalar(arma::sum(histogram));
 }
 
 HogBagOfWordsCallback::HogBagOfWordsCallback(const Vocabulary* v)
         : bow(v) {}
 
-cv::Mat
+arma::fmat
 HogBagOfWordsCallback::operator()(const cv::Mat& image) const {
-    cv::Mat d = hog.extract(image).toMat();
-    cv::Mat hist = bow(d).t(); // TODO avoid transpose
+    arma::fmat d = hog.extract(image);
+    arma::fmat hist = bow(d);
     return hist;
 }
 
 HsvHistogramsCallback::HsvHistogramsCallback() {}
 
-cv::Mat
+arma::fmat
 HsvHistogramsCallback::operator()(const cv::Mat& image) const {
-    return hsv.extract(image).t(); // TODO avoid transpose
+    return hsv.extract(image);
 }
 
 size_t
@@ -56,13 +55,16 @@ HsvHistogramsCallback::getNumBins() const {
 CompositeCallback::CompositeCallback(const Vocabulary* v)
         : hog(v) {}
 
-cv::Mat
+arma::fmat
 CompositeCallback::operator()(const cv::Mat& image) const {
-    cv::Mat d;
     cv::Mat bwimage;
     cv::cvtColor(image, bwimage, CV_BGR2GRAY);
-    cv::hconcat(hog(bwimage), hsv(image), d);
-    return d;
+
+    arma::fmat d1 = hog(bwimage);
+    arma::fmat d2 = hsv(image);
+
+    // FIXME
+    return arma::join_cols(d1, d2);
 }
 
 size_t

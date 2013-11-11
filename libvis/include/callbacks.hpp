@@ -18,7 +18,7 @@ class Vocabulary;
 /// @brief Base class for callbacks.
 template <typename Derived>
 struct Callback {
-    cv::Mat operator()(const cv::Mat& image) const {
+    arma::fmat operator()(const cv::Mat& image) const {
         return static_cast<Derived*>(this)->operator()(image);
     }
 };
@@ -26,16 +26,16 @@ struct Callback {
 /// Compute HOGs for constructing a word vocabulary.
 struct HogVocabularyCallback : Callback<HogVocabularyCallback> {
     HogVocabularyCallback(size_t numFeatures);
-    cv::Mat operator()(const cv::Mat& image) const;
+    arma::fmat operator()(const cv::Mat& image) const;
 private:
     size_t numFeatures;
     HogExtractor hog;
 };
 
 /// Compute bag-of-words using the given vocabulary.
-struct BagOfWords : Callback<BagOfWords> {
+struct BagOfWords /*: Callback<BagOfWords> */{
     BagOfWords(const Vocabulary* vocabulary);
-    cv::Mat operator()(const cv::Mat& descriptors) const;
+    arma::fmat operator()(const arma::fmat& descriptors) const;
 private:
     const Vocabulary* vocabulary;
 };
@@ -43,7 +43,7 @@ private:
 /// Compute HOG bag-of-words.
 struct HogBagOfWordsCallback : Callback<BagOfWords> {
     HogBagOfWordsCallback(const Vocabulary* v);
-    cv::Mat operator()(const cv::Mat& image) const;
+    arma::fmat operator()(const cv::Mat& image) const;
 
     static const DescriptorsType type = vis::HOG;
 private:
@@ -54,7 +54,7 @@ private:
 /// Compute HSV color histogram.
 struct HsvHistogramsCallback : Callback<HsvHistogramsCallback> {
     HsvHistogramsCallback();
-    cv::Mat operator()(const cv::Mat& image) const;
+    arma::fmat operator()(const cv::Mat& image) const;
     size_t getNumBins() const;
 
     static const DescriptorsType type = vis::HSV;
@@ -65,7 +65,7 @@ private:
 /// Compute both HOG bag-of-words and HSV color histogram.
 struct CompositeCallback : Callback<CompositeCallback> {
     CompositeCallback(const Vocabulary* v);
-    cv::Mat operator()(const cv::Mat& image) const;
+    arma::fmat operator()(const cv::Mat& image) const;
     size_t getNumBins() const;
 
     static const DescriptorsType type = vis::HOG_HSV;
