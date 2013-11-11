@@ -11,25 +11,6 @@
 
 namespace vis {
 
-HogVocabularyCallback::HogVocabularyCallback(size_t n)
-        : numFeatures(n) {}
-
-arma::fmat
-HogVocabularyCallback::operator()(const cv::Mat& image) const {
-    arma::fmat d = hog.extract(image);
-    return colsubset(d, numFeatures);
-}
-
-BagOfWords::BagOfWords(const Vocabulary* v)
-        : vocabulary(v) {}
-
-arma::fmat
-BagOfWords::operator()(const arma::fmat& descriptors) const {
-    arma::fmat words = vocabulary->quantize(descriptors);
-    arma::fmat histogram = arma::conv_to<arma::fmat>::from(arma::hist(words, vocabulary->getNumWords()));
-    return histogram / arma::as_scalar(arma::sum(histogram));
-}
-
 HogBagOfWordsCallback::HogBagOfWordsCallback(const Vocabulary* v)
         : bow(v) {}
 

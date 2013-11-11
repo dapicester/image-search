@@ -7,8 +7,8 @@
 #ifndef VIS_CALLBACKS_HPP
 #define VIS_CALLBACKS_HPP
 
+#include "callbacks_hog.hpp"
 #include "descriptors_type.hpp"
-#include "hog.hpp"
 #include "hsv.hpp"
 
 namespace vis {
@@ -18,26 +18,10 @@ class Vocabulary;
 /// @brief Base class for callbacks.
 template <typename Derived>
 struct Callback {
+    // FIXME this should return vec/rowvec
     arma::fmat operator()(const cv::Mat& image) const {
         return static_cast<Derived*>(this)->operator()(image);
     }
-};
-
-/// Compute HOGs for constructing a word vocabulary.
-struct HogVocabularyCallback : Callback<HogVocabularyCallback> {
-    HogVocabularyCallback(size_t numFeatures);
-    arma::fmat operator()(const cv::Mat& image) const;
-private:
-    size_t numFeatures;
-    HogExtractor hog;
-};
-
-/// Compute bag-of-words using the given vocabulary.
-struct BagOfWords /*: Callback<BagOfWords> */{
-    BagOfWords(const Vocabulary* vocabulary);
-    arma::fmat operator()(const arma::fmat& descriptors) const;
-private:
-    const Vocabulary* vocabulary;
 };
 
 /// Compute HOG bag-of-words.

@@ -4,11 +4,11 @@
  * @author Paolo D'Apice
  */
 
-#include "vocabulary.hpp"
-#include "callbacks.hpp"
+#include "callbacks_hog.hpp"
 #include "extract.hpp"
 #include "kmeans.hpp"
 #include "serialization.hpp"
+#include "vocabulary.hpp"
 #include <boost/assert.hpp>
 #include <iostream>
 
@@ -55,11 +55,13 @@ Vocabulary::quantize(const arma::fmat& descriptors) const {
     std::vector<KDTreeIndex> neighbors = kdtree->search<KDTreeIndex>(descriptors, 1, vocabulary::MAX_COMPARISONS);
     arma::fmat quantized(descriptors.n_rows, descriptors.n_cols);
 
+    // FIXME should not return the quantized words but the indices!!!
+
     for (int i = 0; i < neighbors.size(); i++) {
         vl_uindex index = neighbors[i].index;
         quantized.col(i) = words.col(index);
     }
-    // TODO convert to double?
+
     return quantized;
 }
 
