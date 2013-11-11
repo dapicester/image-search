@@ -12,6 +12,7 @@
 #include "fixtures.hpp"
 #include "vocabulary.hpp"
 #include "utils/matrix.hpp"
+#include "utils/print.hpp"
 #include <boost/scoped_ptr.hpp>
 
 namespace fs = boost::filesystem;
@@ -26,45 +27,37 @@ vis::Vocabulary* loadVocabulary() {
     return vp;
 };
 
-#define USE_OLD_API 0
-
-BOOST_FIXTURE_TEST_SUITE(test_descriptors, test::ImageDir)
+BOOST_FIXTURE_TEST_SUITE(descriptors, test::ImageDir)
 
 BOOST_AUTO_TEST_CASE(hog) {
     boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
     vis::HogBagOfWordsCallback cb(vocabulary.get());
 
-    const cv::Size expectedSize(files.size(), vocabulary->getNumWords());
-#if USE_OLD_API
-    cv::Mat descriptors;
-    vis::extract(files, descriptors, cb, vis::GRAYSCALE);
+    const size_t expectedCols = files.size();
+    const size_t expectedRows = vocabulary->getNumWords();
 
-    BOOST_CHECK_EQUAL(expectedSize, descriptors.size());
-#else
     vis::Descriptors descriptors;
     descriptors.compute("test", files, cb, vis::GRAYSCALE);
+    const arma::fmat& data = descriptors.get();
 
-    BOOST_CHECK_EQUAL(expectedSize, descriptors.get().size());
+    BOOST_CHECK_EQUAL(expectedRows, data.n_rows);
+    BOOST_CHECK_EQUAL(expectedCols, data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG, descriptors.getType());
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(hsv) {
     vis::HsvHistogramsCallback cb;
 
-    const cv::Size expectedSize(files.size(), cb.getNumBins());
-#if USE_OLD_API
-    cv::Mat histograms;
-    vis::extract(files, histograms, cb);
+    const size_t expectedCols = files.size();
+    const size_t expectedRows = cb.getNumBins();
 
-    BOOST_CHECK_EQUAL(expectedSize, histograms.size());
-#else
     vis::Descriptors histograms;
     histograms.compute("test", files, cb);
+    const arma::fmat& data = histograms.get();
 
-    BOOST_CHECK_EQUAL(expectedSize, histograms.get().size());
+    BOOST_CHECK_EQUAL(expectedRows, data.n_rows);
+    BOOST_CHECK_EQUAL(expectedCols, data.n_cols);
     BOOST_CHECK_EQUAL(vis::HSV, histograms.getType());
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(hog_hsv) {
@@ -88,19 +81,16 @@ BOOST_AUTO_TEST_CASE(hog_hsv) {
 
     vis::CompositeCallback cb(vocabulary.get());
 
-    const cv::Size expectedSize(files.size(), cb.getNumBins() + vocabulary->getNumWords());
-#if USE_OLD_API
-    cv::Mat descriptors;
-    vis::extract(files, descriptors, cb);
+    const size_t expectedCols = files.size();
+    const size_t expectedRows = cb.getNumBins() + vocabulary->getNumWords();
 
-    BOOST_CHECK_EQUAL(expectedSize, descriptors.size());
-#else
     vis::Descriptors descriptors;
     descriptors.compute("test", files, cb);
+    const arma::fmat& data = descriptors.get();
 
-    BOOST_CHECK_EQUAL(expectedSize, descriptors.get().size());
+    BOOST_CHECK_EQUAL(expectedRows, data.n_rows);
+    BOOST_CHECK_EQUAL(expectedCols, data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG_HSV, descriptors.getType());
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(serialization) {

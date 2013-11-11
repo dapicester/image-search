@@ -9,11 +9,11 @@
 
 #include "descriptors_type.hpp"
 #include "extract.hpp"
+#include <armadillo>
 #include <boost/filesystem/path.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/scoped_ptr.hpp>
-#include <opencv2/core/core.hpp>
 
 namespace vis {
 
@@ -37,7 +37,7 @@ public:
     std::string getCategory() const;
 
     /// @return A reference to the descriptor matrix.
-    const cv::Mat& get() const;
+    const arma::fmat& get() const;
 
     /// @return The actual descriptor type.
     vis::DescriptorsType getType() const;
@@ -49,7 +49,6 @@ public:
     void save(const boost::filesystem::path& file) const;
 
 private:
-
     friend class boost::serialization::access;
 
     template <typename Archive>
@@ -57,7 +56,7 @@ private:
 
 private:
     std::string category;
-    boost::scoped_ptr<cv::Mat> descriptors;
+    boost::scoped_ptr<arma::fmat> descriptors;
     vis::DescriptorsType type;
 };
 
@@ -66,7 +65,7 @@ Descriptors::getCategory() const {
     return category;
 }
 
-inline const cv::Mat&
+inline const arma::fmat&
 Descriptors::get() const {
     return *descriptors;
 }
@@ -90,7 +89,7 @@ Descriptors::compute(const std::string& category,
         const std::vector<boost::filesystem::path>& files,
         const Callback& cb, LoadImage flag) {
     this->category = category;
-    this->descriptors.reset(new cv::Mat);
+    this->descriptors.reset(new arma::fmat);
     this->type = cb.type;
     vis::extract(files, *descriptors, cb, flag);
 }
