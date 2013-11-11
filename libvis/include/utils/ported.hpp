@@ -7,9 +7,11 @@
 #ifndef VIS_UTILS_PORTED_HPP
 #define VIS_UTILS_PORTED_HPP
 
+#include <armadillo>
 #include <boost/assert.hpp>
 #include <boost/math/special_functions/round.hpp>
 #include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 namespace vis {
 
@@ -113,58 +115,32 @@ round(const cv::Mat& in) {
     return out;
 }
 
-enum SubsetMode {
-    BEGINNING,
-    ENDING,
-    RANDOM,
-    UNIFORM,
-    LARGEST,
-    SMALLEST
-};
-
 /**
  * @brief Select a given number of columns
  */
 template <typename T>
-cv::Mat
-colsubset(const cv::Mat& in, size_t num, SubsetMode mode) {
-    size_t m = in.size().width;
+arma::Mat<T>
+colsubset(const arma::Mat<T>& in, size_t num) {
+    size_t m = in.n_cols;
     size_t n = std::min(m, num);
 
-    cv::Mat out, idx;
-    switch (mode) {
-    case UNIFORM:
-        idx = linspace<T>(0, m-1, n);
-        idx = round<T>(idx);
-        out = colon<T>(in, idx, COLUMNS);
-        break;
-    default:
-        // FIXME
-        throw "not yet implemented!";
-    }
-    BOOST_ASSERT(out.cols == n);
+    arma::uvec idx = arma::linspace<arma::uvec>(0, m-1, n);
+    arma::Mat<T> out = in.cols(idx);
+    BOOST_ASSERT(out.n_cols == n);
+
     return out;
 }
 
 template <typename T>
 std::vector<T>
-subset(const std::vector<T>& in, size_t num, SubsetMode mode) {
+subset(const std::vector<T>& in, size_t num) {
     size_t m = in.size();
     size_t n = std::min(m, num);
 
-    std::vector<T> out;
-    cv::Mat idx;
-    switch (mode) {
-    case UNIFORM:
-        idx = linspace<int>(0, m-1, n);
-        idx = round<int>(idx);
-        break;
-    default:
-        // FIXME
-        throw "not yet implemented!";
-    }
+    arma::uvec idx = arma::linspace<arma::uvec>(0, m-1, n);
 
-    for (auto it = idx.begin<int>(); it != idx.end<int>(); ++it) {
+    std::vector<T> out;
+    for (arma::uvec::iterator it = idx.begin(); it != idx.end(); ++it) {
         out.push_back(in[*it]);
     }
     BOOST_ASSERT(out.size() == n);

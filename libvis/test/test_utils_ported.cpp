@@ -118,10 +118,13 @@ BOOST_AUTO_TEST_CASE(test_round) {
 }
 
 BOOST_AUTO_TEST_CASE(test_colsubset) {
-    Mat input = (Mat_<double>(1,10) << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-    Mat expected = (Mat_<double>(1,5) << 1, 3, 6, 8, 10);
+    arma::mat input = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    input.reshape(1,10);
 
-    Mat actual = vis::colsubset<double>(input, 5, vis::UNIFORM);
+    //arma::mat expected = { 1, 3, 6, 8, 10 }; // XXX
+    arma::mat expected = { 1, 3, 5, 7, 10 };
+
+    arma::mat actual = vis::colsubset(input, 5);
 
     printmat(input);
     printmat(expected);
@@ -136,7 +139,7 @@ BOOST_AUTO_TEST_CASE(test_subset) {
         v.push_back(boost::lexical_cast<std::string>(i));
     printvar(v);
 
-    std::vector<std::string> actual = vis::subset(v, 10, vis::UNIFORM);
+    std::vector<std::string> actual = vis::subset(v, 10);
     printvar(actual);
 
     std::vector<std::string> expected;
