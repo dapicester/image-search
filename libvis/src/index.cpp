@@ -13,26 +13,26 @@ namespace vis {
 
 namespace fs = boost::filesystem;
 
-Index::Index() {}
+Index::Index() : kdtree(new KDTree<float>) {}
 
 Index::~Index() {}
 
 void
-Index::build(const std::string& cat, const cv::Mat& data, DescriptorsType t, size_t numTrees) {
+Index::build(const std::string& cat, const arma::fmat& data, DescriptorsType t, size_t numTrees) {
     category = cat;
     type = t;
-    kdtree.reset(new KDTree<float>(data, numTrees));
+    kdtree->build(data, numTrees);
 }
 
 void
 Index::build(const std::string& cat, const Descriptors& descriptors, size_t numTrees) {
     category = cat;
     type = descriptors.getType();
-    kdtree.reset(new KDTree<float>(descriptors.get(), numTrees));
+    kdtree->build(descriptors.get(), numTrees);
 }
 
 void
-Index::query(const cv::Mat& data, std::vector<id_type>& results,
+Index::query(const arma::fmat& data, std::vector<id_type>& results,
         size_t numResults, size_t maxNumComparisons) const {
     std::vector<KDTreeIndex> items = kdtree->search<KDTreeIndex>(data, numResults, maxNumComparisons);
     for (const KDTreeIndex& item : items) {

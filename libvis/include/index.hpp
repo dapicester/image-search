@@ -9,7 +9,6 @@
 
 #include "descriptors_type.hpp"
 #include "descriptors.hpp"
-#include <opencv2/core/core.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/serialization/access.hpp>
@@ -36,7 +35,7 @@ public:
      * @param numTree Number of trees in the KD-forest.
      */
     void build(const std::string& category,
-               const cv::Mat& data,
+               const arma::fmat& data,
                DescriptorsType type,
                size_t numTrees = 1);
 
@@ -60,7 +59,7 @@ public:
      * @param[in] numResults Number of query results requested.
      * @param[in] maxNumComparisons Maximum number of comparisons (ANN), \c 0 means unbounded.
      */
-    void query(const cv::Mat& data,
+    void query(const arma::fmat& data,
                std::vector<id_type>& results,
                size_t numResults = 1,
                size_t maxNumComparisons = 0) const;

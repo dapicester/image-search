@@ -27,14 +27,8 @@ vis::Vocabulary* loadVocabulary() {
     return vp;
 };
 
-#define USE_OLD_API 0
-
 BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
-#if USE_OLD_API
-    cv::Mat descriptors;
-#else
     vis::Descriptors descriptors;
-#endif
     fs::path indexFile("index.dat.gz");
 
     {
@@ -42,26 +36,18 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
 
         boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
         vis::CompositeCallback cb(vocabulary.get());
-#if USE_OLD_API
-        vis::extract(files, descriptors, cb);
-        BOOST_REQUIRE_EQUAL(descriptors.size(),
-                            cv::Size(files.size(), cb.getNumBins() + vocabulary->getNumWords()));
-#else
+
         descriptors.compute("test", files, cb);
-        BOOST_REQUIRE_EQUAL(descriptors.get().size(),
-                            cv::Size(files.size(), cb.getNumBins() + vocabulary->getNumWords()));
-#endif
+        BOOST_REQUIRE_EQUAL(descriptors.get().n_cols, files.size());
+        BOOST_REQUIRE_EQUAL(descriptors.get().n_rows, cb.getNumBins() + vocabulary->getNumWords());
     }
 
     {
         // 2. build index
 
         vis::Index index;
-#if USE_OLD_API
-        index.build("test", descriptors, vis::HOG_HSV);
-#else
         index.build("test", descriptors);
-#endif
+
         // 3. save
         index.save("index.dat.gz");
     }
@@ -76,11 +62,7 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
         // 5. query
 
         const size_t queryId = 5;
-#if USE_OLD_API
-        cv::Mat query(descriptors.col(queryId));
-#else
-        cv::Mat query(descriptors.get().col(queryId));
-#endif
+        arma::fmat query(descriptors.get().col(queryId));
 
         // single result
         std::vector<vis::Index::id_type> match;
