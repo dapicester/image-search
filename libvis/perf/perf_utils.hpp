@@ -12,11 +12,9 @@
 
 namespace perf {
 
-cv::Mat
-getRandomData(size_t rows, size_t cols, float min = 0., float max = 1.) {
-    cv::Mat data(rows, cols, cv::DataType<float>::type);
-    cv::randu(data, min, max);
-    return data;
+inline arma::fmat
+getRandomData(size_t rows, size_t cols) {
+    return arma::randu<arma::fmat>(rows, cols);
 }
 
 // TODO move this to descriptors_type.hpp

@@ -18,7 +18,7 @@ static const std::string SAVE_FILE     = "query_index_neighbors.xml";
 int main(int, char**) {
     perf::TimingsVector results;
 
-    cv::Mat data = perf::getRandomData(LEN, NUM_DATA);
+    arma::fmat data = perf::getRandomData(LEN, NUM_DATA);
     vis::Index index;
     index.build("benchmark", data, TYPE);
 

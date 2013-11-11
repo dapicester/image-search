@@ -22,7 +22,7 @@ int main(int, char**) {
         t.addParam("numData", numData);
         t.addParam("length", LEN);
 
-        cv::Mat data = perf::getRandomData(LEN, numData);
+        arma::fmat data = perf::getRandomData(LEN, numData);
         vis::Index index;
         index.build("benchmark", data, TYPE);
 

@@ -31,11 +31,11 @@ static const std::array<size_t,5> MAX_COMPARISONS = { 0, 1000000, 100000, 10000,
 
 /// @brief Build index on given descriptors matrix.
 std::vector<Timer::timestamp_t>
-buildIndex(const cv::Mat& data, vis::DescriptorsType type, size_t numTrees = 1);
+buildIndex(const arma::fmat& data, vis::DescriptorsType type, size_t numTrees = 1);
 
 /// @brief Query index with given descriptors matrix.
 std::vector<Timer::timestamp_t>
-queryIndex(const vis::Index& index, const cv::Mat& data,
+queryIndex(const vis::Index& index, const arma::fmat& data,
                size_t neighbors = 15, size_t maxComparisons = 0);
 
 } /* namespace perf */
