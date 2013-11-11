@@ -6,7 +6,7 @@ environment();
 global DATA_DIR
 
 % build vocabulary for 'test' class
-image_dir = fullfile(DATA_DIR, 'test');
+image_dir = fullfile(DATA_DIR, '..', 'images');
 names = files(image_dir);
 
 vocabulary = computeVocabularyFromImageList('test', names, 300);

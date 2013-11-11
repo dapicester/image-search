@@ -9,52 +9,57 @@
 #include "extract.hpp"
 #include "kmeans.hpp"
 #include "serialization.hpp"
+#include <boost/assert.hpp>
 #include <iostream>
 
 namespace vis {
 
-using namespace cv;
-using namespace std;
+Vocabulary::Vocabulary(size_t nw) : numWords(nw) {}
 
-Vocabulary::Vocabulary() {}
+void
+Vocabulary::build(const std::string c, const arma::fmat& data) {
+    category = c;
 
-Vocabulary::Vocabulary(const std::string c, const cv::Mat& data, size_t n)
-    : category(c), numWords(n) {
     KMeans<float> kmeans;
     words = kmeans.cluster(data, numWords);
 
-    kdtree.reset(new KDTree<float>(words));
+    kdtree.reset(new KDTree<float>);
+    kdtree->build(words);
 }
 
 Vocabulary::~Vocabulary() {}
 
 Vocabulary*
 Vocabulary::fromImageList(
-        const string& category,
-        const vector<fs::path>& names,
+        const std::string& category,
+        const std::vector<fs::path>& names,
         size_t numWords) {
     const size_t len = names.size();
     const size_t numFeatures = cvRound(numWords*100.0/len);
 
-    Mat descriptors;
+    arma::fmat descriptors;
     HogVocabularyCallback cb(numFeatures);
     extract(names, descriptors, cb);
 
     std::cout << "Computing visual words and kdtree ..." << std::endl;
-    Vocabulary* vocabulary = new Vocabulary(category, descriptors, numWords);
+    Vocabulary* vocabulary = new Vocabulary(numWords);
+    vocabulary->build(category, descriptors);
 
     return vocabulary;
 }
 
-Mat
-Vocabulary::quantize(const Mat& descriptors) const {
-    vector<KDTreeIndex> neighbors = kdtree->search<KDTreeIndex>(descriptors, 1, vocabulary::MAX_COMPARISONS);
-    Mat quantized(descriptors.rows, descriptors.cols, descriptors.type());
+arma::fmat
+Vocabulary::quantize(const arma::fmat& descriptors) const {
+    BOOST_ASSERT(descriptors.n_rows == words.n_rows);
+
+    std::vector<KDTreeIndex> neighbors = kdtree->search<KDTreeIndex>(descriptors, 1, vocabulary::MAX_COMPARISONS);
+    arma::fmat quantized(descriptors.n_rows, descriptors.n_cols);
+
     for (int i = 0; i < neighbors.size(); i++) {
         vl_uindex index = neighbors[i].index;
-        words.col(index).copyTo(quantized.col(i));
+        quantized.col(i) = words.col(index);
     }
-    // Mat::convertTo(cv::DataType<double>::type)
+    // TODO convert to double?
     return quantized;
 }
 
