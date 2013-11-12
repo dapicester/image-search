@@ -31,7 +31,7 @@ struct Callback {
 };
 
 /// Compute HOG bag-of-words.
-struct HogBagOfWordsCallback : Callback<BagOfWords, vis::HOG> {
+struct HogBagOfWordsCallback : Callback<HogBagOfWordsCallback, vis::HOG> {
     HogBagOfWordsCallback(const Vocabulary* v);
 
     arma::fvec operator()(const cv::Mat& image) const;
