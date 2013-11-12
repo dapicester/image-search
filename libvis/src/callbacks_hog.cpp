@@ -34,5 +34,10 @@ BagOfWords::operator()(const arma::fmat& descriptors) const {
     return cv2arma<float>(histogram);
 }
 
+size_t
+BagOfWords::numWords() const {
+    return vocabulary->getNumWords();
+}
+
 } /* namespace vis */
 

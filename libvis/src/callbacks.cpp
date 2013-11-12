@@ -28,11 +28,6 @@ HsvHistogramsCallback::operator()(const cv::Mat& image) const {
     return hsv.extract(image);
 }
 
-size_t
-HsvHistogramsCallback::getNumBins() const {
-    return hsv.getNumBins();
-}
-
 CompositeCallback::CompositeCallback(const Vocabulary* v)
         : hog(v) {}
 
@@ -45,11 +40,6 @@ CompositeCallback::operator()(const cv::Mat& image) const {
     arma::fvec d2 = hsv(image);
 
     return arma::join_cols(d1, d2);
-}
-
-size_t
-CompositeCallback::getNumBins() const {
-    return hsv.getNumBins();
 }
 
 } /* namespace vis */

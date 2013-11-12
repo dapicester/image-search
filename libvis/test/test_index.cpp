@@ -29,7 +29,7 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
 
         descriptors.compute("test", files, cb);
         BOOST_REQUIRE_EQUAL(descriptors.get().n_cols, files.size());
-        BOOST_REQUIRE_EQUAL(descriptors.get().n_rows, cb.getNumBins() + vocabulary->getNumWords());
+        BOOST_REQUIRE_EQUAL(descriptors.get().n_rows, cb.length());
     }
 
     {

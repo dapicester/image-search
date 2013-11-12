@@ -26,6 +26,7 @@ private:
 struct BagOfWords {
     BagOfWords(const Vocabulary* vocabulary);
     arma::fmat operator()(const arma::fmat& descriptors) const;
+    size_t numWords() const;
 private:
     const Vocabulary* vocabulary;
 };

@@ -16,42 +16,53 @@ namespace vis {
 class Vocabulary;
 
 /// @brief Base class for callbacks.
-template <typename Derived>
+template <typename Derived, DescriptorsType t>
 struct Callback {
+    /// DescriptorsType of the callback.
+    static const DescriptorsType type = t;
+
     arma::fvec operator()(const cv::Mat& image) const {
         return static_cast<Derived*>(this)->operator()(image);
+    }
+
+    size_t length() const {
+        return static_cast<Derived*>(this)->length();
     }
 };
 
 /// Compute HOG bag-of-words.
-struct HogBagOfWordsCallback : Callback<BagOfWords> {
+struct HogBagOfWordsCallback : Callback<BagOfWords, vis::HOG> {
     HogBagOfWordsCallback(const Vocabulary* v);
+
     arma::fvec operator()(const cv::Mat& image) const;
 
-    static const DescriptorsType type = vis::HOG;
+    size_t length() const { return bow.numWords(); }
+
 private:
     BagOfWords bow;
     HogExtractor hog;
 };
 
 /// Compute HSV color histogram.
-struct HsvHistogramsCallback : Callback<HsvHistogramsCallback> {
+struct HsvHistogramsCallback : Callback<HsvHistogramsCallback, vis::HSV> {
     HsvHistogramsCallback();
-    arma::fvec operator()(const cv::Mat& image) const;
-    size_t getNumBins() const;
 
-    static const DescriptorsType type = vis::HSV;
+    arma::fvec operator()(const cv::Mat& image) const;
+
+    size_t length() const { return hsv.getNumBins(); }
+
 private:
     HsvExtractor hsv;
 };
 
 /// Compute both HOG bag-of-words and HSV color histogram.
-struct CompositeCallback : Callback<CompositeCallback> {
+struct CompositeCallback : Callback<CompositeCallback, vis::HOG_HSV> {
     CompositeCallback(const Vocabulary* v);
-    arma::fvec operator()(const cv::Mat& image) const;
-    size_t getNumBins() const;
 
-    static const DescriptorsType type = vis::HOG_HSV;
+    arma::fvec operator()(const cv::Mat& image) const;
+
+    size_t length() const { return hsv.length() + hog.length(); }
+
 private:
     HogBagOfWordsCallback hog;
     HsvHistogramsCallback hsv;

@@ -32,15 +32,12 @@ BOOST_AUTO_TEST_CASE(hog) {
     boost::scoped_ptr<vis::Vocabulary> vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
     vis::HogBagOfWordsCallback cb(vocabulary.get());
 
-    const size_t expectedCols = files.size();
-    const size_t expectedRows = vocabulary->getNumWords();
-
     vis::Descriptors descriptors;
     descriptors.compute("test", files, cb, vis::GRAYSCALE);
     const arma::fmat& data = descriptors.get();
 
-    BOOST_CHECK_EQUAL(expectedRows, data.n_rows);
-    BOOST_CHECK_EQUAL(expectedCols, data.n_cols);
+    BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
+    BOOST_CHECK_EQUAL(files.size(), data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG, descriptors.getType());
 
     testSerialization("test_descriptors_hog.dat", descriptors);
@@ -49,15 +46,12 @@ BOOST_AUTO_TEST_CASE(hog) {
 BOOST_AUTO_TEST_CASE(hsv) {
     vis::HsvHistogramsCallback cb;
 
-    const size_t expectedCols = files.size();
-    const size_t expectedRows = cb.getNumBins();
-
     vis::Descriptors histograms;
     histograms.compute("test", files, cb);
     const arma::fmat& data = histograms.get();
 
-    BOOST_CHECK_EQUAL(expectedRows, data.n_rows);
-    BOOST_CHECK_EQUAL(expectedCols, data.n_cols);
+    BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
+    BOOST_CHECK_EQUAL(files.size(), data.n_cols);
     BOOST_CHECK_EQUAL(vis::HSV, histograms.getType());
 
     testSerialization("test_descriptors_hsv.dat", histograms);
@@ -79,20 +73,17 @@ BOOST_AUTO_TEST_CASE(hoghsv) {
      * cv::Mat descriptors;
      * extractor.extract(files, descriptors);
      *
-     * size_t descriptorSize = hsv.getNumBins() + vocabulary->getNumWords();
+     * size_t descriptorSize = hsv.length() + hog.length();
      */
 
     vis::CompositeCallback cb(vocabulary.get());
-
-    const size_t expectedCols = files.size();
-    const size_t expectedRows = cb.getNumBins() + vocabulary->getNumWords();
 
     vis::Descriptors descriptors;
     descriptors.compute("test", files, cb);
     const arma::fmat& data = descriptors.get();
 
-    BOOST_CHECK_EQUAL(expectedRows, data.n_rows);
-    BOOST_CHECK_EQUAL(expectedCols, data.n_cols);
+    BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
+    BOOST_CHECK_EQUAL(files.size(), data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG_HSV, descriptors.getType());
 
     testSerialization("test_descriptors_hoghsv.dat", descriptors);
