@@ -11,9 +11,10 @@
 #include "vocabulary.hpp"
 #include "fixtures.hpp"
 #include "utils/matrix.hpp"
+#include "test_commons.hpp"
 #include <boost/scoped_ptr.hpp>
 
-namespace fs = boost::filesystem;
+static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
 
 arma::fmat
 lookup(const vis::Vocabulary* vocabulary) {
@@ -53,20 +54,16 @@ BOOST_FIXTURE_TEST_CASE(test_vocabulary, test::ImageDir) {
     descriptors = lookup(vocabulary.get());
 
     // save
-    const fs::path vocabularyFile = "test_vocabulary.dat";
-    if (fs::exists(vocabularyFile)) fs::remove(vocabularyFile);
-    BOOST_CHECK(not fs::exists(vocabularyFile));
+    if (fs::exists(VOCABULARY_FILE))
+        fs::remove(VOCABULARY_FILE);
+    BOOST_CHECK(not fs::exists(VOCABULARY_FILE));
 
-    vocabulary->save(vocabularyFile);
-    BOOST_CHECK(fs::is_regular_file(vocabularyFile));
+    vocabulary->save(VOCABULARY_FILE);
+    BOOST_CHECK(fs::is_regular_file(VOCABULARY_FILE));
 }
 
 BOOST_AUTO_TEST_CASE(test_serialization) {
-    const fs::path vocabularyFile = "test_vocabulary.dat";
-    BOOST_REQUIRE_MESSAGE(fs::is_regular_file(vocabularyFile), "Cannot find vocabulary file");
-
-    boost::scoped_ptr<vis::Vocabulary> vocabulary(vis::Vocabulary::load(vocabularyFile));
-    BOOST_CHECK(vocabulary.get());
+    boost::scoped_ptr<vis::Vocabulary> vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
     BOOST_CHECK_EQUAL("test", vocabulary->getCategory());
 
     // check it's the same

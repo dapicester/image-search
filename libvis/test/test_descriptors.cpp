@@ -13,24 +13,15 @@
 #include "vocabulary.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
+#include "test_commons.hpp"
 #include <boost/scoped_ptr.hpp>
-
-namespace fs = boost::filesystem;
-
-vis::Vocabulary* loadVocabulary() {
-    static const fs::path vocabularyFile = "test_vocabulary.dat";
-    BOOST_REQUIRE_MESSAGE(fs::is_regular_file(vocabularyFile), "Cannot find vocabulary file");
-
-    vis::Vocabulary* vp = vis::Vocabulary::load(vocabularyFile);
-    BOOST_CHECK(vp);
-
-    return vp;
-};
 
 BOOST_FIXTURE_TEST_SUITE(descriptors, test::ImageDir)
 
+static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
+
 BOOST_AUTO_TEST_CASE(hog) {
-    boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
+    boost::scoped_ptr<vis::Vocabulary> vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
     vis::HogBagOfWordsCallback cb(vocabulary.get());
 
     const size_t expectedCols = files.size();
@@ -61,7 +52,7 @@ BOOST_AUTO_TEST_CASE(hsv) {
 }
 
 BOOST_AUTO_TEST_CASE(hog_hsv) {
-    boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
+    boost::scoped_ptr<vis::Vocabulary> vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
 
     /*
      * TODO this is the interface I want
