@@ -28,14 +28,15 @@ BOOST_FIXTURE_TEST_CASE(test_histogram, test::Peppers) {
     vis::HsvExtractor extractor(levels);
 
     cv::Mat quantized;
-    arma::fmat histogram = extractor.extract(image, true, quantized);
+    arma::fvec histogram = extractor.extract(image, true, quantized);
+    float sum = arma::sum(histogram);
 
     printmat(histogram);
+    printvar(sum);
 
     int numbins = extractor.getNumBins();
-    BOOST_CHECK_EQUAL(histogram.n_cols, 1); // TODO use vec instead mat
-    BOOST_CHECK_EQUAL(histogram.n_rows, numbins); // TODO use vec.size()
-    BOOST_CHECK_CLOSE_FRACTION(arma::accu(histogram), 1., 0.1);
+    BOOST_CHECK_EQUAL(histogram.size(), numbins);
+    BOOST_CHECK_CLOSE_FRACTION(sum, 1., 0.1);
 
     BOOST_CHECK(not quantized.empty());
 

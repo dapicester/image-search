@@ -14,7 +14,7 @@ namespace vis {
 HogBagOfWordsCallback::HogBagOfWordsCallback(const Vocabulary* v)
         : bow(v) {}
 
-arma::fmat
+arma::fvec
 HogBagOfWordsCallback::operator()(const cv::Mat& image) const {
     arma::fmat d = hog.extract(image);
     arma::fmat hist = bow(d);
@@ -23,7 +23,7 @@ HogBagOfWordsCallback::operator()(const cv::Mat& image) const {
 
 HsvHistogramsCallback::HsvHistogramsCallback() {}
 
-arma::fmat
+arma::fvec
 HsvHistogramsCallback::operator()(const cv::Mat& image) const {
     return hsv.extract(image);
 }
@@ -36,15 +36,14 @@ HsvHistogramsCallback::getNumBins() const {
 CompositeCallback::CompositeCallback(const Vocabulary* v)
         : hog(v) {}
 
-arma::fmat
+arma::fvec
 CompositeCallback::operator()(const cv::Mat& image) const {
     cv::Mat bwimage;
     cv::cvtColor(image, bwimage, CV_BGR2GRAY);
 
     arma::fmat d1 = hog(bwimage);
-    arma::fmat d2 = hsv(image);
+    arma::fvec d2 = hsv(image);
 
-    // FIXME
     return arma::join_cols(d1, d2);
 }
 

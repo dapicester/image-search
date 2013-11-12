@@ -18,8 +18,7 @@ class Vocabulary;
 /// @brief Base class for callbacks.
 template <typename Derived>
 struct Callback {
-    // FIXME this should return vec/rowvec
-    arma::fmat operator()(const cv::Mat& image) const {
+    arma::fvec operator()(const cv::Mat& image) const {
         return static_cast<Derived*>(this)->operator()(image);
     }
 };
@@ -27,7 +26,7 @@ struct Callback {
 /// Compute HOG bag-of-words.
 struct HogBagOfWordsCallback : Callback<BagOfWords> {
     HogBagOfWordsCallback(const Vocabulary* v);
-    arma::fmat operator()(const cv::Mat& image) const;
+    arma::fvec operator()(const cv::Mat& image) const;
 
     static const DescriptorsType type = vis::HOG;
 private:
@@ -38,7 +37,7 @@ private:
 /// Compute HSV color histogram.
 struct HsvHistogramsCallback : Callback<HsvHistogramsCallback> {
     HsvHistogramsCallback();
-    arma::fmat operator()(const cv::Mat& image) const;
+    arma::fvec operator()(const cv::Mat& image) const;
     size_t getNumBins() const;
 
     static const DescriptorsType type = vis::HSV;
@@ -49,7 +48,7 @@ private:
 /// Compute both HOG bag-of-words and HSV color histogram.
 struct CompositeCallback : Callback<CompositeCallback> {
     CompositeCallback(const Vocabulary* v);
-    arma::fmat operator()(const cv::Mat& image) const;
+    arma::fvec operator()(const cv::Mat& image) const;
     size_t getNumBins() const;
 
     static const DescriptorsType type = vis::HOG_HSV;

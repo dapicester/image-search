@@ -36,7 +36,8 @@ public:
      * @param normalize Whether normalize the histogram to the unit sum.
      * @param[out] quantized The color-quantized image.
      */
-    arma::fmat extract(const cv::Mat& image, bool normalize = true, cv::OutputArray& quantized = cv::noArray()) const;
+    arma::fvec extract(const cv::Mat& image, bool normalize = true,
+                       cv::OutputArray& quantized = cv::noArray()) const;
 
     /// @brief Render the histogram to a displayable image.
     cv::Mat render(const arma::fmat& histogram) const;

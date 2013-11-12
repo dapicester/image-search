@@ -14,7 +14,7 @@ namespace vis {
 
 /// Compute the histogram using non-uniform mapping
 template <typename T>
-arma::fmat
+arma::fvec
 computeHistogram(const cv::Mat& quantized, const arma::ivec3& levels, bool normalize) {
     BOOST_ASSERT(quantized.depth() == cv::DataType<T>::type);
 
@@ -54,9 +54,9 @@ computeHistogram(const cv::Mat& quantized, const arma::ivec3& levels, bool norma
     }
 
     colors.reshape(hue_bins * sat_bins * val_bins, 1, 1);
-    arma::imat values = arma::join_cols(arma::ivec(colors), grays);
+    arma::ivec values = arma::join_cols(arma::ivec(colors), grays);
 
-    return arma::conv_to<arma::fmat>::from(values) /= arma::as_scalar(arma::sum(values));
+    return arma::conv_to<arma::fvec>::from(values) /= arma::as_scalar(arma::sum(values));
 }
 
 HsvExtractor::HsvExtractor(const levels_t& l, bool f)
@@ -69,7 +69,7 @@ HsvExtractor::getNumBins() const {
     return levels[0] * levels[1] * levels[2] + levels[2] + 1;
 }
 
-arma::fmat
+arma::fvec
 HsvExtractor::extract(const cv::Mat& image, bool normalize, cv::OutputArray& qimage) const {
     cv::Mat hsv = toHsv(image);
     cv::Mat quantized = quantize(hsv, hsvlevels);
