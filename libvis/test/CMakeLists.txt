@@ -53,15 +53,19 @@ add_unit_test(NAME test_standardize
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hog
-    SOURCES test_hog.cpp ${SRC_DIR}/hog.cpp
+    SOURCES test_hog.cpp
+            ${SRC_DIR}/hog.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hsv_aux
-    SOURCES test_hsv_aux.cpp ${SRC_DIR}/hsv_aux.cpp
+    SOURCES test_hsv_aux.cpp
+            ${SRC_DIR}/hsv_aux.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hsv
-    SOURCES test_hsv.cpp ${SRC_DIR}/hsv.cpp ${SRC_DIR}/hsv_aux.cpp
+    SOURCES test_hsv.cpp
+            ${SRC_DIR}/hsv.cpp
+            ${SRC_DIR}/hsv_aux.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_utils_ported
@@ -84,7 +88,10 @@ add_unit_test(NAME test_timer
 
 add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
-    LINK_LIBRARIES vis ${Boost_LIBRARIES})
+            ${SRC_DIR}/hog.cpp
+            ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/callbacks_hog.cpp
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_descriptors
     SOURCES test_descriptors.cpp
