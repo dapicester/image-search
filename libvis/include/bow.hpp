@@ -35,10 +35,12 @@ private:
 template <class Extractor>
 arma::fvec
 BagOfWords<Extractor>::extract(const cv::Mat& image) const {
-    arma::fmat descriptors = extractor.extract(image);
-    arma::uvec words = vocabulary.lookup(descriptors);
-    arma::fvec histogram = arma::conv_to<arma::fvec>::from(arma::hist(words, vocabulary.getNumWords()));
-    return histogram / arma::as_scalar(arma::sum(histogram));
+    using namespace arma;
+    fmat descriptors = extractor.extract(image);
+    uvec words = vocabulary.lookup(descriptors);
+    size_t n = numWords();
+    fvec histogram = conv_to<fvec>::from(hist(words, arma::linspace<uvec>(1,n,n)));
+    return histogram / sum(histogram);
 }
 
 } /* namespace vis */
