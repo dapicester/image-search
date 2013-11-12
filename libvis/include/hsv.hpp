@@ -13,6 +13,7 @@
 
 namespace vis {
 
+/// Type alias for quantization levels.
 typedef arma::ivec3 levels_t;
 
 namespace hsv {
@@ -28,7 +29,13 @@ public:
     /// Default destructor.
     ~HsvExtractor();
 
-    /// @brief Extracts HSV color histogram from a color single-precision image.
+    /**
+     * @brief Extracts HSV color histogram.
+     * HSV color histogram are computed from an RGB color single-precision image.
+     * @param image Input image.
+     * @param normalize Whether normalize the histogram to the unit sum.
+     * @param[out] quantized The color-quantized image.
+     */
     arma::fmat extract(const cv::Mat& image, bool normalize = true, cv::OutputArray& quantized = cv::noArray()) const;
 
     /// @brief Render the histogram to a displayable image.
