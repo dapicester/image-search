@@ -49,6 +49,9 @@ public:
     /// @brief Quantize the input descriptors into words.
     arma::fmat quantize(const arma::fmat& descriptors) const;
 
+    /// @brief Lookup the input descriptors as words (indices).
+    arma::uvec lookup(const arma::fmat& descriptors) const;
+
     /// @return The actual number of words in dictionary.
     size_t getNumWords() const;
 

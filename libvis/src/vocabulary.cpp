@@ -55,14 +55,26 @@ Vocabulary::quantize(const arma::fmat& descriptors) const {
     std::vector<KDTreeIndex> neighbors = kdtree->search<KDTreeIndex>(descriptors, 1, vocabulary::MAX_COMPARISONS);
     arma::fmat quantized(descriptors.n_rows, descriptors.n_cols);
 
-    // FIXME should not return the quantized words but the indices!!!
-
     for (int i = 0; i < neighbors.size(); i++) {
         vl_uindex index = neighbors[i].index;
         quantized.col(i) = words.col(index);
     }
 
     return quantized;
+}
+
+arma::uvec
+Vocabulary::lookup(const arma::fmat& descriptors) const {
+    BOOST_ASSERT(descriptors.n_rows == words.n_rows);
+
+    std::vector<KDTreeIndex> neighbors = kdtree->search<KDTreeIndex>(descriptors, 1, vocabulary::MAX_COMPARISONS);
+    arma::uvec indices(descriptors.n_cols);
+
+    for (int i = 0; i < neighbors.size(); i++) {
+        indices(i) = neighbors[i].index;
+    }
+
+    return indices;
 }
 
 Vocabulary*

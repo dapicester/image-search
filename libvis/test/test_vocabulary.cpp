@@ -17,20 +17,34 @@
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
 
 arma::fmat
-lookup(const vis::Vocabulary* vocabulary) {
+quantize(const vis::Vocabulary& vocabulary) {
     static test::Lena lena;
     static cv::Mat image = vis::standardizeImage(lena.input);
 
     vis::HogExtractor extractor;
     arma::fmat data = extractor.extract(image);
-    arma::fmat quantized = vocabulary->quantize(data);
+    arma::fmat quantized = vocabulary.quantize(data);
     BOOST_CHECK_EQUAL(data.n_cols, quantized.n_cols);
     BOOST_CHECK_EQUAL(data.n_rows, quantized.n_rows);
 
     return quantized;
 }
 
+arma::uvec
+lookup(const vis::Vocabulary& vocabulary) {
+    static test::Lena lena;
+    static cv::Mat image = vis::standardizeImage(lena.input);
+
+    vis::HogExtractor extractor;
+    arma::fmat data = extractor.extract(image);
+    arma::uvec words = vocabulary.lookup(data);
+    BOOST_CHECK_EQUAL(data.n_cols, words.size());
+
+    return words;
+}
+
 arma::fmat descriptors;
+arma::uvec indices;
 
 BOOST_FIXTURE_TEST_CASE(test_vocabulary, test::ImageDir) {
     // compute vocabulary
@@ -51,7 +65,8 @@ BOOST_FIXTURE_TEST_CASE(test_vocabulary, test::ImageDir) {
     BOOST_CHECK_EQUAL(599, vl_kdforest_get_num_nodes_of_tree(forest, 0));
 
     // use
-    descriptors = lookup(vocabulary.get());
+    descriptors = quantize(*vocabulary);
+    indices = lookup(*vocabulary);
 
     // save
     test::save(VOCABULARY_FILE, *vocabulary);
@@ -74,8 +89,12 @@ BOOST_AUTO_TEST_CASE(test_serialization) {
     BOOST_CHECK_EQUAL(9, vl_kdforest_get_depth_of_tree(forest, 0));
     BOOST_CHECK_EQUAL(599, vl_kdforest_get_num_nodes_of_tree(forest, 0));
 
-    arma::fmat lena = lookup(vocabulary.get());
+    arma::fmat lenaDescriptors = quantize(*vocabulary);
     if (not descriptors.empty())
-        BOOST_CHECK(test::equals(lena, descriptors));
+        BOOST_CHECK(test::equals(lenaDescriptors, descriptors));
+
+    arma::uvec lenaIndices = lookup(*vocabulary);
+    if (not indices.empty())
+        BOOST_CHECK(test::equals(lenaIndices, indices));
 }
 
