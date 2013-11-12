@@ -11,8 +11,8 @@
 
 namespace vis {
 
-HogBagOfWordsCallback::HogBagOfWordsCallback(const Vocabulary* v)
-        : bow(*v) {}
+HogBagOfWordsCallback::HogBagOfWordsCallback(const Vocabulary& v)
+        : bow(v) {}
 
 arma::fvec
 HogBagOfWordsCallback::operator()(const cv::Mat& image) const {
@@ -26,7 +26,7 @@ HsvHistogramsCallback::operator()(const cv::Mat& image) const {
     return hsv.extract(image);
 }
 
-CompositeCallback::CompositeCallback(const Vocabulary* v)
+CompositeCallback::CompositeCallback(const Vocabulary& v)
         : hog(v) {}
 
 arma::fvec

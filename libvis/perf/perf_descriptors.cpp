@@ -90,13 +90,13 @@ inline void extractDescriptors(vis::DescriptorsType type,
             break;
         case vis::HOG:
             {
-            vis::HogBagOfWordsCallback cb(vocabulary);
+            vis::HogBagOfWordsCallback cb(*vocabulary);
             descriptors.compute("benchmark", files, cb);
             }
             break;
         case vis::HOG_HSV:
             {
-            vis::CompositeCallback cb(vocabulary);
+            vis::CompositeCallback cb(*vocabulary);
             descriptors.compute("benchmark", files, cb);
             }
             break;

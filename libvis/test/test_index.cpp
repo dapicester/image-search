@@ -18,14 +18,18 @@
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
 static const fs::path INDEX_FILE = "index.dat.gz";
 
+typedef boost::scoped_ptr<vis::Vocabulary> VocabularyPtr;
+typedef boost::scoped_ptr<vis::Descriptors> DescriptorsPtr;
+typedef boost::scoped_ptr<vis::Index> IndexPtr;
+
 BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
     vis::Descriptors descriptors;
 
     {
         // 1. compute histograms/load from file
 
-        boost::scoped_ptr<vis::Vocabulary> vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
-        vis::CompositeCallback cb(vocabulary.get());
+        VocabularyPtr vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
+        vis::CompositeCallback cb(*vocabulary);
 
         descriptors.compute("test", files, cb);
         BOOST_REQUIRE_EQUAL(descriptors.get().n_cols, files.size());
@@ -45,7 +49,7 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
     {
         // 4. load
 
-        boost::scoped_ptr<vis::Index> index(test::load<vis::Index>(INDEX_FILE));
+        IndexPtr index(test::load<vis::Index>(INDEX_FILE));
         BOOST_REQUIRE_EQUAL("test", index->getCategory());
         BOOST_REQUIRE_EQUAL(vis::HOG_HSV, index->getType());
 

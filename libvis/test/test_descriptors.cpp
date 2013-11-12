@@ -20,17 +20,20 @@ BOOST_FIXTURE_TEST_SUITE(descriptors, test::ImageDir)
 
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
 
+typedef boost::scoped_ptr<vis::Vocabulary> VocabularyPtr;
+typedef boost::scoped_ptr<vis::Descriptors> DescriptorsPtr;
+
 void testSerialization(const fs::path& file, const vis::Descriptors& descriptors) {
     test::save(file, descriptors);
-    vis::Descriptors* loaded = test::load<vis::Descriptors>(file);
+    DescriptorsPtr loaded(test::load<vis::Descriptors>(file));
     BOOST_CHECK_EQUAL(descriptors.getCategory(), loaded->getCategory());
     BOOST_CHECK(test::equals(descriptors.get(), loaded->get()));
     BOOST_CHECK_EQUAL(descriptors.getType(), loaded->getType());
 }
 
 BOOST_AUTO_TEST_CASE(hog) {
-    boost::scoped_ptr<vis::Vocabulary> vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
-    vis::HogBagOfWordsCallback cb(vocabulary.get());
+    VocabularyPtr vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
+    vis::HogBagOfWordsCallback cb(*vocabulary);
 
     vis::Descriptors descriptors;
     descriptors.compute("test", files, cb, vis::GRAYSCALE);
@@ -58,7 +61,7 @@ BOOST_AUTO_TEST_CASE(hsv) {
 }
 
 BOOST_AUTO_TEST_CASE(hoghsv) {
-    boost::scoped_ptr<vis::Vocabulary> vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
+    VocabularyPtr vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
 
     /*
      * TODO this is the interface I want
@@ -76,7 +79,7 @@ BOOST_AUTO_TEST_CASE(hoghsv) {
      * size_t descriptorSize = hsv.length() + hog.length();
      */
 
-    vis::CompositeCallback cb(vocabulary.get());
+    vis::CompositeCallback cb(*vocabulary);
 
     vis::Descriptors descriptors;
     descriptors.compute("test", files, cb);

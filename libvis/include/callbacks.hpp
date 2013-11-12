@@ -14,8 +14,6 @@
 
 namespace vis {
 
-class Vocabulary;
-
 /// @brief Base class for callbacks.
 template <typename Derived, DescriptorsType t>
 struct Callback {
@@ -33,7 +31,7 @@ struct Callback {
 
 /// Compute HOG bag-of-words.
 struct HogBagOfWordsCallback : Callback<HogBagOfWordsCallback, vis::HOG> {
-    HogBagOfWordsCallback(const Vocabulary* v);
+    HogBagOfWordsCallback(const Vocabulary& v);
 
     arma::fvec operator()(const cv::Mat& image) const;
 
@@ -57,7 +55,7 @@ private:
 
 /// Compute both HOG bag-of-words and HSV color histogram.
 struct CompositeCallback : Callback<CompositeCallback, vis::HOG_HSV> {
-    CompositeCallback(const Vocabulary* v);
+    CompositeCallback(const Vocabulary& v);
 
     arma::fvec operator()(const cv::Mat& image) const;
 
