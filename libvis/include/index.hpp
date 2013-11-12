@@ -74,7 +74,7 @@ public:
     static Index* load(const boost::filesystem::path& file);
 
     /// @brief Write index to file.
-    void save(const boost::filesystem::path& file);
+    void save(const boost::filesystem::path& file) const;
 
 private:
     std::string category;

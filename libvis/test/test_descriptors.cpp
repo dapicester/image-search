@@ -20,6 +20,14 @@ BOOST_FIXTURE_TEST_SUITE(descriptors, test::ImageDir)
 
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
 
+void testSerialization(const fs::path& file, const vis::Descriptors& descriptors) {
+    test::save(file, descriptors);
+    vis::Descriptors* loaded = test::load<vis::Descriptors>(file);
+    BOOST_CHECK_EQUAL(descriptors.getCategory(), loaded->getCategory());
+    BOOST_CHECK(test::equals(descriptors.get(), loaded->get()));
+    BOOST_CHECK_EQUAL(descriptors.getType(), loaded->getType());
+}
+
 BOOST_AUTO_TEST_CASE(hog) {
     boost::scoped_ptr<vis::Vocabulary> vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
     vis::HogBagOfWordsCallback cb(vocabulary.get());
@@ -34,6 +42,8 @@ BOOST_AUTO_TEST_CASE(hog) {
     BOOST_CHECK_EQUAL(expectedRows, data.n_rows);
     BOOST_CHECK_EQUAL(expectedCols, data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG, descriptors.getType());
+
+    testSerialization("test_descriptors_hog.dat", descriptors);
 }
 
 BOOST_AUTO_TEST_CASE(hsv) {
@@ -49,9 +59,11 @@ BOOST_AUTO_TEST_CASE(hsv) {
     BOOST_CHECK_EQUAL(expectedRows, data.n_rows);
     BOOST_CHECK_EQUAL(expectedCols, data.n_cols);
     BOOST_CHECK_EQUAL(vis::HSV, histograms.getType());
+
+    testSerialization("test_descriptors_hsv.dat", histograms);
 }
 
-BOOST_AUTO_TEST_CASE(hog_hsv) {
+BOOST_AUTO_TEST_CASE(hoghsv) {
     boost::scoped_ptr<vis::Vocabulary> vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
 
     /*
@@ -82,20 +94,8 @@ BOOST_AUTO_TEST_CASE(hog_hsv) {
     BOOST_CHECK_EQUAL(expectedRows, data.n_rows);
     BOOST_CHECK_EQUAL(expectedCols, data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG_HSV, descriptors.getType());
-}
 
-BOOST_AUTO_TEST_CASE(serialization) {
-    vis::HsvHistogramsCallback cb;
-    fs::path file("test_descriptors.dat");
-
-    vis::Descriptors histograms;
-    histograms.compute("test", files, cb);
-    histograms.save(file);
-
-    vis::Descriptors* loaded = vis::Descriptors::load(file);
-    BOOST_CHECK_EQUAL(histograms.getCategory(), loaded->getCategory());
-    BOOST_CHECK(test::equals(histograms.get(), loaded->get()));
-    BOOST_CHECK_EQUAL(histograms.getType(), loaded->getType());
+    testSerialization("test_descriptors_hoghsv.dat", descriptors);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

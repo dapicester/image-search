@@ -49,7 +49,7 @@ Index::load(const fs::path& file) {
 }
 
 void
-Index::save(const fs::path& file) {
+Index::save(const fs::path& file) const {
     std::cout << "Saving index to file: " << file << " ... ";
     vis::save<Index, BinarySerializer>(file, *this);
     std::cout << "done" << std::endl;
