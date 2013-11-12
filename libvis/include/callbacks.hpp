@@ -7,8 +7,8 @@
 #ifndef VIS_CALLBACKS_HPP
 #define VIS_CALLBACKS_HPP
 
-#include "callbacks_hog.hpp"
 #include "descriptors_type.hpp"
+#include "bow.hpp"
 #include "hog.hpp"
 #include "hsv.hpp"
 
@@ -40,8 +40,7 @@ struct HogBagOfWordsCallback : Callback<HogBagOfWordsCallback, vis::HOG> {
     size_t length() const { return bow.numWords(); }
 
 private:
-    hog::BagOfWords bow;
-    HogExtractor hog;
+    BagOfWords<HogExtractor> bow;
 };
 
 /// Compute HSV color histogram.

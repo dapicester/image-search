@@ -24,6 +24,9 @@ public:
     /// @brief Compute bag of words of HOG from a gray-scale single-precision image.
     arma::fvec extract(const cv::Mat& image) const;
 
+    /// @brief Returns the number of words in the vocabulary.
+    size_t numWords() const { return vocabulary.getNumWords(); }
+
 private:
     const Vocabulary& vocabulary; ///< Reference to the vocabulary instance.
     const Extractor extractor;    ///< Local \c Extractor instance.

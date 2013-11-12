@@ -12,13 +12,11 @@
 namespace vis {
 
 HogBagOfWordsCallback::HogBagOfWordsCallback(const Vocabulary* v)
-        : bow(v) {}
+        : bow(*v) {}
 
 arma::fvec
 HogBagOfWordsCallback::operator()(const cv::Mat& image) const {
-    arma::fmat d = hog.extract(image);
-    arma::fmat hist = bow(d);
-    return hist;
+    return bow.extract(image);
 }
 
 HsvHistogramsCallback::HsvHistogramsCallback() {}

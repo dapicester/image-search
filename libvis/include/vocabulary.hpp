@@ -7,7 +7,6 @@
 #ifndef VIS_VOCABULARY_HPP
 #define VIS_VOCABULARY_HPP
 
-#include "callbacks_hog.hpp"
 #include "extract.hpp"
 #include "kdtree.hpp"
 #include "utils/ported.hpp"
