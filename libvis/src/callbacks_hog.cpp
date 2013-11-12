@@ -7,18 +7,9 @@
 #include "callbacks_hog.hpp"
 #include "vocabulary.hpp"
 #include "utils/conversions.hpp"
-#include "utils/ported.hpp"
 
 namespace vis {
-
-HogVocabularyCallback::HogVocabularyCallback(size_t n)
-        : numFeatures(n) {}
-
-arma::fmat
-HogVocabularyCallback::operator()(const cv::Mat& image) const {
-    arma::fmat d = hog.extract(image);
-    return colsubset(d, numFeatures);
-}
+namespace hog {
 
 BagOfWords::BagOfWords(const Vocabulary* v)
         : vocabulary(v) {}
@@ -39,5 +30,6 @@ BagOfWords::numWords() const {
     return vocabulary->getNumWords();
 }
 
+} /* namespace hog */
 } /* namespace vis */
 

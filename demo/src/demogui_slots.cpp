@@ -163,7 +163,7 @@ DemoGui::recomputeVocabulary() {
     progress->setValue(3);
 
     PathList names = vis::subset(imagesMap[category], 100);
-    vocabulary.reset(vis::Vocabulary::fromImageList(category.toStdString(), names));
+    vocabulary.reset(vis::Vocabulary::fromImageList<vis::HogExtractor>(category.toStdString(), names));
     progress->setValue(6);
 
     fs::path savefile = vocabularyFile(DATA_PATH, category);

@@ -16,6 +16,8 @@
 
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
 
+typedef boost::scoped_ptr<vis::Vocabulary> VocabularyPtr;
+
 arma::fmat
 quantize(const vis::Vocabulary& vocabulary) {
     static test::Lena lena;
@@ -48,7 +50,7 @@ arma::uvec indices;
 
 BOOST_FIXTURE_TEST_CASE(test_vocabulary, test::ImageDir) {
     // compute vocabulary
-    boost::scoped_ptr<vis::Vocabulary> vocabulary(vis::Vocabulary::fromImageList("test", files));
+    VocabularyPtr vocabulary(vis::Vocabulary::fromImageList<vis::HogExtractor>("test", files));
     BOOST_CHECK(vocabulary.get());
 
     // check it's the same as matlab (see test_vocabulary.mat)

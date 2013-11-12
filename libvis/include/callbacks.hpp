@@ -9,6 +9,7 @@
 
 #include "callbacks_hog.hpp"
 #include "descriptors_type.hpp"
+#include "hog.hpp"
 #include "hsv.hpp"
 
 namespace vis {
@@ -39,7 +40,7 @@ struct HogBagOfWordsCallback : Callback<HogBagOfWordsCallback, vis::HOG> {
     size_t length() const { return bow.numWords(); }
 
 private:
-    BagOfWords bow;
+    hog::BagOfWords bow;
     HogExtractor hog;
 };
 

@@ -7,22 +7,16 @@
 #ifndef VIS_CALLBACKS_HOG_HPP
 #define VIS_CALLBACKS_HOG_HPP
 
-#include "hog.hpp"
+#include <armadillo>
 
 namespace vis {
 
 class Vocabulary;
 
-/// Compute HOGs for constructing a word vocabulary.
-struct HogVocabularyCallback {
-    HogVocabularyCallback(size_t numFeatures);
-    arma::fmat operator()(const cv::Mat& image) const;
-private:
-    size_t numFeatures;
-    HogExtractor hog;
-};
+namespace hog {
 
 /// Compute bag-of-words using the given vocabulary.
+// FIXME usare classe BagOfWords
 struct BagOfWords {
     BagOfWords(const Vocabulary* vocabulary);
     arma::fmat operator()(const arma::fmat& descriptors) const;
@@ -31,6 +25,7 @@ private:
     const Vocabulary* vocabulary;
 };
 
+} /* namespace hog */
 } /* namespace vis */
 
 #endif /* VIS_CALLBACKS_HOG_HPP */
