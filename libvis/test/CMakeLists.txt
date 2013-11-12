@@ -57,6 +57,13 @@ add_unit_test(NAME test_hog
             ${SRC_DIR}/hog.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_hog_bow
+    SOURCES test_hog_bow.cpp
+            ${SRC_DIR}/hog.cpp
+            ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/callbacks_hog.cpp
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_hsv_aux
     SOURCES test_hsv_aux.cpp
             ${SRC_DIR}/hsv_aux.cpp
