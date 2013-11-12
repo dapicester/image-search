@@ -39,7 +39,7 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
         index.build("test", descriptors);
 
         // 3. save
-        index.save(INDEX_FILE);
+        test::save(INDEX_FILE, index);
     }
 
     {

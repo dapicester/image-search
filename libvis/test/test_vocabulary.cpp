@@ -54,12 +54,7 @@ BOOST_FIXTURE_TEST_CASE(test_vocabulary, test::ImageDir) {
     descriptors = lookup(vocabulary.get());
 
     // save
-    if (fs::exists(VOCABULARY_FILE))
-        fs::remove(VOCABULARY_FILE);
-    BOOST_CHECK(not fs::exists(VOCABULARY_FILE));
-
-    vocabulary->save(VOCABULARY_FILE);
-    BOOST_CHECK(fs::is_regular_file(VOCABULARY_FILE));
+    test::save(VOCABULARY_FILE, *vocabulary);
 }
 
 BOOST_AUTO_TEST_CASE(test_serialization) {
