@@ -39,7 +39,7 @@ BagOfWords<Extractor>::extract(const cv::Mat& image) const {
     fmat descriptors = extractor.extract(image);
     uvec words = vocabulary.lookup(descriptors);
     size_t n = numWords();
-    fvec histogram = conv_to<fvec>::from(hist(words, arma::linspace<uvec>(1,n,n)));
+    fvec histogram = conv_to<fvec>::from( hist(words, linspace<uvec>(1,n,n)) );
     return histogram / sum(histogram);
 }
 

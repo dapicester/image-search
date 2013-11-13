@@ -30,7 +30,7 @@ class Vocabulary;
 template <typename Extractor>
 struct VocabularyCallback {
     arma::fmat operator()(const cv::Mat& image) const {
-        return colsubset(e.extract(image), n);
+        return subset(e.extract(image), n);
     }
 
 private:

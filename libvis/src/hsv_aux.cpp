@@ -5,7 +5,6 @@
  */
 
 #include "hsv_aux.hpp"
-#include "utils/ported.hpp"
 #include <boost/assert.hpp>
 
 namespace vis {

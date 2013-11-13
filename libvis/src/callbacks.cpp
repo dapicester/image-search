@@ -6,7 +6,6 @@
 
 #include "callbacks.hpp"
 #include "vocabulary.hpp"
-#include "utils/ported.hpp"
 #include <opencv2/imgproc/imgproc.hpp>
 
 namespace vis {

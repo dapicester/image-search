@@ -7,7 +7,6 @@
 #include "hsv.hpp"
 #include "hsv_aux.hpp"
 #include "utils/conversions.hpp"
-#include "utils/ported.hpp"
 #include <boost/assert.hpp>
 
 namespace vis {
