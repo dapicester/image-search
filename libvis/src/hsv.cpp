@@ -58,8 +58,8 @@ computeHistogram(const cv::Mat& quantized, const arma::ivec3& levels, bool norma
     return arma::conv_to<arma::fvec>::from(values) /= arma::as_scalar(arma::sum(values));
 }
 
-HsvExtractor::HsvExtractor(const levels_t& l, bool f)
-        : levels(l), hsvlevels(l + levels_t{0,1,1}), medfilt(f) {}
+HsvExtractor::HsvExtractor(const hsv::Levels& l, bool f)
+        : levels(l), hsvlevels(l + hsv::Levels{0,1,1}), medfilt(f) {}
 
 HsvExtractor::~HsvExtractor() {}
 
@@ -87,7 +87,7 @@ HsvExtractor::extract(const cv::Mat& image, bool normalize, cv::OutputArray& qim
     return computeHistogram<float>(quantized, levels, normalize);
 }
 
-cv::Scalar colorLevel(int index, levels_t levels) {
+cv::Scalar colorLevel(int index, hsv::Levels levels) {
     // TODO move these outside and pass as arguments?
     int numColors = levels[0] * levels[1] * levels[2];
     int numGrays = levels[2] + 1;
@@ -99,7 +99,7 @@ cv::Scalar colorLevel(int index, levels_t levels) {
         return cv::Scalar(value, value, value);
     }
     else { // colors
-        levels_t indices = ind2sub(levels, index);
+        hsv::Levels indices = ind2sub(levels, index);
 
         cv::Vec3f temp;
         for (int i = 0; i < 3; i++) {

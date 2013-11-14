@@ -24,7 +24,7 @@
     } while(0)
 
 BOOST_FIXTURE_TEST_CASE(test_histogram, test::Peppers) {
-    vis::levels_t levels = { 3, 2, 2 };
+    vis::hsv::Levels levels = {3,2,2};
     vis::HsvExtractor extractor(levels);
 
     cv::Mat quantized;

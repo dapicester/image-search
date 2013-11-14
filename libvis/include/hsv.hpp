@@ -13,18 +13,15 @@
 
 namespace vis {
 
-/// Type alias for quantization levels.
-typedef arma::ivec3 levels_t;
-
 namespace hsv {
-    static const levels_t levels = { 18, 3, 3 }; ///< Default quantization levels.
+    typedef arma::ivec3 Levels; ///< Type alias for quantization levels.
 }
 
 /// @brief Extracts HSV color histogram.
 class HsvExtractor : private boost::noncopyable {
 public:
     /// Constructor.
-    HsvExtractor(const levels_t& levels = hsv::levels, bool medfilt = true);
+    HsvExtractor(const hsv::Levels& levels = {18,3,3}, bool medfilt = true);
 
     /// Default destructor.
     ~HsvExtractor();
@@ -46,8 +43,8 @@ public:
     size_t getNumBins() const;
 
 private:
-    const levels_t levels;    ///< Quantization levels as passed to constructor.
-    const levels_t hsvlevels; ///< Actual HSV quantization levels including gray levels.
+    const hsv::Levels levels;    ///< Quantization levels as passed to constructor.
+    const hsv::Levels hsvlevels; ///< Actual HSV quantization levels including gray levels.
     const bool medfilt;
 };
 
