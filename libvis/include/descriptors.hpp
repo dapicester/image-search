@@ -32,13 +32,13 @@ public:
                  ColorMode mode = ColorMode::COLORS);
 
     /// @return The actual category.
-    std::string getCategory() const;
+    std::string getCategory() const { return category; }
 
     /// @return A const reference to the actual descriptor matrix.
     const arma::fmat& data() const { return descriptors; }
 
     /// @return The actual descriptor type.
-    vis::DescriptorsType getType() const;
+    vis::DescriptorsType getType() const { return type; }
 
     /// @brief Load descriptors from file.
     static Descriptors* load(const boost::filesystem::path& file);
@@ -57,16 +57,6 @@ private:
     arma::fmat descriptors;
     vis::DescriptorsType type;
 };
-
-inline std::string
-Descriptors::getCategory() const {
-    return category;
-}
-
-inline vis::DescriptorsType
-Descriptors::getType() const {
-    return type;
-}
 
 template <typename Archive>
 void

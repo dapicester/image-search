@@ -65,10 +65,10 @@ public:
                size_t maxNumComparisons = 0) const;
 
     /// @return The category of indexed images.
-    std::string getCategory() const;
+    std::string getCategory() const { return category; }
 
     /// @return The descriptor type used to build the index.
-    DescriptorsType getType() const;
+    DescriptorsType getType() const { return type; }
 
     /// @brief Read index from file.
     static Index* load(const boost::filesystem::path& file);
@@ -87,16 +87,6 @@ private:
     template <typename Archive>
     void serialize(Archive& ar, const unsigned int version);
 };
-
-inline std::string
-Index::getCategory() const {
-    return category;
-}
-
-inline DescriptorsType
-Index::getType() const {
-    return type;
-}
 
 template <typename Archive>
 void
