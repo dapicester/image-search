@@ -74,9 +74,9 @@ add_unit_test(NAME test_hsv
             ${SRC_DIR}/hsv_aux.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
-add_unit_test(NAME test_utils_ported
-    SOURCES test_utils_ported.cpp
-    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+add_unit_test(NAME test_subset
+    SOURCES test_subset.cpp
+    LINK_LIBRARIES ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_serialization
     SOURCES test_serialization.cpp
