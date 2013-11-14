@@ -92,5 +92,15 @@ quantize(const cv::Mat& image, const arma::ivec3& levels) {
     return quantized;
 }
 
+cv::Mat medfilt2(const cv::Mat& in) {
+    BOOST_ASSERT(in.depth() == cv::DataType<float>::type);
+    BOOST_ASSERT(in.isContinuous());
+
+    cv::Mat out(in.size(), in.type());
+    cv::medianBlur(in, out, 3); // 3x3 neighborhood
+
+    return out;
+}
+
 } /* namespace vis */
 

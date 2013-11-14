@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(test_medfilt2) {
                                                 10, 12, 18, 19,  9,
                                                 11, 18, 18,  9,  9);
 
-    cv::Mat actual = vis::medfilt2<float>(data.t()); // NOTE transposed wrt Matlab
+    cv::Mat actual = vis::medfilt2(data.t()); // NOTE transposed wrt Matlab
 
     printmat(data);
     printmat(expected);

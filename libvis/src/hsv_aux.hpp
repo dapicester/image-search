@@ -26,22 +26,8 @@ cv::Mat toBgr(const cv::Mat& image, const arma::ivec3& levels = arma::ivec3{0,0,
 /// Quantize image channels to given levels.
 cv::Mat quantize(const cv::Mat& image, const arma::ivec3& levels);
 
-/**
- * @brief Equivalent of Matlab medfilt2 function.
- * Input matrix must be transposed.
- */
-// TODO refactor
-template <typename T>
-cv::Mat
-medfilt2(const cv::Mat& in) {
-    BOOST_ASSERT(in.depth() == cv::DataType<T>::type);
-    BOOST_ASSERT(in.isContinuous());
-
-    cv::Mat out(in.size(), in.type());
-    cv::medianBlur(in, out, 3); // 3x3 neighborhood
-
-    return out;
-}
+/// Equivalent of Matlab \c medfilt2 function.
+cv::Mat medfilt2(const cv::Mat& in);
 
 // FIXME Input matrix must be transposed.
 // TODO refactor

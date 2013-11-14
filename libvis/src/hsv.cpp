@@ -74,7 +74,7 @@ HsvExtractor::extract(const cv::Mat& image, bool normalize, cv::OutputArray& qim
     cv::Mat quantized = quantize(hsv, hsvlevels);
 
     if (medfilt) {
-        quantized = medfilt2<float>(quantized);
+        quantized = medfilt2(quantized);
     }
 
     BOOST_ASSERT(quantized.size() == image.size());
