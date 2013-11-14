@@ -18,7 +18,7 @@ void
 extract(const std::vector<boost::filesystem::path>& names,
         arma::fmat& output,
         const Callback& cb,
-        LoadImage flag) {
+        ColorMode mode) {
 
     // TODO openmp parfor
     size_t numImages = names.size();
@@ -31,9 +31,9 @@ extract(const std::vector<boost::filesystem::path>& names,
         std::cout << "  Extracting features from " << name
                   << " (" << i+1 << "/" << numImages << ")" << std::endl;
 
-        cv::Mat input = cv::imread(name, flag == GRAYSCALE ? CV_LOAD_IMAGE_GRAYSCALE
-                                                           : CV_LOAD_IMAGE_COLOR);
-        BOOST_ASSERT(input.channels() == (flag == GRAYSCALE ? 1 : 3));
+        cv::Mat input = cv::imread(name, mode == ColorMode::GRAYSCALE ? CV_LOAD_IMAGE_GRAYSCALE
+                                                                      : CV_LOAD_IMAGE_COLOR);
+        BOOST_ASSERT(input.channels() == (mode == ColorMode::GRAYSCALE ? 1 : 3));
 
         cv::Mat image = standardizeImage(input);
         arma::fmat m = cb(image);

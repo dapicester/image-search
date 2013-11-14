@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(hog) {
     vis::HogBagOfWordsCallback cb(*vocabulary);
 
     vis::Descriptors descriptors;
-    descriptors.compute("test", files, cb, vis::GRAYSCALE);
+    descriptors.compute("test", files, cb, vis::ColorMode::GRAYSCALE);
     const arma::fmat& data = descriptors.data();
 
     BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);

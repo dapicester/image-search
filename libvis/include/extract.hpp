@@ -13,7 +13,7 @@
 
 namespace vis {
 
-enum LoadImage {
+enum class ColorMode {
     COLORS,
     GRAYSCALE
 };
@@ -21,15 +21,16 @@ enum LoadImage {
 /**
  * @brief Extract descriptors on a list of images.
  * @param names List of full pathnames to images
- * @param output Descriptors
- * @param cv Callback computing descriptors
+ * @param[out] data Descriptors.
+ * @param cv Callback computing descriptors.
+ * @param mode Color type of loaded images.
  */
 template <typename Callback>
 void
 extract(const std::vector<boost::filesystem::path>& names,
-        arma::fmat& output,
+        arma::fmat& data,
         const Callback& cb,
-        LoadImage flag = COLORS);
+        ColorMode mode = ColorMode::COLORS);
 
 } /* namespace vis */
 
