@@ -12,68 +12,61 @@
 #include "fixtures.hpp"
 #include "vocabulary.hpp"
 #include "utils/matrix.hpp"
+#include "utils/print.hpp"
+#include "test_commons.hpp"
 #include <boost/scoped_ptr.hpp>
 
-namespace fs = boost::filesystem;
+BOOST_FIXTURE_TEST_SUITE(descriptors, test::ImageDir)
 
-vis::Vocabulary* loadVocabulary() {
-    static const fs::path vocabularyFile = "test_vocabulary.dat";
-    BOOST_REQUIRE_MESSAGE(fs::is_regular_file(vocabularyFile), "Cannot find vocabulary file");
+static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
 
-    vis::Vocabulary* vp = vis::Vocabulary::load(vocabularyFile);
-    BOOST_CHECK(vp);
+typedef boost::scoped_ptr<vis::Vocabulary> VocabularyPtr;
+typedef boost::scoped_ptr<vis::Descriptors> DescriptorsPtr;
 
-    return vp;
-};
-
-#define USE_OLD_API 0
-
-BOOST_FIXTURE_TEST_SUITE(test_descriptors, test::ImageDir)
+void testSerialization(const fs::path& file, const vis::Descriptors& descriptors) {
+    test::save(file, descriptors);
+    DescriptorsPtr loaded(test::load<vis::Descriptors>(file));
+    BOOST_CHECK_EQUAL(descriptors.getCategory(), loaded->getCategory());
+    BOOST_CHECK(test::equals(descriptors.data(), loaded->data()));
+    BOOST_CHECK_EQUAL(descriptors.getType(), loaded->getType());
+}
 
 BOOST_AUTO_TEST_CASE(hog) {
-    boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
-    vis::HogBagOfWordsCallback cb(vocabulary.get());
+    VocabularyPtr vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
+    vis::HogBagOfWordsCallback cb(*vocabulary);
 
-    const cv::Size expectedSize(files.size(), vocabulary->getNumWords());
-#if USE_OLD_API
-    cv::Mat descriptors;
-    vis::extract(files, descriptors, cb, vis::GRAYSCALE);
-
-    BOOST_CHECK_EQUAL(expectedSize, descriptors.size());
-#else
     vis::Descriptors descriptors;
-    descriptors.compute("test", files, cb, vis::GRAYSCALE);
+    descriptors.compute("test", files, cb, vis::ColorMode::GRAYSCALE);
+    const arma::fmat& data = descriptors.data();
 
-    BOOST_CHECK_EQUAL(expectedSize, descriptors.get().size());
+    BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
+    BOOST_CHECK_EQUAL(files.size(), data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG, descriptors.getType());
-#endif
+
+    testSerialization("test_descriptors_hog.dat", descriptors);
 }
 
 BOOST_AUTO_TEST_CASE(hsv) {
     vis::HsvHistogramsCallback cb;
 
-    const cv::Size expectedSize(files.size(), cb.getNumBins());
-#if USE_OLD_API
-    cv::Mat histograms;
-    vis::extract(files, histograms, cb);
-
-    BOOST_CHECK_EQUAL(expectedSize, histograms.size());
-#else
     vis::Descriptors histograms;
     histograms.compute("test", files, cb);
+    const arma::fmat& data = histograms.data();
 
-    BOOST_CHECK_EQUAL(expectedSize, histograms.get().size());
+    BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
+    BOOST_CHECK_EQUAL(files.size(), data.n_cols);
     BOOST_CHECK_EQUAL(vis::HSV, histograms.getType());
-#endif
+
+    testSerialization("test_descriptors_hsv.dat", histograms);
 }
 
-BOOST_AUTO_TEST_CASE(hog_hsv) {
-    boost::scoped_ptr<vis::Vocabulary> vocabulary( loadVocabulary() );
+BOOST_AUTO_TEST_CASE(hoghsv) {
+    VocabularyPtr vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
 
     /*
      * TODO this is the interface I want
      *
-     * HogBagOfWordsCallback hog(vocabulary.get());
+     * HogBagOfWordsCallback hog(vocabulary.data());
      * HsvHistogramsCallback hsv;
      *
      * Extractor extractor;
@@ -83,38 +76,20 @@ BOOST_AUTO_TEST_CASE(hog_hsv) {
      * cv::Mat descriptors;
      * extractor.extract(files, descriptors);
      *
-     * size_t descriptorSize = hsv.getNumBins() + vocabulary->getNumWords();
+     * size_t descriptorSize = hsv.length() + hog.length();
      */
 
-    vis::CompositeCallback cb(vocabulary.get());
+    vis::CompositeCallback cb(*vocabulary);
 
-    const cv::Size expectedSize(files.size(), cb.getNumBins() + vocabulary->getNumWords());
-#if USE_OLD_API
-    cv::Mat descriptors;
-    vis::extract(files, descriptors, cb);
-
-    BOOST_CHECK_EQUAL(expectedSize, descriptors.size());
-#else
     vis::Descriptors descriptors;
     descriptors.compute("test", files, cb);
+    const arma::fmat& data = descriptors.data();
 
-    BOOST_CHECK_EQUAL(expectedSize, descriptors.get().size());
+    BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
+    BOOST_CHECK_EQUAL(files.size(), data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG_HSV, descriptors.getType());
-#endif
-}
 
-BOOST_AUTO_TEST_CASE(serialization) {
-    vis::HsvHistogramsCallback cb;
-    fs::path file("test_descriptors.dat");
-
-    vis::Descriptors histograms;
-    histograms.compute("test", files, cb);
-    histograms.save(file);
-
-    vis::Descriptors* loaded = vis::Descriptors::load(file);
-    BOOST_CHECK_EQUAL(histograms.getCategory(), loaded->getCategory());
-    BOOST_CHECK(test::equals(histograms.get(), loaded->get()));
-    BOOST_CHECK_EQUAL(histograms.getType(), loaded->getType());
+    testSerialization("test_descriptors_hoghsv.dat", descriptors);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

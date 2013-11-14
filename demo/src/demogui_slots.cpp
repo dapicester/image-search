@@ -8,7 +8,6 @@
 #include "utils.hpp"
 #include <QDebug>
 #include <QProgressDialog>
-#include <opencv2/core/core.hpp>
 
 void
 DemoGui::search() {
@@ -26,13 +25,13 @@ DemoGui::search() {
     Q_ASSERT(queryType == decodeType(index->getType()));
     qDebug() << "search " << category << " by " << queryType;
 
-    cv::Mat query;
+    arma::fmat query;
     if (realtimeCheckBox->isChecked()) {
         qDebug() << "computing descriptors ...";
 
         vis::Descriptors descriptors;
         extractDescriptors(category, queryType, PathList(1, queryImagePath), &descriptors, vocabulary.data());
-        descriptors.get().copyTo(query);
+        query = descriptors.data();
 
         qDebug() << "descriptors computed";
     }
@@ -46,13 +45,13 @@ DemoGui::search() {
         int queryId = queryList->currentRow();
         qDebug() << "query:" << queryId << queryNames[queryId];
         try {
-            query = queries->get().col(queryId);
+            query = queries->data().col(queryId);
         } catch (...) {
             messageBox("Query file found, please recompute queries.", QMessageBox::Critical);
             return;
         }
     }
-    Q_ASSERT(query.cols == 1);
+    Q_ASSERT(query.n_cols == 1);
 
     std::vector<vis::Index::id_type> matches;
     index->query(query, matches, results.size());
@@ -163,8 +162,8 @@ DemoGui::recomputeVocabulary() {
     QScopedPointer<QProgressDialog> progress(progressDialog("Computing vocabulary ...", this, 0, 10));
     progress->setValue(3);
 
-    PathList names = vis::subset(imagesMap[category], 100, vis::UNIFORM);
-    vocabulary.reset(vis::Vocabulary::fromImageList(category.toStdString(), names));
+    PathList names = vis::subset(imagesMap[category], 100);
+    vocabulary.reset(vis::Vocabulary::fromImageList<vis::HogExtractor>(category.toStdString(), names));
     progress->setValue(6);
 
     fs::path savefile = vocabularyFile(DATA_PATH, category);

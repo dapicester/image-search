@@ -7,15 +7,13 @@
 #ifndef VIS_UTILS_POSIXTIMER_HPP
 #define VIS_UTILS_POSIXTIMER_HPP
 
-#warning "This class has been deprecated"
-
 #include <sys/time.h>
 
 /// @brief Type used for timestamps.
 typedef unsigned long long timestamp_t;
 
 /// @brief Simple timer using POSIX functions.
-class PosixTimer {
+class [[deprecated]] PosixTimer {
 public:
     /// Start measuring time.
     void tic() {

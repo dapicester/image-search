@@ -106,11 +106,11 @@ extractDescriptors(const QString& category, const QString& queryType,
         descriptors->compute(category.toStdString(), names, cb);
     }
     else if (queryType == "shape") {
-        vis::HogBagOfWordsCallback cb(vocabulary);
+        vis::HogBagOfWordsCallback cb(*vocabulary);
         descriptors->compute(category.toStdString(), names, cb);
     }
     else if (queryType == "combined") {
-        vis::CompositeCallback cb(vocabulary);
+        vis::CompositeCallback cb(*vocabulary);
         descriptors->compute(category.toStdString(), names, cb);
     }
 }

@@ -14,7 +14,6 @@
 #include "kmeans.hpp"
 #include "standardize.hpp"
 #include "traits.hpp"
-#include "utils.hpp"
 #include "vocabulary.hpp"
 #include "serialization.hpp"
 

@@ -48,12 +48,12 @@ BOOST_AUTO_TEST_CASE(matrix_random) {
     {
         // uniform distribution
         randu(data, Scalar(0), Scalar(1)); // min/max
-        print(data);
+        printmat(data);
         BOOST_CHECK(test::hasMinMax(data, 0., 1.));
     }
     {
         randn(data, Scalar(0), Scalar(1)); // mean/variance
-        print(data);
+        printmat(data);
     }
 }
 
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(matrix_multi) {
         Mat plane;
         NAryMatIterator it(&array, &plane, 1);
         for (int p = 0; p < it.nplanes; p++) { // NOTE actually it.nplanes is the last argument to NAryMatIterator
-            print(plane);
+            printmat(plane);
             BOOST_CHECK_EQUAL(Size(total,1), plane.size());
         }
     }
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(matrix_multi) {
 
         for (int p = 0; p < data.size(); p++) {
             const Mat& plane = data[p];
-            print(plane);
+            printmat(plane);
         }
     }
 }
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(matrix_multi) {
 BOOST_AUTO_TEST_CASE(matrix_serialization) {
     Mat mat(4, 4, CV_32F);
     randu(mat, Scalar(0), Scalar(255));
-    print(mat);
+    printmat(mat);
 
     {
         FileStorage fs("test_serialization.yml", FileStorage::WRITE);
@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE(matrix_serialization) {
 
         Mat loaded;
         fs["matrix"] >> loaded;
-        print(loaded);
+        printmat(loaded);
         BOOST_CHECK(test::equals(mat, loaded));
 
         fs.release();

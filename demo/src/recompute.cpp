@@ -42,8 +42,8 @@ void
 Recompute::computeVocabulary(const QString& category) {
     qDebug() << "computing vocabulary for" << category;
 
-    vector_path names = vis::subset(images, 100, vis::UNIFORM);
-    vocabulary.reset(vis::Vocabulary::fromImageList(category.toStdString(), names));
+    vector_path names = vis::subset(images, 100);
+    vocabulary.reset(vis::Vocabulary::fromImageList<vis::HogExtractor>(category.toStdString(), names));
 
     fs::path savefile = vocabularyFile(dataPath, category);
     vocabulary->save(savefile);

@@ -6,6 +6,7 @@
 
 #include "dir.h"
 #include "vis.hpp"
+#include "utils.hpp"
 
 #include "perf_data.hpp"
 #include "perf_utils.hpp"
@@ -90,13 +91,13 @@ inline void extractDescriptors(vis::DescriptorsType type,
             break;
         case vis::HOG:
             {
-            vis::HogBagOfWordsCallback cb(vocabulary);
+            vis::HogBagOfWordsCallback cb(*vocabulary);
             descriptors.compute("benchmark", files, cb);
             }
             break;
         case vis::HOG_HSV:
             {
-            vis::CompositeCallback cb(vocabulary);
+            vis::CompositeCallback cb(*vocabulary);
             descriptors.compute("benchmark", files, cb);
             }
             break;
@@ -110,7 +111,7 @@ std::vector<Timer::timestamp_t> computeDescriptors(vis::DescriptorsType type,
 
     for (int i = 0; i < NUM_EXECUTIONS; i++) {
         std::random_shuffle(files.begin(), files.end());
-        std::vector<fs::path> names = vis::subset(files, 100, vis::UNIFORM);
+        std::vector<fs::path> names = vis::subset(files, 100);
 
         timer.tic();
         extractDescriptors(type, names, vocabulary);

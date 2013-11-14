@@ -10,12 +10,13 @@
 #include <opencv2/core/core.hpp>
 #include <iostream>
 #include <vector>
-#include <cstdio>
 
-#define print(X) std::cout << #X << ": " << X << std::endl
+// TODO move these macros to test/utils/printmacros.hpp
+#define printvar(X) std::cout << #X << ": " << X << std::endl
 #define printmat(X) std::cout << #X << ":\n" << X << std::endl
 #define println(X) std::cout << X << std::endl
 
+// TODO is this used?
 /// Operator << for std::vector
 template <typename T>
 std::ostream&
@@ -31,6 +32,7 @@ operator<<(std::ostream& os, const std::vector<T>& v) {
     return os;
 }
 
+// TODO is this used?
 /// Print multidimensional matrix (OpenCV does not support it)
 static
 void

@@ -44,24 +44,21 @@ printTreeInfo(const VlKDForest* forest) {
 }
 
 template <typename T>
-KDTree<T>::KDTree() {
-    forest = nullptr;
-    dataPtr = nullptr;
-    dataSize = 0;
+KDTree<T>::KDTree() {}
+
+template <typename T>
+KDTree<T>::~KDTree() {
+    if (forest) vl_kdforest_delete(forest);
 }
 
 template <typename T>
-KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees) {
-    BOOST_ASSERT_MSG(d.depth() == cv::DataType<T>::type, "Data is not of type T");
+void
+KDTree<T>::build(const arma::Mat<T>& d, unsigned numTrees) {
+    data = d;
 
-    vl_size numDimensions = d.rows;
-    vl_size numSamples = d.cols;
-
-    dataSize = numDimensions * numSamples;
-    dataPtr = (T*) vl_calloc(dataSize, sizeof(T));
-
-    cv::Mat dt = d.t();
-    std::copy(dt.begin<T>(), dt.end<T>(), dataPtr);
+    vl_size numDimensions = d.n_rows;
+    vl_size numSamples = d.n_cols;
+    vl_size dataSize = numDimensions * numSamples;
 
     forest = vl_kdforest_new(VlType<T>::type, numDimensions, numTrees, kdtree::distance) ;
     vl_kdforest_set_thresholding_method(forest, kdtree::thresholdingMethod);
@@ -69,14 +66,8 @@ KDTree<T>::KDTree(const cv::Mat& d, vl_size numTrees) {
     if (verbose) printInfo<T>(forest, numSamples);
     BOOST_ASSERT(numDimensions == vl_kdforest_get_data_dimension(forest));
 
-    vl_kdforest_build(forest, numSamples, dataPtr);
+    vl_kdforest_build(forest, numSamples, data.memptr());
     if (verbose) printTreeInfo(forest);
-}
-
-template <typename T>
-KDTree<T>::~KDTree() {
-    if (forest) vl_kdforest_delete(forest);
-    if (dataPtr) vl_free(dataPtr);
 }
 
 template <typename T>
@@ -135,22 +126,18 @@ getResults(VlKDForest* forest, const T* query, vl_size numQueries,
 template <typename T>
 template <typename Record>
 std::vector<Record>
-KDTree<T>::search(const cv::Mat& query, vl_size numNeighbors, vl_size maxNumComparisons) {
+KDTree<T>::search(const arma::Mat<T>& query,
+        unsigned numNeighbors, unsigned maxNumComparisons) {
     vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);
 
-    BOOST_ASSERT_MSG(query.depth() == cv::DataType<T>::type, "Query is not of type T");
-    BOOST_ASSERT_MSG(query.rows == vl_kdforest_get_data_dimension(forest), "Query has wrong data dimension");
+    BOOST_ASSERT_MSG(query.n_rows == vl_kdforest_get_data_dimension(forest),
+            "Query has wrong data dimension");
 
-    vl_size numQueries = query.cols;
-    T* queryPtr = (T*) vl_calloc(numQueries * query.rows, sizeof(T));
-
-    cv::Mat temp = query.t(); // data is stored by rows, we need columns
-    std::copy(temp.begin<T>(), temp.end<T>(), queryPtr);
+    vl_size numQueries = query.n_cols;
 
     std::vector<Record> results;
-    getResults(forest, queryPtr, numQueries, numNeighbors, results);
+    getResults(forest, query.memptr(), numQueries, numNeighbors, results);
 
-    vl_free(queryPtr);
     return results;
 }
 
@@ -159,12 +146,7 @@ template <typename Archive>
 void
 KDTree<T>::save(Archive& ar, const unsigned int version) const {
     ar & forest;
-
-    BOOST_ASSERT_MSG(dataSize > 0, "KDTree has no data");
-    ar & dataSize;
-
-    BOOST_ASSERT_MSG(dataPtr != NULL, "dataPtr is NULL");
-    ar & boost::serialization::make_array(dataPtr, dataSize);
+    ar & data;
 }
 
 template <typename T>
@@ -172,16 +154,9 @@ template <typename Archive>
 void
 KDTree<T>::load(Archive& ar, const unsigned int version) {
     ar & forest;
+    ar & data;
 
-    ar & dataSize;
-    BOOST_ASSERT_MSG(dataSize > 0, "KDTree has no data");
-
-    dataPtr = (T*) vl_calloc(dataSize, sizeof(T));
-
-    ar & boost::serialization::make_array(dataPtr, dataSize);
-    BOOST_ASSERT_MSG(dataPtr != NULL, "dataPtr is NULL");
-
-    forest->data = dataPtr;
+    forest->data = data.memptr();
 }
 
 inline

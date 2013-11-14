@@ -13,6 +13,10 @@ find_package(OpenCV COMPONENTS core imgproc highgui REQUIRED)
 list(APPEND libraries ${OpenCV_LIBS})
 list(APPEND includes ${OpenCV_INCLUDE_DIRS})
 
+find_package(Armadillo REQUIRED)
+list(APPEND includes ${ARMADILLO_INCLUDE_DIRS})
+list(APPEND libraries ${ARMADILLO_LIBRARIES})
+
 find_package(VLFeat REQUIRED)
 list(APPEND libraries ${VLFEAT_LIBRARIES})
 list(APPEND includes ${VLFEAT_INCLUDE_DIRS})

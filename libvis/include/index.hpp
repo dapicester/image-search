@@ -9,7 +9,6 @@
 
 #include "descriptors_type.hpp"
 #include "descriptors.hpp"
-#include <opencv2/core/core.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/serialization/access.hpp>
@@ -36,7 +35,7 @@ public:
      * @param numTree Number of trees in the KD-forest.
      */
     void build(const std::string& category,
-               const cv::Mat& data,
+               const arma::fmat& data,
                DescriptorsType type,
                size_t numTrees = 1);
 
@@ -60,22 +59,22 @@ public:
      * @param[in] numResults Number of query results requested.
      * @param[in] maxNumComparisons Maximum number of comparisons (ANN), \c 0 means unbounded.
      */
-    void query(const cv::Mat& data,
+    void query(const arma::fmat& data,
                std::vector<id_type>& results,
                size_t numResults = 1,
                size_t maxNumComparisons = 0) const;
 
     /// @return The category of indexed images.
-    std::string getCategory() const;
+    std::string getCategory() const { return category; }
 
     /// @return The descriptor type used to build the index.
-    DescriptorsType getType() const;
+    DescriptorsType getType() const { return type; }
 
     /// @brief Read index from file.
     static Index* load(const boost::filesystem::path& file);
 
     /// @brief Write index to file.
-    void save(const boost::filesystem::path& file);
+    void save(const boost::filesystem::path& file) const;
 
 private:
     std::string category;
@@ -88,16 +87,6 @@ private:
     template <typename Archive>
     void serialize(Archive& ar, const unsigned int version);
 };
-
-inline std::string
-Index::getCategory() const {
-    return category;
-}
-
-inline DescriptorsType
-Index::getType() const {
-    return type;
-}
 
 template <typename Archive>
 void

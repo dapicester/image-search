@@ -9,11 +9,9 @@
 
 #include "descriptors_type.hpp"
 #include "extract.hpp"
+#include <armadillo>
 #include <boost/filesystem/path.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/serialization/access.hpp>
-#include <boost/serialization/scoped_ptr.hpp>
-#include <opencv2/core/core.hpp>
 
 namespace vis {
 
@@ -31,16 +29,16 @@ public:
     void compute(const std::string& category,
                  const std::vector<boost::filesystem::path>& files,
                  const Callback& cb,
-                 LoadImage flag = vis::COLORS);
+                 ColorMode mode = ColorMode::COLORS);
 
     /// @return The actual category.
-    std::string getCategory() const;
+    std::string getCategory() const { return category; }
 
-    /// @return A reference to the descriptor matrix.
-    const cv::Mat& get() const;
+    /// @return A const reference to the actual descriptor matrix.
+    const arma::fmat& data() const { return descriptors; }
 
     /// @return The actual descriptor type.
-    vis::DescriptorsType getType() const;
+    vis::DescriptorsType getType() const { return type; }
 
     /// @brief Load descriptors from file.
     static Descriptors* load(const boost::filesystem::path& file);
@@ -49,7 +47,6 @@ public:
     void save(const boost::filesystem::path& file) const;
 
 private:
-
     friend class boost::serialization::access;
 
     template <typename Archive>
@@ -57,24 +54,9 @@ private:
 
 private:
     std::string category;
-    boost::scoped_ptr<cv::Mat> descriptors;
+    arma::fmat descriptors;
     vis::DescriptorsType type;
 };
-
-inline std::string
-Descriptors::getCategory() const {
-    return category;
-}
-
-inline const cv::Mat&
-Descriptors::get() const {
-    return *descriptors;
-}
-
-inline vis::DescriptorsType
-Descriptors::getType() const {
-    return type;
-}
 
 template <typename Archive>
 void
@@ -88,11 +70,10 @@ template <typename Callback>
 void
 Descriptors::compute(const std::string& category,
         const std::vector<boost::filesystem::path>& files,
-        const Callback& cb, LoadImage flag) {
+        const Callback& cb, ColorMode mode) {
     this->category = category;
-    this->descriptors.reset(new cv::Mat);
     this->type = cb.type;
-    vis::extract(files, *descriptors, cb, flag);
+    vis::extract(files, descriptors, cb, mode);
 }
 
 } /* namespace vis */

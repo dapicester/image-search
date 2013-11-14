@@ -14,7 +14,7 @@
 namespace vis {
 
 namespace kmeans {
-    static const VlVectorComparisonType distance = VlDistanceL2 ;
+    static const VlVectorComparisonType distance = VlDistanceL2;
     static const VlKMeansAlgorithm algorithm = VlKMeansElkan;
     static const VlKMeansInitialization initialization = VlKMeansPlusPlus;
     static const vl_size maxNumIterations = 100;
@@ -57,11 +57,11 @@ printInfo(const VlKMeans* kmeans, vl_size dimension, vl_size numData, vl_size nu
 }
 
 template <typename T>
-cv::Mat
-KMeans<T>::cluster(const cv::Mat& data, vl_size numCenters) {
-    vl_size dimension = data.rows;
-    vl_size numData = data.cols;
-    const T* ptr = data.ptr<T>(0);
+arma::Mat<T>
+KMeans<T>::cluster(const arma::Mat<T>& data, unsigned numCenters) {
+    vl_size dimension = data.n_rows;
+    vl_size numData = data.n_cols;
+    const T* ptr = data.memptr();
 
     if (verbose) printInfo(kmeans, dimension, numData, numCenters);
 
@@ -71,7 +71,7 @@ KMeans<T>::cluster(const cv::Mat& data, vl_size numCenters) {
     BOOST_ASSERT(numCenters == vl_kmeans_get_num_centers(kmeans));
     BOOST_ASSERT(dimension == vl_kmeans_get_dimension(kmeans));
 
-    return cv::Mat(dimension, numCenters, cv::DataType<T>::type, centers).clone();
+    return arma::Mat<T>(centers, dimension, numCenters);
 }
 
 } /* namespace vis */

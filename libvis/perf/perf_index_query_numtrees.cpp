@@ -18,7 +18,7 @@ static const std::string SAVE_FILE     = "query_index_numtrees.xml";
 int main(int, char**) {
     perf::TimingsVector results;
 
-    cv::Mat data = perf::getRandomData(LEN, NUM_DATA);
+    arma::fmat data = perf::getRandomData(LEN, NUM_DATA);
 
     for (size_t numTrees : perf::NUM_TREES) {
         perf::Timings t;

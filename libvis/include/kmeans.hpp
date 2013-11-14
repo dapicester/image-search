@@ -10,7 +10,7 @@
 extern "C" {
 #include <vl/kmeans.h>
 }
-#include <opencv2/core/core.hpp>
+#include <armadillo>
 
 namespace vis {
 
@@ -30,7 +30,7 @@ public:
      * @param numCenters Number of centers
      * @return Matrix of cluster centers with size numCenters x C
      */
-    cv::Mat cluster(const cv::Mat& data, vl_size numCenters);
+    arma::Mat<T> cluster(const arma::Mat<T>& data, unsigned numCenters);
 
     /// Set verbosity.
     void setVerbose(bool val) { verbose = val; }

@@ -5,11 +5,12 @@
  */
 
 #include "perf_index.hpp"
+//#include <random>
 
 namespace perf {
 
 std::vector<Timer::timestamp_t>
-buildIndex(const cv::Mat& data, vis::DescriptorsType type, size_t numTrees) {
+buildIndex(const arma::fmat& data, vis::DescriptorsType type, size_t numTrees) {
     Timer timer;
     std::vector<Timer::timestamp_t> timings;
 
@@ -28,15 +29,15 @@ buildIndex(const cv::Mat& data, vis::DescriptorsType type, size_t numTrees) {
 }
 
 std::vector<Timer::timestamp_t>
-queryIndex(const vis::Index& index, const cv::Mat& data,
+queryIndex(const vis::Index& index, const arma::fmat& data,
         size_t neighbors, size_t maxComparisons) {
     Timer timer;
     std::vector<Timer::timestamp_t> timings;
 
     for (int i = 0; i < NUM_EXECUTIONS; i++) {
         // query = random select one row
-        int idx = rand() % data.cols;
-        cv::Mat query = data.col(idx);
+        int idx = rand() % data.n_cols;
+        arma::fmat query = data.col(idx);
 
         timer.tic();
         std::vector<vis::Index::id_type> matches;

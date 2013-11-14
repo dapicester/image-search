@@ -6,68 +6,37 @@
 
 #include "callbacks.hpp"
 #include "vocabulary.hpp"
-#include "utils/ported.hpp"
+#include <opencv2/imgproc/imgproc.hpp>
 
 namespace vis {
 
-HogVocabularyCallback::HogVocabularyCallback(size_t n)
-        : numFeatures(n) {}
-
-cv::Mat
-HogVocabularyCallback::operator()(const cv::Mat& image) const {
-    cv::Mat d = hog.extract(image).toMat();
-    d = colsubset<float>(d, numFeatures, UNIFORM);
-    d = d.t(); // TODO avoid transpose
-    return d;
-}
-
-BagOfWords::BagOfWords(const Vocabulary* v)
-        : vocabulary(v) {}
-
-cv::Mat
-BagOfWords::operator()(const cv::Mat& descriptors) const {
-    cv::Mat words = vocabulary->quantize(descriptors);
-    cv::Mat histogram = hist(words, vocabulary->getNumWords(), SUM1);
-    return histogram;
-}
-
-HogBagOfWordsCallback::HogBagOfWordsCallback(const Vocabulary* v)
+HogBagOfWordsCallback::HogBagOfWordsCallback(const Vocabulary& v)
         : bow(v) {}
 
-cv::Mat
+arma::fvec
 HogBagOfWordsCallback::operator()(const cv::Mat& image) const {
-    cv::Mat d = hog.extract(image).toMat();
-    cv::Mat hist = bow(d).t(); // TODO avoid transpose
-    return hist;
+    return bow.extract(image);
 }
 
 HsvHistogramsCallback::HsvHistogramsCallback() {}
 
-cv::Mat
+arma::fvec
 HsvHistogramsCallback::operator()(const cv::Mat& image) const {
-    return hsv.extract(image).t(); // TODO avoid transpose
+    return hsv.extract(image);
 }
 
-size_t
-HsvHistogramsCallback::getNumBins() const {
-    return hsv.getNumBins();
-}
-
-CompositeCallback::CompositeCallback(const Vocabulary* v)
+CompositeCallback::CompositeCallback(const Vocabulary& v)
         : hog(v) {}
 
-cv::Mat
+arma::fvec
 CompositeCallback::operator()(const cv::Mat& image) const {
-    cv::Mat d;
     cv::Mat bwimage;
     cv::cvtColor(image, bwimage, CV_BGR2GRAY);
-    cv::hconcat(hog(bwimage), hsv(image), d);
-    return d;
-}
 
-size_t
-CompositeCallback::getNumBins() const {
-    return hsv.getNumBins();
+    arma::fmat d1 = hog(bwimage);
+    arma::fvec d2 = hsv(image);
+
+    return arma::join_cols(d1, d2);
 }
 
 } /* namespace vis */
