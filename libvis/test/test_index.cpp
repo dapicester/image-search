@@ -32,8 +32,8 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
         vis::CompositeCallback cb(*vocabulary);
 
         descriptors.compute("test", files, cb);
-        BOOST_REQUIRE_EQUAL(descriptors.get().n_cols, files.size());
-        BOOST_REQUIRE_EQUAL(descriptors.get().n_rows, cb.length());
+        BOOST_REQUIRE_EQUAL(descriptors.data().n_cols, files.size());
+        BOOST_REQUIRE_EQUAL(descriptors.data().n_rows, cb.length());
     }
 
     {
@@ -56,7 +56,7 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
         // 5. query
 
         const size_t queryId = 5;
-        arma::fmat query(descriptors.get().col(queryId));
+        arma::fmat query(descriptors.data().col(queryId));
 
         // single result
         std::vector<vis::Index::id_type> match;

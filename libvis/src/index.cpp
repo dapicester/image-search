@@ -28,7 +28,7 @@ void
 Index::build(const std::string& cat, const Descriptors& descriptors, size_t numTrees) {
     category = cat;
     type = descriptors.getType();
-    kdtree->build(descriptors.get(), numTrees);
+    kdtree->build(descriptors.data(), numTrees);
 }
 
 void

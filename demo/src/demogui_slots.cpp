@@ -31,7 +31,7 @@ DemoGui::search() {
 
         vis::Descriptors descriptors;
         extractDescriptors(category, queryType, PathList(1, queryImagePath), &descriptors, vocabulary.data());
-        query = descriptors.get();
+        query = descriptors.data();
 
         qDebug() << "descriptors computed";
     }
@@ -45,7 +45,7 @@ DemoGui::search() {
         int queryId = queryList->currentRow();
         qDebug() << "query:" << queryId << queryNames[queryId];
         try {
-            query = queries->get().col(queryId);
+            query = queries->data().col(queryId);
         } catch (...) {
             messageBox("Query file found, please recompute queries.", QMessageBox::Critical);
             return;

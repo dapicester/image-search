@@ -27,7 +27,7 @@ void testSerialization(const fs::path& file, const vis::Descriptors& descriptors
     test::save(file, descriptors);
     DescriptorsPtr loaded(test::load<vis::Descriptors>(file));
     BOOST_CHECK_EQUAL(descriptors.getCategory(), loaded->getCategory());
-    BOOST_CHECK(test::equals(descriptors.get(), loaded->get()));
+    BOOST_CHECK(test::equals(descriptors.data(), loaded->data()));
     BOOST_CHECK_EQUAL(descriptors.getType(), loaded->getType());
 }
 
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(hog) {
 
     vis::Descriptors descriptors;
     descriptors.compute("test", files, cb, vis::GRAYSCALE);
-    const arma::fmat& data = descriptors.get();
+    const arma::fmat& data = descriptors.data();
 
     BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
     BOOST_CHECK_EQUAL(files.size(), data.n_cols);
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(hsv) {
 
     vis::Descriptors histograms;
     histograms.compute("test", files, cb);
-    const arma::fmat& data = histograms.get();
+    const arma::fmat& data = histograms.data();
 
     BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
     BOOST_CHECK_EQUAL(files.size(), data.n_cols);
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(hoghsv) {
     /*
      * TODO this is the interface I want
      *
-     * HogBagOfWordsCallback hog(vocabulary.get());
+     * HogBagOfWordsCallback hog(vocabulary.data());
      * HsvHistogramsCallback hsv;
      *
      * Extractor extractor;
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(hoghsv) {
 
     vis::Descriptors descriptors;
     descriptors.compute("test", files, cb);
-    const arma::fmat& data = descriptors.get();
+    const arma::fmat& data = descriptors.data();
 
     BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
     BOOST_CHECK_EQUAL(files.size(), data.n_cols);

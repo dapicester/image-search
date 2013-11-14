@@ -36,8 +36,8 @@ public:
     /// @return The actual category.
     std::string getCategory() const;
 
-    /// @return A reference to the descriptor matrix.
-    const arma::fmat& get() const;
+    /// @return A const reference to the actual descriptor matrix.
+    const arma::fmat& data() const { return *descriptors; }
 
     /// @return The actual descriptor type.
     vis::DescriptorsType getType() const;
@@ -63,11 +63,6 @@ private:
 inline std::string
 Descriptors::getCategory() const {
     return category;
-}
-
-inline const arma::fmat&
-Descriptors::get() const {
-    return *descriptors;
 }
 
 inline vis::DescriptorsType
