@@ -6,6 +6,7 @@
 
 #include "dir.h"
 #include "vis.hpp"
+#include "utils.hpp"
 
 #include "perf_data.hpp"
 #include "perf_utils.hpp"
