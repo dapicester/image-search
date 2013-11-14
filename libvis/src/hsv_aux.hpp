@@ -14,14 +14,15 @@
 
 namespace vis {
 
-/// Equivalent to Matlab @c ind2sub function.
+/// Equivalent to Matlab \c ind2sub function.
 arma::ivec3 ind2sub(const arma::ivec3& size, int index);
 
 /// Convert a BGR color single-precision image to HSV colorspace.
 cv::Mat toHsv(const cv::Mat& image);
 
 /// Convert a HSV color single-precision image to BGR colorspace.
-cv::Mat toBgr(const cv::Mat& image, const arma::ivec3& levels = arma::ivec3{0,0,0}); // FIXME perché 0,0,0?
+/// Optionally scales values.
+cv::Mat toBgr(const cv::Mat& image, const arma::ivec3& levels = arma::ivec3{0,0,0});
 
 /// Quantize image channels to given levels.
 cv::Mat quantize(const cv::Mat& image, const arma::ivec3& levels);
