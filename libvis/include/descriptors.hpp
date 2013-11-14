@@ -11,9 +11,7 @@
 #include "extract.hpp"
 #include <armadillo>
 #include <boost/filesystem/path.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/serialization/access.hpp>
-#include <boost/serialization/scoped_ptr.hpp>
 
 namespace vis {
 
@@ -37,7 +35,7 @@ public:
     std::string getCategory() const;
 
     /// @return A const reference to the actual descriptor matrix.
-    const arma::fmat& data() const { return *descriptors; }
+    const arma::fmat& data() const { return descriptors; }
 
     /// @return The actual descriptor type.
     vis::DescriptorsType getType() const;
@@ -56,7 +54,7 @@ private:
 
 private:
     std::string category;
-    boost::scoped_ptr<arma::fmat> descriptors;
+    arma::fmat descriptors;
     vis::DescriptorsType type;
 };
 
@@ -84,9 +82,8 @@ Descriptors::compute(const std::string& category,
         const std::vector<boost::filesystem::path>& files,
         const Callback& cb, LoadImage flag) {
     this->category = category;
-    this->descriptors.reset(new arma::fmat);
     this->type = cb.type;
-    vis::extract(files, *descriptors, cb, flag);
+    vis::extract(files, descriptors, cb, flag);
 }
 
 } /* namespace vis */
