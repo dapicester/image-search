@@ -109,9 +109,8 @@ imquantize(const cv::Mat& in, const arma::fvec& thresholds) {
     cv::Mat index(in.size(), in.type(), cv::Scalar::all(1));
     for (int i = 0; i < thresholds.size() ; i++) {
         cv::Mat temp = (in > thresholds(i)) / 255;
-        temp = temp.t(); // Matlab store images by columns, OpenCV by rows
         temp.convertTo(temp, cv::DataType<float>::type);
-        index += temp.t();
+        index += temp;
     }
 
     return index;

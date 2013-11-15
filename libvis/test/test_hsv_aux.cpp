@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(test_imquantize) {
                                               3, 4, 5, 5, 2,
                                               3, 5, 6, 2, 3);
 
-    cv::Mat actual = vis::imquantize(data.t(), thresholds); // NOTE transposed wrt Matlab
+    cv::Mat actual = vis::imquantize(data, thresholds).t(); // NOTE transposed wrt Matlab
 
     printmat(expected);
     printmat(actual);
