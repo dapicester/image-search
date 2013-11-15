@@ -83,21 +83,21 @@ BOOST_FIXTURE_TEST_CASE(test_functions, test::Peppers) {
 }
 
 BOOST_AUTO_TEST_CASE(test_imquantize) {
-    cv::Mat data = (cv::Mat_<int>(5,5) << 17, 23,  4, 10, 11,
+    cv::Mat data = (cv::Mat_<float>(5,5) << 17, 23,  4, 10, 11,
                                           24,  5,  6, 12, 18,
                                            1,  7, 13, 19, 25,
                                            8, 14, 20, 21,  2,
                                           15, 16, 22,  3,  9);
 
-    cv::Mat levels = (cv::Mat_<int>(1,5) << 1, 6, 11, 16, 21);
+    arma::fvec thresholds = { 1, 6, 11, 16, 21 };
 
-    cv::Mat expected = (cv::Mat_<int>(5,5) << 5, 6, 1, 3, 4,
+    cv::Mat expected = (cv::Mat_<float>(5,5) << 5, 6, 1, 3, 4,
                                               6, 2, 3, 4, 4,
                                               2, 2, 4, 5, 6,
                                               3, 4, 5, 5, 2,
                                               3, 5, 6, 2, 3);
 
-    cv::Mat actual = vis::imquantize<int>(data.t(), levels); // NOTE transposed wrt Matlab
+    cv::Mat actual = vis::imquantize(data.t(), thresholds); // NOTE transposed wrt Matlab
 
     printmat(expected);
     printmat(actual);

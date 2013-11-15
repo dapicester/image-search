@@ -5,7 +5,6 @@
  */
 
 #include "hsv_aux.hpp"
-#include "utils/conversions.hpp"
 #include <boost/assert.hpp>
 
 namespace vis {
@@ -82,7 +81,7 @@ quantize(const cv::Mat& image, const arma::ivec3& levels) {
     for (int i = 0; i < 3; i++) {
         const float step = 1./levels[i];
         arma::fvec thresh = arma::linspace<arma::fvec>(step, 1.-step, levels[i]-1);
-        channels[i] = imquantize<float>(channels[i], arma2cv(thresh));
+        channels[i] = imquantize(channels[i], thresh);
         BOOST_ASSERT(channels[i].size() == image.size());
     }
 
@@ -101,6 +100,21 @@ cv::Mat medfilt2(const cv::Mat& in) {
     cv::medianBlur(in, out, 3); // 3x3 neighborhood
 
     return out;
+}
+
+cv::Mat
+imquantize(const cv::Mat& in, const arma::fvec& thresholds) {
+    BOOST_ASSERT_MSG(cv::DataType<float>::type == in.type(), "input is not of type float");
+
+    cv::Mat index(in.size(), in.type(), cv::Scalar::all(1));
+    for (int i = 0; i < thresholds.size() ; i++) {
+        cv::Mat temp = (in > thresholds(i)) / 255;
+        temp = temp.t(); // Matlab store images by columns, OpenCV by rows
+        temp.convertTo(temp, cv::DataType<float>::type);
+        index += temp.t();
+    }
+
+    return index;
 }
 
 } /* namespace vis */
