@@ -51,17 +51,6 @@ imquantize(const cv::Mat& in, const cv::Mat& levels) {
     return index;
 }
 
-/**
- * @brief Equivalent of Matlab reshape function.
- */
-inline
-cv::Mat
-reshape(const cv::Mat& in, size_t cols) {
-    // TODO avoid transpose
-    cv::Mat out = in.t();
-    return out.reshape(0, cols).t();
-}
-
 
 } /* namespace vis */
 

@@ -143,34 +143,44 @@ BOOST_AUTO_TEST_CASE(test_linspace) {
     }
 }
 
-void doReshapeTest(const cv::Mat& expected, const cv::Mat& actual) {
+template <typename T>
+void doReshapeTest(const arma::Mat<T>& expected, const arma::Mat<T>& actual) {
     printmat(expected);
     printmat(actual);
 
     BOOST_CHECK_EQUAL(actual.size(), expected.size());
+    BOOST_CHECK_EQUAL(actual.n_rows, expected.n_rows);
+    BOOST_CHECK_EQUAL(actual.n_cols, expected.n_cols);
     BOOST_CHECK(test::equals(expected, actual));
 }
 
 BOOST_AUTO_TEST_CASE(test_reshape) {
-    cv::Mat data = (cv::Mat_<int>(3,4) << 8, 1, 6, 2,
-                                          3, 5, 7, 9,
-                                          4, 9, 2, 1);
+    arma::imat data = { 8, 1, 6, 2,
+                        3, 5, 7, 9,
+                        4, 9, 2, 1 };
+    data = arma::reshape(data,4,3).t(); // NOTE column-major vs row-major
     printmat(data);
-    {
-        cv::Mat expected = (cv::Mat_<int>(2,6) << 8, 4, 5, 6, 2, 9,
-                                                  3, 1, 9, 7, 2, 1);
 
-        cv::Mat actual = vis::reshape(data,6);
+    {
+        arma::imat expected = { 8, 4, 5, 6, 2, 9,
+                                3, 1, 9, 7, 2, 1 };
+        expected = arma::reshape(expected,6,2).t();
+
+        arma::imat actual(data);
+        actual.reshape(2,6);
         doReshapeTest(expected, actual);
     }
     {
-        cv::Mat expected = (cv::Mat_<int>(6,2) << 8, 6,
-                                                  3, 7,
-                                                  4, 2,
-                                                  1, 2,
-                                                  5, 9,
-                                                  9, 1);
-        cv::Mat actual = vis::reshape(data,2);
+        arma::imat expected = { 8, 6,
+                                3, 7,
+                                4, 2,
+                                1, 2,
+                                5, 9,
+                                9, 1 };
+        expected = arma::reshape(expected,2,6).t();
+
+        arma::imat actual(data);
+        actual.reshape(6,2);
         doReshapeTest(expected, actual);
     }
 }
