@@ -29,7 +29,8 @@ public:
     void compute(const std::string& category,
                  const std::vector<boost::filesystem::path>& files,
                  const Callback& cb,
-                 ColorMode mode = ColorMode::COLORS);
+                 ColorMode mode = ColorMode::COLORS,
+                 ProgressHandler handler = [](int){});
 
     /// @return The actual category.
     std::string getCategory() const { return category; }
@@ -70,10 +71,10 @@ template <typename Callback>
 void
 Descriptors::compute(const std::string& category,
         const std::vector<boost::filesystem::path>& files,
-        const Callback& cb, ColorMode mode) {
+        const Callback& cb, ColorMode mode, ProgressHandler handler) {
     this->category = category;
     this->type = cb.type;
-    vis::extract(files, descriptors, cb, mode);
+    vis::extract(files, descriptors, cb, mode, handler);
 }
 
 } /* namespace vis */

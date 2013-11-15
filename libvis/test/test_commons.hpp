@@ -8,10 +8,16 @@
 #define VIS_TEST_COMMONS_HPP
 
 #include <boost/filesystem.hpp>
+#include <functional>
 
 namespace fs = boost::filesystem;
 
 namespace test {
+
+auto progress = [](int i, const std::vector<fs::path>& files) {
+    std::cout << "  Extracting features from " << files[i]
+              << " (" << i+1 << "/" << files.size() << ")" << std::endl;
+};
 
 template <typename Object>
 Object*

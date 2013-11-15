@@ -49,8 +49,11 @@ arma::fmat descriptors;
 arma::uvec indices;
 
 BOOST_FIXTURE_TEST_CASE(test_vocabulary, test::ImageDir) {
+    auto progress = [&](int i) { test::progress(i, files); };
+
     // compute vocabulary
-    VocabularyPtr vocabulary(vis::Vocabulary::fromImageList<vis::HogExtractor>("test", files));
+    VocabularyPtr vocabulary(vis::Vocabulary::fromImageList<vis::HogExtractor>("test",
+                files, vis::vocabulary::NUM_WORDS, progress));
     BOOST_CHECK(vocabulary.get());
 
     // check it's the same as matlab (see test_vocabulary.mat)

@@ -59,7 +59,8 @@ public:
     static Vocabulary* fromImageList(
         const std::string& category,
         const std::vector<boost::filesystem::path>& names,
-        size_t numWords = vocabulary::NUM_WORDS);
+        size_t numWords = vocabulary::NUM_WORDS,
+        ProgressHandler handler = [](int){});
 
     /// @brief Read vocabulary from file.
     static Vocabulary* load(const boost::filesystem::path& file);
@@ -122,22 +123,21 @@ inline Vocabulary*
 Vocabulary::fromImageList(
         const std::string& category,
         const std::vector<boost::filesystem::path>& names,
-        size_t numWords) {
+        size_t numWords,
+        ProgressHandler handler) {
     const size_t len = names.size();
     const size_t numFeatures = cvRound(numWords*100.0/len);
 
     arma::fmat descriptors;
 
     VocabularyCallback<Extractor> cb(numFeatures);
-    extract(names, descriptors, cb);
+    extract(names, descriptors, cb, ColorMode::COLORS, handler);
 
-    std::cout << "Computing visual words and kdtree ..." << std::endl;
     Vocabulary* vocabulary = new Vocabulary(numWords);
     vocabulary->build(category, descriptors);
 
     return vocabulary;
 }
-
 
 } /* namespace vis */
 
