@@ -52,26 +52,6 @@ imquantize(const cv::Mat& in, const cv::Mat& levels) {
 }
 
 /**
- * @brief Equivalent of the Matlab linspace function
- * Original code taken from:
- * http://dsj23.wordpress.com/2013/02/13/matlab-linspace-function-written-in-c/
- */
-// TODO move to hsv_aux
-template <typename T>
-cv::Mat
-linspace(T min, T max, size_t n) {
-    cv::Mat result = cv::Mat_<T>(1,n);
-    T* ptr = result.ptr<T>(0);
-    const T range = max - min;
-    for (size_t i = 0; i < n-1; i++) {
-        ptr[i] = min + i*range/(n - 1);
-    }
-    ptr[n-1] = max;
-
-    return result;
-}
-
-/**
  * @brief Equivalent of Matlab reshape function.
  */
 inline
@@ -81,7 +61,6 @@ reshape(const cv::Mat& in, size_t cols) {
     cv::Mat out = in.t();
     return out.reshape(0, cols).t();
 }
-
 
 
 } /* namespace vis */

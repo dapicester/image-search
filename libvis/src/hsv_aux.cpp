@@ -5,6 +5,7 @@
  */
 
 #include "hsv_aux.hpp"
+#include "utils/conversions.hpp"
 #include <boost/assert.hpp>
 
 namespace vis {
@@ -79,9 +80,9 @@ quantize(const cv::Mat& image, const arma::ivec3& levels) {
     cv::split(image, channels);
 
     for (int i = 0; i < 3; i++) {
-        float step = 1./levels[i];
-        cv::Mat thresh = linspace<float>(step, 1. - step, levels[i] - 1);
-        channels[i] = imquantize<float>(channels[i], thresh);
+        const float step = 1./levels[i];
+        arma::fvec thresh = arma::linspace<arma::fvec>(step, 1.-step, levels[i]-1);
+        channels[i] = imquantize<float>(channels[i], arma2cv(thresh));
         BOOST_ASSERT(channels[i].size() == image.size());
     }
 

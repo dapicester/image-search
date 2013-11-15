@@ -128,28 +128,18 @@ BOOST_AUTO_TEST_CASE(test_medfilt2) {
 }
 
 BOOST_AUTO_TEST_CASE(test_linspace) {
-    cv::Mat expected, actual;
-
-    /* implicit type */
-    expected = (cv::Mat_<double>(1,10) << 1,2,3,4,5,6,7,8,9,10);
-    actual = vis::linspace(1.0, 10.0, 10);
-    BOOST_CHECK(test::equals(expected, actual));
-
-    /* explicit type */
-    expected = (cv::Mat_<int>(1,10) << 1,2,3,4,5,6,7,8,9,10);
-    actual = vis::linspace<int>(1, 10, 10);
-    BOOST_CHECK(test::equals(expected, actual));
-
-    /* double */
-    expected = (cv::Mat_<double>(1,15)
-            << 1.0, 1.642857143, 2.285714286, 2.928571429, 3.571428571,
-               4.214285714, 4.857142857, 5.5, 6.142857143, 6.785714286,
-               7.428571429, 8.071428571, 8.714285714, 9.357142857, 10.0);
-    actual = vis::linspace<double>(1, 10, 15);
-    BOOST_REQUIRE_EQUAL(expected.size(), actual.size());
-
-    for(int i = 0; i < 15; ++i) {
-        BOOST_CHECK_CLOSE(expected.at<double>(i), actual.at<double>(i), 0.000001);
+    {
+        arma::fvec expected = {1,2,3,4,5,6,7,8,9,10};
+        arma::fvec actual = arma::linspace<arma::fvec>(1., 10., 10);
+        BOOST_CHECK(test::equals(expected, actual));
+    }
+    {
+        arma::vec expected = { 1.0, 1.642857143, 2.285714286, 2.928571429, 3.571428571,
+                               4.214285714, 4.857142857, 5.5, 6.142857143, 6.785714286,
+                               7.428571429, 8.071428571, 8.714285714, 9.357142857, 10.0 };
+        arma::vec actual = arma::linspace<arma::vec>(1, 10, 15);
+        BOOST_REQUIRE_EQUAL(expected.size(), actual.size());
+        for(int i = 0; i < 15; ++i) BOOST_CHECK_CLOSE(expected(i), actual(i), 0.000001);
     }
 }
 

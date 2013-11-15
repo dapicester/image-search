@@ -91,11 +91,11 @@ cv::Scalar colorLevel(int index, hsv::Levels levels) {
     // TODO move these outside and pass as arguments?
     int numColors = levels[0] * levels[1] * levels[2];
     int numGrays = levels[2] + 1;
-    cv::Mat grays = linspace(1, 256, numGrays);
+    arma::ivec grays = arma::linspace<arma::ivec>(1, 256, numGrays);
 
     if (index > numColors - 1) { // grays
         int level = index - numColors;
-        int value = grays.at<int>(level) - 1;
+        int value = grays(level) - 1;
         return cv::Scalar(value, value, value);
     }
     else { // colors
