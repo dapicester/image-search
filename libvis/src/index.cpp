@@ -7,7 +7,6 @@
 #include "index.hpp"
 #include "kdtree.hpp"
 #include "serialization.hpp"
-#include <iostream>
 
 namespace vis {
 
@@ -42,17 +41,12 @@ Index::query(const arma::fmat& data, std::vector<id_type>& results,
 
 Index*
 Index::load(const fs::path& file) {
-    std::cout << "Loading index from file: " << file << " ... ";
-    Index* index = vis::load<Index, BinarySerializer>(file);
-    std::cout << "done" << std::endl;
-    return index;
+    return vis::load<Index, BinarySerializer>(file);
 }
 
 void
 Index::save(const fs::path& file) const {
-    std::cout << "Saving index to file: " << file << " ... ";
     vis::save<Index, BinarySerializer>(file, *this);
-    std::cout << "done" << std::endl;
 }
 
 } /* namespace vis */

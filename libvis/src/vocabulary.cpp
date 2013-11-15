@@ -8,7 +8,6 @@
 #include "serialization.hpp"
 #include "vocabulary.hpp"
 #include <boost/assert.hpp>
-#include <iostream>
 
 namespace vis {
 
@@ -60,17 +59,12 @@ Vocabulary::lookup(const arma::fmat& descriptors) const {
 
 Vocabulary*
 Vocabulary::load(const fs::path& file) {
-    std::cout << "Loading vocabulary from file " << file << " ... ";
-    Vocabulary* vocabulary = vis::load<Vocabulary, BinarySerializer>(file);
-    std::cout << "done" << std::endl;
-    return vocabulary;
+    return vis::load<Vocabulary, BinarySerializer>(file);
 }
 
 void
 Vocabulary::save(const fs::path& file) const {
-    std::cout << "Saving vocabulary to file " << file << " ... ";
     vis::save<Vocabulary, BinarySerializer>(file, *this);
-    std::cout << "done" << std::endl;
 }
 
 } /* namespace vis */
