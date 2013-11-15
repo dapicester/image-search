@@ -75,10 +75,10 @@ public:
     arma::uvec lookup(const arma::fmat& descriptors) const;
 
     /// @return The actual number of words in dictionary.
-    size_t getNumWords() const;
+    size_t getNumWords() const { return numWords; }
 
     /// @return The category for which the dictionary has been built.
-    std::string getCategory() const;
+    std::string getCategory() const { return category; }
 
 private:
     friend class boost::serialization::access;
@@ -98,16 +98,6 @@ public:
     const arma::fmat& getWords() const { return words; }
 #endif
 };
-
-inline size_t
-Vocabulary::getNumWords() const {
-    return numWords;
-}
-
-inline std::string
-Vocabulary::getCategory() const {
-    return category;
-}
 
 template <typename Archive>
 void
