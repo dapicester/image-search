@@ -15,6 +15,7 @@
 #include "vis/callbacks.hpp"
 #include "vis/descriptors.hpp"
 #include "vis/vocabulary.hpp"
+#include "vis/utils/handlers.hpp"
 
 #include <boost/scoped_ptr.hpp>
 
@@ -33,14 +34,14 @@ void testSerialization(const fs::path& file, const vis::Descriptors& descriptors
     BOOST_CHECK_EQUAL(descriptors.getType(), loaded->getType());
 }
 
+#define PROGRESS [&](int i) { vis::handlers::PrintFile(i, files); }
+
 BOOST_AUTO_TEST_CASE(hog) {
     VocabularyPtr vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
     vis::HogBagOfWordsCallback cb(*vocabulary);
 
-    auto progress = [&](int i) { test::progress(i, files); };
-
     vis::Descriptors descriptors;
-    descriptors.compute("test", files, cb, vis::ColorMode::GRAYSCALE, progress);
+    descriptors.compute("test", files, cb, vis::ColorMode::GRAYSCALE, PROGRESS);
     const arma::fmat& data = descriptors.data();
 
     BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
@@ -53,10 +54,8 @@ BOOST_AUTO_TEST_CASE(hog) {
 BOOST_AUTO_TEST_CASE(hsv) {
     vis::HsvHistogramsCallback cb;
 
-    auto progress = [&](int i) { test::progress(i, files); };
-
     vis::Descriptors histograms;
-    histograms.compute("test", files, cb, vis::ColorMode::COLORS, progress);
+    histograms.compute("test", files, cb, vis::ColorMode::COLORS, PROGRESS);
     const arma::fmat& data = histograms.data();
 
     BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
@@ -87,10 +86,8 @@ BOOST_AUTO_TEST_CASE(hoghsv) {
 
     vis::CompositeCallback cb(*vocabulary);
 
-    auto progress = [&](int i) { test::progress(i, files); };
-
     vis::Descriptors descriptors;
-    descriptors.compute("test", files, cb, vis::ColorMode::COLORS, progress);
+    descriptors.compute("test", files, cb, vis::ColorMode::COLORS, PROGRESS);
     const arma::fmat& data = descriptors.data();
 
     BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);

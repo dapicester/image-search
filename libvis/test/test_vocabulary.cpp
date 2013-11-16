@@ -9,6 +9,7 @@
 
 #include "vis/hog.hpp"
 #include "vis/vocabulary.hpp"
+#include "vis/utils/handlers.hpp"
 
 #include "fixtures.hpp"
 #include "utils/matrix.hpp"
@@ -51,7 +52,7 @@ arma::fmat descriptors;
 arma::uvec indices;
 
 BOOST_FIXTURE_TEST_CASE(test_vocabulary, test::ImageDir) {
-    auto progress = [&](int i) { test::progress(i, files); };
+    auto progress = [&](int i) { vis::handlers::PrintFile(i, files); };
 
     // compute vocabulary
     VocabularyPtr vocabulary(vis::Vocabulary::fromImageList<vis::HogExtractor>("test",
