@@ -10,7 +10,7 @@
 #include "descriptors_type.hpp"
 #include "index.hpp"
 #include "utils/timer.hpp"
-#include <boost/array.hpp>
+#include <array>
 
 namespace perf {
 
