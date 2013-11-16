@@ -4,9 +4,10 @@
  * @author Paolo D'Apice
  */
 
-#include "kmeans.hpp"
-#include "serialization.hpp"
-#include "vocabulary.hpp"
+#include "vis/kmeans.hpp"
+#include "vis/serialization.hpp"
+#include "vis/vocabulary.hpp"
+
 #include <boost/assert.hpp>
 
 namespace vis {

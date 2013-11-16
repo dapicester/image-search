@@ -7,9 +7,10 @@
 #ifndef DEMO_RECOMPUTE_HPP
 #define DEMO_RECOMPUTE_HPP
 
+#include <boost/filesystem/path.hpp>
+
 #include <QString>
 #include <QScopedPointer>
-#include <boost/filesystem/path.hpp>
 
 namespace vis {
     class Descriptors;

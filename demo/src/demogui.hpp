@@ -9,8 +9,9 @@
 
 #include "directories.hpp"
 #include "ui_demo.h"
+
 #include <vis.hpp>
-#include <boost/filesystem/path.hpp>
+
 #include <QMainWindow>
 #include <QScopedPointer>
 

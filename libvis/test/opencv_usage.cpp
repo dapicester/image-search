@@ -8,8 +8,10 @@
 #include <boost/test/unit_test.hpp>
 
 #include "fixtures.hpp"
+
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
+
 #include <opencv2/opencv.hpp>
 
 #define argc boost::unit_test::framework::master_test_suite().argc

@@ -8,8 +8,10 @@
 #define VIS_TEST_FIXTURES_HPP
 
 #include "images.h"
-#include "standardize.hpp"
-#include "utils/filesystem.hpp"
+
+#include "vis/standardize.hpp"
+#include "vis/utils/filesystem.hpp"
+
 #include <opencv2/highgui/highgui.hpp>
 
 namespace test {

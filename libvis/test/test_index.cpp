@@ -7,12 +7,14 @@
 #define BOOST_TEST_MODULE index
 #include <boost/test/unit_test.hpp>
 
-#include "callbacks.hpp"
-#include "extract.hpp"
 #include "fixtures.hpp"
-#include "index.hpp"
-#include "vocabulary.hpp"
 #include "test_commons.hpp"
+
+#include "vis/callbacks.hpp"
+#include "vis/extract.hpp"
+#include "vis/index.hpp"
+#include "vis/vocabulary.hpp"
+
 #include <boost/scoped_ptr.hpp>
 
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";

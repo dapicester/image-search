@@ -7,9 +7,10 @@
 #include "dir.h"
 #include "perf_data.hpp"
 #include "perf_serialization.hpp"
+
 #include <boost/filesystem/path.hpp>
 #ifdef HAVE_GNUPLOT_IOSTREAM
-#  include "gnuplot-iostream.h"
+#  include <gnuplot-iostream.h>
 #endif
 
 namespace fs = boost::filesystem;

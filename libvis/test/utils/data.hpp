@@ -8,6 +8,7 @@
 #define VIS_TEST_UTILS_DATA_HPP
 
 #include "random.hpp"
+
 #include <armadillo>
 #include <opencv2/core/core.hpp>
 

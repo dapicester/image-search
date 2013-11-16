@@ -7,7 +7,8 @@
 #define BOOST_TEST_MODULE timer
 #include <boost/test/unit_test.hpp>
 
-#include "utils/timer.hpp"
+#include "vis/utils/timer.hpp"
+
 #include <thread>
 
 #define _CHECK_CLOSE(A,B,DELTA)

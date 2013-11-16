@@ -7,6 +7,7 @@
 #include "demogui.hpp"
 #include "ui_images.h"
 #include "utils.hpp"
+
 #include <QDebug>
 
 void

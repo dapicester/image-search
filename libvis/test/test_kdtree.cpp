@@ -7,9 +7,11 @@
 #define BOOST_TEST_MODULE kdtree
 #include <boost/test/unit_test.hpp>
 
-#include "kdtree.hpp"
 #include "utils/data.hpp"
 #include "utils/print.hpp"
+
+#include "vis/kdtree.hpp"
+
 #include <iostream>
 #include <random>
 

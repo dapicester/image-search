@@ -7,11 +7,13 @@
 #ifndef DEMO_UTILS_HPP
 #define DEMO_UTILS_HPP
 
-#include <QMessageBox>
-#include <QString>
-#include <descriptors_type.hpp>
+#include <vis/descriptors_type.hpp>
+
 #include <boost/filesystem/path.hpp>
 #include <vector>
+
+#include <QMessageBox>
+#include <QString>
 
 class QProgressDialog;
 class QWidget;

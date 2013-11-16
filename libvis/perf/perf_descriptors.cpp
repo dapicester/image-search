@@ -5,11 +5,12 @@
  */
 
 #include "dir.h"
-#include "vis.hpp"
-#include "utils.hpp"
-
 #include "perf_data.hpp"
 #include "perf_utils.hpp"
+
+#include "vis.hpp"
+#include "vis/utils.hpp"
+
 #include <boost/scoped_ptr.hpp>
 
 /// Number of times a single test is executed.

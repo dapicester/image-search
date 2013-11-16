@@ -4,8 +4,8 @@
  * @author Paolo D'Apice
  */
 
-#include "descriptors.hpp"
-#include "serialization.hpp"
+#include "vis/descriptors.hpp"
+#include "vis/serialization.hpp"
 
 namespace vis {
 

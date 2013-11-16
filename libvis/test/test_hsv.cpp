@@ -8,10 +8,11 @@
 #include <boost/test/unit_test.hpp>
 
 #include "fixtures.hpp"
-#include "standardize.hpp"
-#include "hsv.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
+
+#include "vis/hsv.hpp"
+
 #include <opencv2/highgui/highgui.hpp>
 
 #define argc boost::unit_test::framework::master_test_suite().argc

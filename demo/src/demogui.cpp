@@ -6,6 +6,7 @@
 
 #include "demogui.hpp"
 #include "utils.hpp"
+
 #include <QDebug>
 
 #define connectbtn(BTN, FUNC) connect(BTN, SIGNAL(clicked()), this, SLOT(FUNC))

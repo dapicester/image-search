@@ -4,9 +4,9 @@
  * @author Paolo D'Apice
  */
 
-#include "index.hpp"
-#include "kdtree.hpp"
-#include "serialization.hpp"
+#include "vis/index.hpp"
+#include "vis/kdtree.hpp"
+#include "vis/serialization.hpp"
 
 namespace vis {
 

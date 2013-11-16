@@ -8,6 +8,7 @@
 #define VIS_BOW_HPP
 
 #include "vocabulary.hpp"
+
 #include <armadillo>
 #include <boost/noncopyable.hpp>
 #include <opencv2/core/core.hpp>

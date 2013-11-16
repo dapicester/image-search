@@ -4,8 +4,9 @@
  * @author Paolo D'Apice
  */
 
-#include "callbacks.hpp"
-#include "vocabulary.hpp"
+#include "vis/callbacks.hpp"
+#include "vis/vocabulary.hpp"
+
 #include <opencv2/imgproc/imgproc.hpp>
 
 namespace vis {

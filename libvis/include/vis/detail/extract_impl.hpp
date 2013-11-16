@@ -7,7 +7,8 @@
 #ifndef VIS_DETAIL_EXTRACT_IMPL_HPP
 #define VIS_DETAIL_EXTRACT_IMPL_HPP
 
-#include "standardize.hpp"
+#include "../standardize.hpp"
+
 #include <opencv2/highgui/highgui.hpp>
 
 namespace vis {

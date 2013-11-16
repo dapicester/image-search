@@ -6,6 +6,7 @@
 
 #include "directories.hpp"
 #include "recompute.hpp"
+
 #include <QString>
 #include <QtDebug>
 

@@ -7,7 +7,9 @@
 #ifndef VIS_PERF_UTILS_HPP
 #define VIS_PERF_UTILS_HPP
 
-#include "descriptors_type.hpp"
+#include "vis/descriptors_type.hpp"
+
+#include <armadillo>
 #include <opencv2/core/core.hpp>
 
 namespace perf {

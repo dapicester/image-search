@@ -4,9 +4,10 @@
  * @author Paolo D'Apice
  */
 
-#include "hsv.hpp"
+#include "vis/hsv.hpp"
+#include "vis/utils/conversions.hpp"
 #include "hsv_aux.hpp"
-#include "utils/conversions.hpp"
+
 #include <boost/assert.hpp>
 
 namespace vis {

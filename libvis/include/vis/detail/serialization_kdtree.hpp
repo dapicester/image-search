@@ -8,11 +8,11 @@
 #ifndef VIS_DETAIL_SERIALIZATION_KDTREE_HPP
 #define VIS_DETAIL_SERIALIZATION_KDTREE_HPP
 
-#include <boost/assert.hpp>
-#include <boost/serialization/split_free.hpp>
 extern "C" {
 #include <vl/kdtree.h>
 }
+#include <boost/assert.hpp>
+#include <boost/serialization/split_free.hpp>
 
 BOOST_SERIALIZATION_SPLIT_FREE(VlKDForest)
 

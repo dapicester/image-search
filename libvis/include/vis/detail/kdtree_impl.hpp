@@ -7,7 +7,8 @@
 #ifndef VIS_DETAIL_KDTREE_IMPL_HPP
 #define VIS_DETAIL_KDTREE_IMPL_HPP
 
-#include "traits.hpp"
+#include "../traits.hpp"
+
 #include <boost/assert.hpp>
 #include <boost/serialization/array.hpp>
 #include <cstdio>

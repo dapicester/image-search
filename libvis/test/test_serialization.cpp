@@ -7,10 +7,12 @@
 #define BOOST_TEST_MODULE serialization
 #include <boost/test/unit_test.hpp>
 
-#include "kdtree.hpp"
 #include "utils/data.hpp"
 #include "utils/matrix.hpp"
-#include "serialization.hpp"
+
+#include "vis/kdtree.hpp"
+#include "vis/serialization.hpp"
+
 #include <opencv2/core/core.hpp>
 #include <fstream>
 #include <random>

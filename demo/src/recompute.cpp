@@ -6,6 +6,7 @@
 
 #include "recompute.hpp"
 #include "utils.hpp"
+
 #include <vis.hpp>
 #include <QDebug>
 

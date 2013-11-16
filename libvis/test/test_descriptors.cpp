@@ -7,13 +7,15 @@
 #define BOOST_TEST_MODULE descriptors
 #include <boost/test/unit_test.hpp>
 
-#include "callbacks.hpp"
-#include "descriptors.hpp"
 #include "fixtures.hpp"
-#include "vocabulary.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
 #include "test_commons.hpp"
+
+#include "vis/callbacks.hpp"
+#include "vis/descriptors.hpp"
+#include "vis/vocabulary.hpp"
+
 #include <boost/scoped_ptr.hpp>
 
 BOOST_FIXTURE_TEST_SUITE(descriptors, test::ImageDir)

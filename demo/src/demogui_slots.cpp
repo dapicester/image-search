@@ -6,6 +6,7 @@
 
 #include "demogui.hpp"
 #include "utils.hpp"
+
 #include <QDebug>
 #include <QProgressDialog>
 

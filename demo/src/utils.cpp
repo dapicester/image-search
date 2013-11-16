@@ -5,12 +5,15 @@
  */
 
 #include "utils.hpp"
-#include <descriptors.hpp>
-#include <callbacks.hpp>
+
+#include <vis/callbacks.hpp>
+#include <vis/descriptors.hpp>
+
 #include <boost/foreach.hpp>
+#include <fstream>
+
 #include <QMessageBox>
 #include <QProgressDialog>
-#include <fstream>
 
 namespace fs = boost::filesystem;
 

@@ -7,11 +7,13 @@
 #define BOOST_TEST_MODULE vocabulary
 #include <boost/test/unit_test.hpp>
 
-#include "hog.hpp"
-#include "vocabulary.hpp"
+#include "vis/hog.hpp"
+#include "vis/vocabulary.hpp"
+
 #include "fixtures.hpp"
 #include "utils/matrix.hpp"
 #include "test_commons.hpp"
+
 #include <boost/scoped_ptr.hpp>
 
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";

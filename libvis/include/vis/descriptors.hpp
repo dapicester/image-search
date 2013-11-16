@@ -9,6 +9,7 @@
 
 #include "descriptors_type.hpp"
 #include "extract.hpp"
+
 #include <armadillo>
 #include <boost/filesystem/path.hpp>
 #include <boost/serialization/access.hpp>
