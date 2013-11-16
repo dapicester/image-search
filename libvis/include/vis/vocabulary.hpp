@@ -60,7 +60,7 @@ public:
         const std::string& category,
         const std::vector<boost::filesystem::path>& names,
         size_t numWords = vocabulary::NUM_WORDS,
-        ProgressHandler handler = [](int){});
+        ProgressHandler handler = NO_ACTION);
 
     /// @brief Read vocabulary from file.
     static Vocabulary* load(const boost::filesystem::path& file);
