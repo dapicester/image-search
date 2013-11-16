@@ -21,8 +21,6 @@ enum class ColorMode {
 
 typedef std::function<void (int)> ProgressHandler;
 
-static const ProgressHandler NO_ACTION = [](int){};
-
 /**
  * @brief Extract descriptors on a list of images.
  * @param names List of full pathnames to images
@@ -37,7 +35,7 @@ extract(const std::vector<boost::filesystem::path>& names,
         arma::fmat& data,
         const Callback& cb,
         ColorMode mode = ColorMode::COLORS,
-        ProgressHandler handler = NO_ACTION);
+        ProgressHandler handler = NULL);
 
 } /* namespace vis */
 

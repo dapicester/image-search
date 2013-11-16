@@ -92,7 +92,7 @@ void
 extractDescriptors(const QString& category, const QString& queryType,
         const std::vector<boost::filesystem::path>& names,
         vis::Descriptors* descriptors, vis::Vocabulary* vocabulary,
-        vis::ProgressHandler handler = vis::NO_ACTION);
+        vis::ProgressHandler handler = NULL);
 
 /// Display a confirmation message box.
 bool confirmMessageBox(const QString& message);

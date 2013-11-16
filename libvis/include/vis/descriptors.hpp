@@ -31,7 +31,7 @@ public:
                  const std::vector<boost::filesystem::path>& files,
                  const Callback& cb,
                  ColorMode mode = ColorMode::COLORS,
-                 ProgressHandler handler = NO_ACTION);
+                 ProgressHandler handler = NULL);
 
     /// @return The actual category.
     std::string getCategory() const { return category; }
