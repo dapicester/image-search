@@ -8,6 +8,7 @@
 #define DEMO_UTILS_HPP
 
 #include <vis/descriptors_type.hpp>
+#include <vis/extract.hpp>
 
 #include <boost/filesystem/path.hpp>
 #include <vector>
@@ -90,7 +91,8 @@ indexFile(const boost::filesystem::path& dataDir, const QString& category, const
 void
 extractDescriptors(const QString& category, const QString& queryType,
         const std::vector<boost::filesystem::path>& names,
-        vis::Descriptors* descriptors, vis::Vocabulary* vocabulary);
+        vis::Descriptors* descriptors, vis::Vocabulary* vocabulary,
+        vis::ProgressHandler handler = vis::NO_ACTION);
 
 /// Display a confirmation message box.
 bool confirmMessageBox(const QString& message);
@@ -99,7 +101,7 @@ bool confirmMessageBox(const QString& message);
 void messageBox(const QString& message, QMessageBox::Icon icon = QMessageBox::NoIcon);
 
 /// Progress dialog box.
-QProgressDialog* progressDialog(const QString& title, QWidget* parent, int min, int max);
+QProgressDialog* progressDialog(const QString& title, QWidget* parent, int max);
 
 /// Operator << for std::vector.
 template <typename T>

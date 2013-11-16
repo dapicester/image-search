@@ -75,21 +75,21 @@ DemoGui::recomputeIndex() {
         return;
     }
 
-    QScopedPointer<QProgressDialog> progress(progressDialog("Computing index ...", this, 1, 10));
+    QScopedPointer<QProgressDialog> progress(progressDialog("Computing index ...", this, 3));
 
     if (not loadDescriptors()) {
         messageBox("No descriptors file found, please recompute descriptors.", QMessageBox::Critical);
         return;
     }
-    progress->setValue(3);
+    progress->setValue(1);
 
     index.reset(new vis::Index);
     index->build(category.toStdString(), *descriptors);
-    progress->setValue(6);
+    progress->setValue(2);
 
     fs::path savefile = indexFile(DATA_PATH, category, queryType);
     index->save(savefile);
-    progress->setValue(10);
+    progress->setValue(3);
 
     qDebug() << "index done!";
 }
@@ -101,23 +101,26 @@ DemoGui::recomputeDescriptors() {
         return;
     }
 
-    QScopedPointer<QProgressDialog> progress(progressDialog("Computing descriptors ...", this, 1, 10));
+    const PathList& names = imagesMap[category];
+
+    QScopedPointer<QProgressDialog> progress(progressDialog("Computing descriptors ...", this, names.size() + 3));
 
     if (not loadVocabulary()) {
         messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
         return;
     }
-    progress->setValue(3);
-
-    const PathList& names = imagesMap[category];
-    progress->setValue(6);
+    progress->setValue(1);
 
     descriptors.reset(new vis::Descriptors);
-    extractDescriptors(category, queryType, names, descriptors.data(), vocabulary.data());
+    extractDescriptors(category, queryType, names,
+            descriptors.data(), vocabulary.data(), [&](int i) {
+                progress->setValue(i+2);
+                qDebug() << "processing file" << str(names[i]);
+            });
 
     fs::path savefile = descriptorsFile(DATA_PATH, category, queryType);
     descriptors->save(savefile);
-    progress->setValue(10);
+    progress->setValue(names.size() + 3);
 
     qDebug() << "descriptors done!";
 }
@@ -129,26 +132,29 @@ DemoGui::recomputeQueries() {
         return;
     }
 
-    QScopedPointer<QProgressDialog> progress(progressDialog("Computing queries ...", this, 1, 10));
-
-    if (not loadVocabulary()) {
-        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
-        return;
-    }
-    progress->setValue(3);
-
     static fs::path file = categoryFile(DATA_PATH, "test");
     static fs::path dir = categoryDir(DATA_PATH, "test");
     static PathList allnames = loadNames(file, dir);
     PathList names = ::queryNames(allnames, category);
 
+    QScopedPointer<QProgressDialog> progress(progressDialog("Computing queries ...", this, names.size() + 3));
+
+    if (not loadVocabulary()) {
+        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
+        return;
+    }
+    progress->setValue(1);
+
     queries.reset(new vis::Descriptors);
-    extractDescriptors(category, queryType, names, queries.data(), vocabulary.data());
-    progress->setValue(6);
+    extractDescriptors(category, queryType, names,
+            queries.data(), vocabulary.data(), [&](int i) {
+                progress->setValue(i+2);
+                qDebug() << "processing file" << str(names[i]);
+            });
 
     fs::path savefile = queryFile(DATA_PATH, category, queryType);
     queries->save(savefile);
-    progress->setValue(10);
+    progress->setValue(names.size());
 
     qDebug() << "queries done!";
 }
@@ -160,16 +166,20 @@ DemoGui::recomputeVocabulary() {
         return;
     }
 
-    QScopedPointer<QProgressDialog> progress(progressDialog("Computing vocabulary ...", this, 0, 10));
-    progress->setValue(3);
-
     PathList names = vis::subset(imagesMap[category], 100);
-    vocabulary.reset(vis::Vocabulary::fromImageList<vis::HogExtractor>(category.toStdString(), names));
-    progress->setValue(6);
+
+    QScopedPointer<QProgressDialog> progress(progressDialog("Computing vocabulary ...", this, names.size() + 3));
+    progress->setValue(1);
+
+    vocabulary.reset(vis::Vocabulary::fromImageList<vis::HogExtractor>(
+                category.toStdString(), names, vis::vocabulary::NUM_WORDS, [&](int i) {
+                    progress->setValue(i+2);
+                    qDebug() << "processing file" << str(names[i]);
+                }));
 
     fs::path savefile = vocabularyFile(DATA_PATH, category);
     vocabulary->save(savefile);
-    progress->setValue(10);
+    progress->setValue(names.size());
 
     qDebug() << "vocabulary done!";
 }

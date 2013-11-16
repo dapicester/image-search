@@ -9,7 +9,6 @@
 #include <vis/callbacks.hpp>
 #include <vis/descriptors.hpp>
 
-#include <boost/foreach.hpp>
 #include <fstream>
 
 #include <QMessageBox>
@@ -26,7 +25,7 @@ static const QString TEXT_EXT = ".txt";
 vector<string>
 loadNames(const fs::path& file) {
     vector<string> names;
-    std::ifstream input(file.string().c_str());
+    std::ifstream input(file.string());
     std::copy(std::istream_iterator<string>(input),
               std::istream_iterator<string>(),
               std::back_inserter(names));
@@ -37,9 +36,9 @@ vector<fs::path>
 loadNames(const fs::path& file, const fs::path& prefix) {
     vector<string> lines = loadNames(file);
     vector<fs::path> names;
-    BOOST_FOREACH(const string& line, lines) {
+    std::for_each (lines.begin(), lines.end(), [&](const string& line) {
         names.push_back(prefix / line);
-    }
+    });
     return names;
 }
 
@@ -59,11 +58,9 @@ vector<fs::path>
 queryNames(const vector<fs::path>& all, const QString& category) {
     vector<fs::path> names;
     QRegExp re("\\b" + category + "\\d");
-    for (vector<fs::path>::const_iterator it = all.begin(); it != all.end(); ++it) {
-        if (str(*it).contains(re)) {
-            names.push_back(*it);
-        }
-    }
+    std::for_each(all.begin(), all.end(), [&](const fs::path& path) {
+        if (str(path).contains(re)) names.push_back(path);
+    });
     return names;
 }
 
@@ -102,19 +99,23 @@ indexFile(const fs::path& dataDir, const QString& category, const QString& type)
 void
 extractDescriptors(const QString& category, const QString& queryType,
         const std::vector<boost::filesystem::path>& names,
-        vis::Descriptors* descriptors, vis::Vocabulary* vocabulary) {
+        vis::Descriptors* descriptors, vis::Vocabulary* vocabulary,
+        vis::ProgressHandler handler) {
     // XXX quick'n dirty (TM)
     if (queryType == "color") {
         vis::HsvHistogramsCallback cb;
-        descriptors->compute(category.toStdString(), names, cb);
+        descriptors->compute(category.toStdString(), names, cb,
+                vis::ColorMode::COLORS, handler);
     }
     else if (queryType == "shape") {
         vis::HogBagOfWordsCallback cb(*vocabulary);
-        descriptors->compute(category.toStdString(), names, cb);
+        descriptors->compute(category.toStdString(), names, cb,
+                vis::ColorMode::GRAYSCALE, handler);
     }
     else if (queryType == "combined") {
         vis::CompositeCallback cb(*vocabulary);
-        descriptors->compute(category.toStdString(), names, cb);
+        descriptors->compute(category.toStdString(), names, cb,
+                vis::ColorMode::COLORS, handler);
     }
 }
 
@@ -142,9 +143,11 @@ messageBox(const QString& message, QMessageBox::Icon icon) {
 }
 
 QProgressDialog*
-progressDialog(const QString& title, QWidget* parent, int min, int max) {
-    QProgressDialog* dialog = new QProgressDialog(title, "Cancel", min, max, parent);
-    //dialog->setWindowModality(Qt::WindowModal);
+progressDialog(const QString& title, QWidget* parent, int max) {
+    QProgressDialog* dialog = new QProgressDialog(title, "Cancel", 0, max, parent);
+    dialog->setWindowModality(Qt::WindowModal);
+    dialog->setMinimumDuration(0);
+    dialog->setCancelButton(0);
     dialog->show();
     return dialog;
 }

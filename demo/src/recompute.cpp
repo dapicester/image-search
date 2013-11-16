@@ -8,6 +8,8 @@
 #include "utils.hpp"
 
 #include <vis.hpp>
+#include <vis/utils/handlers.hpp>
+
 #include <QDebug>
 
 Recompute::Recompute(const char* path) : dataPath(path) {}
@@ -39,12 +41,16 @@ Recompute::loadQueryImagePaths(const QString& category) {
     qDebug() << "loaded" << queryImages.size() << "query images for" << category;
 }
 
+#define PROGRESS_HANDLER(files) [&](int i) { vis::handlers::PrintFile(i, files); }
+
 void
 Recompute::computeVocabulary(const QString& category) {
     qDebug() << "computing vocabulary for" << category;
 
     vector_path names = vis::subset(images, 100);
-    vocabulary.reset(vis::Vocabulary::fromImageList<vis::HogExtractor>(category.toStdString(), names));
+    vocabulary.reset(vis::Vocabulary::fromImageList<vis::HogExtractor>(
+                category.toStdString(), names, vis::vocabulary::NUM_WORDS,
+                PROGRESS_HANDLER(names)));
 
     fs::path savefile = vocabularyFile(dataPath, category);
     vocabulary->save(savefile);
@@ -57,7 +63,9 @@ Recompute::computeDescriptors(const QString& category, const QString& type) {
     qDebug() << "computing descriptors for" << category << "with" << type;
 
     descriptors.reset(new vis::Descriptors);
-    extractDescriptors(category, type, images, descriptors.data(), vocabulary.data());
+    extractDescriptors(category, type, images,
+            descriptors.data(), vocabulary.data(),
+            PROGRESS_HANDLER(images));
 
     fs::path savefile = descriptorsFile(dataPath, category, type);
     descriptors->save(savefile);
@@ -70,7 +78,9 @@ Recompute::computeQueries(const QString& category, const QString& type) {
     qDebug() << "computing query descriptors for" << category << "with" << type;
 
     queries.reset(new vis::Descriptors);
-    extractDescriptors(category, type, queryImages, queries.data(), vocabulary.data());
+    extractDescriptors(category, type, queryImages,
+            queries.data(), vocabulary.data(),
+            PROGRESS_HANDLER(queryImages));
 
     fs::path savefile = queryFile(dataPath, category, type);
     queries->save(savefile);
