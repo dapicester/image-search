@@ -6,10 +6,7 @@
 
 #include "server.hpp"
 #include "connection.hpp"
-#include <boost/bind.hpp>
-#include <boost/thread.hpp>
-//#include <functional>
-//#include <thread>
+#include <thread>
 #include <iostream>
 
 namespace vis {
@@ -37,11 +34,9 @@ void
 Server::start() {
     std::cerr << "Starting server ... ";
     doAccept();
-    // XXX using std causes runtime SIGABRT
-    //std::thread(std::bind<size_t (boost::asio::io_service::*)()>(&boost::asio::io_service::run, &io_service));
-    //std::thread(std::bind(static_cast<size_t (boost::asio::io_service::*)()>(&boost::asio::io_service::run), &io_service));
-    //std::thread(boost::bind(&boost::asio::io_service::run, &io_service));
-    boost::thread(boost::bind(&boost::asio::io_service::run, &io_service));
+    service.reset(new std::thread([this]{
+        io_service.run();
+    }));
     running = true;
     std::cerr << "OK\n";
 }
@@ -51,6 +46,7 @@ Server::stop() {
     std::cerr << "Stopping server ... ";
     acceptor.close();
     io_service.stop();
+    service->join();
     running = false;
     std::cerr << "OK\n";
 }

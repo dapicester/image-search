@@ -8,6 +8,8 @@
 #define VIS_SERVER_HPP
 
 #include <boost/asio.hpp>
+#include <memory>
+#include <thread>
 
 namespace vis {
 
@@ -36,6 +38,7 @@ private:
     boost::asio::ip::tcp::socket socket;
     boost::asio::signal_set signals;
 
+    std::unique_ptr<std::thread> service;
     bool running = false;
 };
 

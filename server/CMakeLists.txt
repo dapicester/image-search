@@ -8,9 +8,9 @@ list(APPEND libraries vis)
 
 list(APPEND includes "${server_SOURCE_DIR}/include")
 
-find_package(Boost COMPONENTS thread REQUIRED)
+find_package(Boost REQUIRED)
 list(APPEND includes ${Boost_INCLUDE_DIRS})
-list(APPEND libraries ${Boost_LIBRARIES})
+#list(APPEND libraries ${Boost_LIBRARIES})
 
 set(server_SRCS
     src/server.cpp
