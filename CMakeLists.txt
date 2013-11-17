@@ -27,6 +27,7 @@ option(ENABLE_CTAGS "Enable CTags" OFF)
 
 add_subdirectory(libvis)
 add_subdirectory(demo)
+add_subdirectory(server)
 
 if(ENABLE_CTAGS)
     add_ctags_for(libvis demo)
