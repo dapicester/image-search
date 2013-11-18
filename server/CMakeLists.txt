@@ -12,6 +12,10 @@ find_package(Boost COMPONENTS thread REQUIRED)
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
+set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
+configure_file("include/directories.h.in" ${CMAKE_CURRENT_BINARY_DIR}/directories.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 set(server_SRCS
     src/server.cpp
     src/connection.cpp
