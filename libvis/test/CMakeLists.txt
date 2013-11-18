@@ -42,11 +42,6 @@ add_unit_test(NAME test_kmeans
     SOURCES test_kmeans.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
-add_unit_test(NAME test_vl_kdtree
-    SOURCES test_vl_kdtree.c
-    DISABLED true
-    LINK_LIBRARIES ${VLFEAT_LIBRARIES})
-
 add_unit_test(NAME test_kdtree
     SOURCES test_kdtree.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
