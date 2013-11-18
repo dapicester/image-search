@@ -8,6 +8,8 @@
 #define VIS_SERVER_HPP
 
 #include <boost/asio.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/scoped_ptr.hpp>
 
 namespace vis {
 
@@ -37,6 +39,7 @@ private:
     boost::asio::signal_set signals;
 
     bool running = false;
+    boost::scoped_ptr<boost::thread> io;
 };
 
 } // namespace vis

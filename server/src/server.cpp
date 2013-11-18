@@ -7,7 +7,6 @@
 #include "server.hpp"
 #include "connection.hpp"
 #include <boost/bind.hpp>
-#include <boost/thread.hpp>
 #include <iostream>
 
 namespace vis {
@@ -35,7 +34,7 @@ void
 Server::start() {
     std::cerr << "Starting server ... ";
     doAccept();
-    boost::thread(boost::bind(&boost::asio::io_service::run, &io_service));
+    io.reset(new boost::thread(boost::bind(&boost::asio::io_service::run, &io_service)));
     running = true;
     std::cerr << "OK\n";
 }
@@ -45,6 +44,7 @@ Server::stop() {
     std::cerr << "Stopping server ... ";
     acceptor.close();
     io_service.stop();
+    io->join();
     running = false;
     std::cerr << "OK\n";
 }
