@@ -42,7 +42,5 @@ BOOST_AUTO_TEST_CASE(test_request) {
     }
     server.stop();
     BOOST_REQUIRE(not server.isRunning());
-
-    std::this_thread::sleep_for(std::chrono::seconds(1)); // wait for stdout
 }
 
