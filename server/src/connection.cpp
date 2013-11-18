@@ -34,7 +34,7 @@ void
 Connection::doWrite(std::size_t length) {
     auto self(shared_from_this());
     //std::cerr << "* writing echo back ...\n";
-    boost::asio::async_write(socket, boost::asio::buffer(buffer.data(), length),
+    boost::asio::async_write(socket, boost::asio::buffer(buffer, length),
         [this, self](boost::system::error_code ec, std::size_t length) {
             if(not ec) {
                 //std::cerr << "* written " << length << "\n";

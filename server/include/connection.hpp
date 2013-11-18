@@ -30,7 +30,7 @@ private:
 
 private:
     boost::asio::ip::tcp::socket socket;
-    std::array<char,1024> buffer;
+    char buffer[1024];
 };
 
 } //namespace vis

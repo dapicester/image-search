@@ -35,7 +35,7 @@ public:
         std::cout << "done\n";
 
         std::cout << "Receiving response ... ";
-        std::array<char,1024> response;
+        char response[1024];
         boost::system::error_code ec;
         size_t length = boost::asio::read(socket,
                 boost::asio::buffer(response), boost::asio::transfer_all(), ec);
@@ -46,7 +46,7 @@ public:
          */
 
         std::cout << length << " bytes received\n";
-        return std::string(response.data(), length);
+        return std::string(response, length);
     }
 
 private:
