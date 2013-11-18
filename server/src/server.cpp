@@ -14,14 +14,14 @@ namespace vis {
 Server::Server(short port)
     : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)),
       socket(io_service), signals(io_service) {
-    std::cerr << "New server on port " << port << std::endl;
+    std::cout << "New server on port " << port << std::endl;
     signals.add(SIGINT);
     signals.add(SIGTERM);
 #if defined(SIGQUIT)
     signals.add(SIGQUIT);
 #endif
     signals.async_wait([this](boost::system::error_code, int signal) {
-        std::cerr << "Received signal " << signal << std::endl;
+        std::cout << "Received signal " << signal << std::endl;
         stop();
     });
 }
@@ -32,29 +32,29 @@ Server::~Server() {
 
 void
 Server::start() {
-    std::cerr << "Starting server ... ";
+    std::cout << "Starting server ...\n";
     doAccept();
     io.reset(new boost::thread(boost::bind(&boost::asio::io_service::run, &io_service)));
     running = true;
-    std::cerr << "OK\n";
+    std::cout << "Server started\n";
 }
 
 void
 Server::stop() {
-    std::cerr << "Stopping server ... ";
+    std::cout << "Stopping server ...\n";
     acceptor.close();
     io_service.stop();
     io->join();
     running = false;
-    std::cerr << "OK\n";
+    std::cout << "Server stopped\n";
 }
 
 void
 Server::doAccept() {
-    std::cerr << "Waiting for requests\n";
+    std::cout << "Waiting for requests\n";
     acceptor.async_accept(socket, [this](boost::system::error_code ec) {
         if (not ec) {
-            std::cerr << "Incoming request\n";
+            std::cout << "Incoming request\n";
             std::make_shared<Connection>(std::move(socket))->start();
         }
 

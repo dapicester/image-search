@@ -20,11 +20,11 @@ Connection::start() {
 void
 Connection::doRead() {
     auto self(shared_from_this());
-    //std::cerr << "* reading request data ...\n";
+    //std::cout << "* reading request data ...\n";
     socket.async_read_some(boost::asio::buffer(buffer),
         [this, self](boost::system::error_code ec, std::size_t length) {
             if (not ec) {
-                //std::cerr << "* read " << length << "\n";
+                //std::cout << "* read " << length << "\n";
                 doWrite(length);
             }
         });
@@ -33,11 +33,11 @@ Connection::doRead() {
 void
 Connection::doWrite(std::size_t length) {
     auto self(shared_from_this());
-    //std::cerr << "* writing echo back ...\n";
+    //std::cout << "* writing echo back ...\n";
     boost::asio::async_write(socket, boost::asio::buffer(buffer, length),
         [this, self](boost::system::error_code ec, std::size_t length) {
             if(not ec) {
-                //std::cerr << "* written " << length << "\n";
+                //std::cout << "* written " << length << "\n";
                 //doRead();
             }
         });

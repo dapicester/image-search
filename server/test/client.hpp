@@ -16,25 +16,25 @@ public:
     virtual ~Client() {}
 
     bool probe() {
-        std::cout << "Probing " << host << ":" << port << " ... ";
+        std::cout << "Probing " << host << ":" << port << " ...\n";
         try {
             boost::asio::ip::tcp::resolver resolver(io_service);
             boost::asio::connect(socket, resolver.resolve({host,std::to_string(port)}));
-            std::cout << "OK\n";
+            std::cout << "Probe OK\n";
             return true;
         } catch (std::exception& e) {
-            std::cout << "ERROR: " << e.what() << std::endl;
+            std::cout << "Probe ERROR: " << e.what() << std::endl;
             return false;
         }
     }
 
     std::string sendRequest(const std::string& request) {
-        std::cout << "Sending request [" << request << "] ...";
+        std::cout << "Sending request [" << request << "] ...\n";
         boost::asio::write(socket,
                 boost::asio::buffer(request.data(), request.length()));
-        std::cout << "done\n";
+        std::cout << "Request sent\n";
 
-        std::cout << "Receiving response ... ";
+        std::cout << "Receiving response ...\n";
         char response[1024];
         boost::system::error_code ec;
         size_t length = boost::asio::read(socket,
@@ -45,7 +45,7 @@ public:
          *}
          */
 
-        std::cout << length << " bytes received\n";
+        std::cout << "Response :" << length << " bytes received\n";
         return std::string(response, length);
     }
 
