@@ -3,7 +3,9 @@ project(server)
 message(STATUS "Building image-search server")
 
 set(LIBVIS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/libvis/include")
-list(APPEND includes ${LIBVIS_INCLUDE_DIR})
+set(EASYLOGGING_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/easylogging++")
+
+list(APPEND includes ${LIBVIS_INCLUDE_DIR} ${EASYLOGGING_INCLUDE_DIR})
 list(APPEND libraries vis)
 
 list(APPEND includes "${server_SOURCE_DIR}/include")

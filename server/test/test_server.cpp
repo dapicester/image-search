@@ -8,16 +8,27 @@
 #include <boost/test/unit_test.hpp>
 
 #include "client.hpp"
+#include "logging.hpp"
 #include "server.hpp"
+
+_INITIALIZE_EASYLOGGINGPP
 
 static const short PORT = 4567;
 
-BOOST_AUTO_TEST_CASE(test_no_connect) {
+struct InitLogging {
+    InitLogging() {
+        vis::registerLoggers({ "server", "client", "connection" });
+    }
+};
+
+BOOST_FIXTURE_TEST_SUITE(test, InitLogging)
+
+BOOST_AUTO_TEST_CASE(no_connect) {
     vis::Client client("localhost", PORT);
     BOOST_CHECK(not client.probe());
 }
 
-BOOST_AUTO_TEST_CASE(test_connect) {
+BOOST_AUTO_TEST_CASE(connect) {
     vis::Server server(PORT);
     server.start();
     BOOST_REQUIRE(server.isRunning());
@@ -29,7 +40,7 @@ BOOST_AUTO_TEST_CASE(test_connect) {
     BOOST_REQUIRE(not server.isRunning());
 }
 
-BOOST_AUTO_TEST_CASE(test_request) {
+BOOST_AUTO_TEST_CASE(request) {
     vis::Server server(PORT);
     server.start();
     BOOST_REQUIRE(server.isRunning());
@@ -43,4 +54,6 @@ BOOST_AUTO_TEST_CASE(test_request) {
     server.stop();
     BOOST_REQUIRE(not server.isRunning());
 }
+
+BOOST_AUTO_TEST_SUITE_END();
 

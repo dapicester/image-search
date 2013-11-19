@@ -6,22 +6,26 @@
 
 #include "server.hpp"
 #include "connection.hpp"
+#include "logging.hpp"
+
 #include <boost/bind.hpp>
 #include <iostream>
 
 namespace vis {
 
+#define _LOG(X) CLOG(X, "server")
+
 Server::Server(short port)
     : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)),
       socket(io_service), signals(io_service) {
-    std::cout << "New server on port " << port << std::endl;
+    _LOG(INFO) << "New server on port " << port;
     signals.add(SIGINT);
     signals.add(SIGTERM);
 #if defined(SIGQUIT)
     signals.add(SIGQUIT);
 #endif
     signals.async_wait([this](boost::system::error_code, int signal) {
-        std::cout << "Received signal " << signal << std::endl;
+        _LOG(INFO) << "Received signal " << signal;
         stop();
     });
 }
@@ -32,29 +36,29 @@ Server::~Server() {
 
 void
 Server::start() {
-    std::cout << "Starting server ...\n";
+    _LOG(INFO) << "Starting server ...";
     doAccept();
     io.reset(new boost::thread(boost::bind(&boost::asio::io_service::run, &io_service)));
     running = true;
-    std::cout << "Server started\n";
+    _LOG(INFO) << "Server started";
 }
 
 void
 Server::stop() {
-    std::cout << "Stopping server ...\n";
+    _LOG(INFO) << "Stopping server ...";
     acceptor.close();
     io_service.stop();
     io->join();
     running = false;
-    std::cout << "Server stopped\n";
+    _LOG(INFO) << "Server stopped";
 }
 
 void
 Server::doAccept() {
-    std::cout << "Waiting for requests\n";
+    _LOG(INFO) << "Waiting for requests";
     acceptor.async_accept(socket, [this](boost::system::error_code ec) {
         if (not ec) {
-            std::cout << "Incoming request\n";
+            _LOG(INFO) << "Incoming request";
             std::make_shared<Connection>(std::move(socket))->start();
         }
 

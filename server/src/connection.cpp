@@ -5,9 +5,13 @@
  */
 
 #include "connection.hpp"
+#include "logging.hpp"
+
 #include <iostream>
 
 namespace vis {
+
+#define _LOG(X) CLOG(X, "connection")
 
 Connection::Connection(boost::asio::ip::tcp::socket socket)
     : socket(std::move(socket)) {}
@@ -20,11 +24,11 @@ Connection::start() {
 void
 Connection::doRead() {
     auto self(shared_from_this());
-    //std::cout << "* reading request data ...\n";
+    _LOG(INFO) << "Reading request data ...";
     socket.async_read_some(boost::asio::buffer(buffer),
         [this, self](boost::system::error_code ec, std::size_t length) {
             if (not ec) {
-                //std::cout << "* read " << length << "\n";
+                _LOG(INFO) << "Read " << length;
                 doWrite(length);
             }
         });
@@ -33,11 +37,11 @@ Connection::doRead() {
 void
 Connection::doWrite(std::size_t length) {
     auto self(shared_from_this());
-    //std::cout << "* writing echo back ...\n";
+    _LOG(INFO) << "Writing echo back ...";
     boost::asio::async_write(socket, boost::asio::buffer(buffer, length),
         [this, self](boost::system::error_code ec, std::size_t length) {
             if(not ec) {
-                //std::cout << "* written " << length << "\n";
+                _LOG(INFO) << "Written " << length;
                 //doRead();
             }
         });
