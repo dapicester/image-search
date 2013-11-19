@@ -7,6 +7,8 @@
 #define BOOST_TEST_MODULE server
 #include <boost/test/unit_test.hpp>
 
+#define _ELPP_THREAD_SAFE
+
 #include "client.hpp"
 #include "logging.hpp"
 #include "protocol.hpp"
