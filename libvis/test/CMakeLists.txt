@@ -38,6 +38,11 @@ add_unit_test(NAME vlfeat_usage
     SOURCES vlfeat_usage.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${Boost_LIBRARIES})
 
+add_unit_test(NAME elpp_usage
+    SOURCES elpp_usage.cpp
+    COMPILE_FLAGS "-pthread"
+    LINK_LIBRARIES ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_kmeans
     SOURCES test_kmeans.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
