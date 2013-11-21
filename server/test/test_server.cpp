@@ -9,6 +9,7 @@
 
 #include "client.hpp"
 #include "logging.hpp"
+#include "protocol.hpp"
 #include "server.hpp"
 
 _INITIALIZE_EASYLOGGINGPP
@@ -40,17 +41,31 @@ BOOST_AUTO_TEST_CASE(connect) {
     BOOST_REQUIRE(not server.isRunning());
 }
 
+const vis::Request offline() {
+    vis::Request r;
+    r.requestType = 'o';
+    r.category = "bag";
+    r.queryType = 'c';
+    r.numResults = 20;
+    r.id = 42;
+    return r;
+}
+//static const vis::Request realtime = { 'r', "bag", 'c', 20, 166, std::vector<float>(166, 0.f) };
+//static const vis::Request upload   = { 'u', "bag", 'c', 20, 255, [>image data<] };
+
 BOOST_AUTO_TEST_CASE(request) {
     vis::Server server(PORT);
     server.start();
     BOOST_REQUIRE(server.isRunning());
-    for (int i = 1; i < 3; i++) {
+
+    vis::Request requests[] = { offline() };
+    std::for_each(std::begin(requests), std::end(requests), [](const vis::Request& request) {
         vis::Client client("localhost", PORT);
         BOOST_REQUIRE(client.probe());
 
-        std::string response = client.sendRequest("echo");
-        BOOST_CHECK_EQUAL("echo", response);
-    }
+        vis::Response response = client.sendRequest(request);
+        BOOST_CHECK(response.results.empty()); // FIXME complete
+    });
     server.stop();
     BOOST_REQUIRE(not server.isRunning());
 }

@@ -6,6 +6,7 @@
 
 #include "connection.hpp"
 #include "logging.hpp"
+#include "protocol_serialization.hpp"
 
 #include <iostream>
 
@@ -25,26 +26,54 @@ void
 Connection::doRead() {
     auto self(shared_from_this());
     _LOG(INFO) << "Reading request data ...";
-    socket.async_read_some(boost::asio::buffer(buffer),
-        [this, self](boost::system::error_code ec, std::size_t length) {
-            if (not ec) {
-                _LOG(INFO) << "Read " << length;
-                doWrite(length);
-            }
-        });
+
+    boost::asio::async_read(socket, boost::asio::buffer(&header, sizeof(header)),
+        [this, self](boost::system::error_code, size_t) {
+            boost::asio::async_read(socket, buf.prepare(header),
+                [this, self](boost::system::error_code, size_t len) {
+                    buf.commit(header);
+                    _LOG(INFO) << "read: " << len + sizeof(header) << " bytes";
+
+                    Request request;
+                    get(buf, request);
+
+                    doProcess(request);
+                }
+            );
+        }
+    );
 }
 
 void
-Connection::doWrite(std::size_t length) {
+Connection::doProcess(const Request& request) {
+    _LOG(INFO) << "request: " << request;
+
+    Response response;
+    // TODO process request here
+    _LOG(INFO) << "response: " << response;
+
+    doWrite(response);
+}
+
+void
+Connection::doWrite(const Response& resp) {
     auto self(shared_from_this());
-    _LOG(INFO) << "Writing echo back ...";
-    boost::asio::async_write(socket, boost::asio::buffer(buffer, length),
-        [this, self](boost::system::error_code ec, std::size_t length) {
-            if(not ec) {
-                _LOG(INFO) << "Written " << length;
-                //doRead();
-            }
-        });
+
+    put(buf, resp);
+    header = buf.size();
+
+    std::array<boost::asio::const_buffer,2> buffers = {
+        boost::asio::buffer(&header, sizeof(header)),
+        buf.data()
+    };
+
+    _LOG(INFO) << "Writing response ...";
+    boost::asio::async_write(socket, buffers,
+        [this, self](boost::system::error_code, size_t len) {
+            buf.consume(len);
+            _LOG(INFO) << "written: " << len << " bytes";
+        }
+    );
 }
 
 } //namespace vis

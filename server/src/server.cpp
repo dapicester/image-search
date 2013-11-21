@@ -58,7 +58,7 @@ Server::doAccept() {
     _LOG(INFO) << "Waiting for requests";
     acceptor.async_accept(socket, [this](boost::system::error_code ec) {
         if (not ec) {
-            _LOG(INFO) << "Incoming request";
+            _LOG(INFO) << "Incoming request from " << socket.remote_endpoint();
             std::make_shared<Connection>(std::move(socket))->start();
         }
 

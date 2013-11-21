@@ -7,6 +7,8 @@
 #ifndef VIS_CONNECTION_HPP
 #define VIS_CONNECTION_HPP
 
+#include "protocol.hpp"
+
 #include <boost/asio.hpp>
 #include <memory>
 
@@ -22,15 +24,19 @@ public:
     void start();
 
 private:
-    /// Read data from socket.
+    /// Read request from socket.
     void doRead();
 
-    /// Write data to socket.
-    void doWrite(std::size_t length);
+    /// Process request.
+    void doProcess(const Request&);
+
+    /// Write response to socket.
+    void doWrite(const Response&);
 
 private:
     boost::asio::ip::tcp::socket socket;
-    char buffer[1024];
+    size_t header;
+    boost::asio::streambuf buf;
 };
 
 } //namespace vis

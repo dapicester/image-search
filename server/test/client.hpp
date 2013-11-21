@@ -2,6 +2,7 @@
 #define VIS_CLIENT_HPP
 
 #include "logging.hpp"
+#include "protocol_serialization.hpp"
 
 #include <boost/asio.hpp>
 #include <iostream>
@@ -32,25 +33,36 @@ public:
         }
     }
 
-    std::string sendRequest(const std::string& request) {
-        _LOG(INFO) << "Sending request [" << request << "] ...";
-        boost::asio::write(socket,
-                boost::asio::buffer(request.data(), request.length()));
-        _LOG(INFO) << "Request sent";
+    Response sendRequest(const Request& request) {
+        _LOG(INFO) << "Sending request";// [" << request << "] ...";
+        {
+            put(buf, request);
+            header = buf.size();
+
+            std::array<boost::asio::const_buffer,2> buffers = {
+                boost::asio::buffer(&header, sizeof(header)),
+                buf.data()
+            };
+
+            const size_t n = boost::asio::write(socket, buffers);
+            buf.consume(n);
+            _LOG(INFO) << "Request sent " << n << " bytes";
+        }
 
         _LOG(INFO) << "Receiving response ...";
-        char response[1024];
-        boost::system::error_code ec;
-        size_t length = boost::asio::read(socket,
-                boost::asio::buffer(response), boost::asio::transfer_all(), ec);
-        /*
-         *if (ec) {
-         *    _LOG(ERROR) << ec.message();
-         *}
-         */
+        {
+            size_t n = boost::asio::read(socket, boost::asio::buffer(&header, sizeof(header)));
 
-        _LOG(INFO) << "Response: " << length << " bytes received";
-        return std::string(response, length);
+            boost::system::error_code ec;
+            n += boost::asio::read(socket, buf.prepare(header), ec);
+            buf.commit(header);
+            _LOG(INFO) << "Response received " << n << " bytes";
+
+            Response response;
+            get(buf, response);
+
+            return response;
+        }
     }
 
 private:
@@ -59,6 +71,9 @@ private:
 
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::socket socket;
+
+    size_t header;
+    boost::asio::streambuf buf;
 };
 
 } // namespace vis
