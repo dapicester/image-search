@@ -13,6 +13,10 @@ set(SRC ${server_SOURCE_DIR}/src)
 
 message(STATUS "Tests:")
 
+add_unit_test(NAME test_protocol
+    SOURCES test_protocol.cpp
+    LINK_LIBRARIES ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_server
     SOURCES test_server.cpp
             ${SRC}/connection.cpp
