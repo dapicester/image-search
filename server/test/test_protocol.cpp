@@ -28,12 +28,13 @@ operator==(const vis::Response left, const vis::Response& right) {
 } // namespace vis
 
 static const vis::Request offline  = { 'o', "bag", 'c', 20, 42 };
-//static const vis::Request realtime = { 'r', "bag", 'c', 20, std::vector<float>(166, 0.f) };
+static const vis::Request realtime = { 'r', "bag", 'c', 20, 0, std::vector<float>(166, 0.f) };
+static const vis::Request upload   = { 'u', "bag", 'c', 20, 0, /*image data*/ };
 
 #define PRINT(X) std::cout << #X << ": " << X << std::endl;
 
 BOOST_AUTO_TEST_CASE(serialize_request) {
-    vis::Request requests[] = { offline/*, realtime*/ };
+    vis::Request requests[] = { offline, realtime, upload };
     std::for_each(std::begin(requests), std::end(requests), [](const vis::Request& request) {
         // serialize
         boost::asio::streambuf buf;

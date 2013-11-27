@@ -8,12 +8,15 @@
 namespace vis {
 
 /*
- *enum class RequestType : char {
- *    OFFLINE,
- *    REALTIME,
- *    UPLOAD
- *};
- */
+enum class RequestType : char {
+    OFFLINE  = 'o',
+    REALTIME = 'r',
+    UPLOAD   = 'u'
+};
+
+// TODO abstract base class and three subclasses
+// TODO factory method for request objects
+*/
 
 struct Request {
     char requestType;
@@ -39,7 +42,8 @@ operator<<(std::ostream& os, const std::vector<T>& v) {
 
 inline std::ostream&
 operator<<(std::ostream& os, const vis::Request& r) {
-    return os << r.requestType << ' ' << r.category << ' '
+    return os << static_cast<char>(r.requestType) << ' '
+        << r.category << ' '
         << r.queryType << ' ' << r.numResults
         << r.id << '/' << r.descriptors;
 }
