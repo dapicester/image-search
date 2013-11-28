@@ -13,7 +13,7 @@
 namespace test {
 
 /// @return \c true if matrices are equals.
-static
+inline
 bool
 equals(const cv::Mat& a, const cv::Mat& b) {
     if (a.size() != b.size()) return false;
@@ -30,7 +30,7 @@ equals(const arma::Mat<T>& a, const arma::Mat<T>& b) {
 }
 
 /// @return \c true if matrix minimum and maximum matches the given values.
-static
+inline
 bool
 hasMinMax(const cv::Mat& in, double min, double max) {
     double min_, max_;
