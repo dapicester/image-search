@@ -13,6 +13,11 @@ set(SRC ${server_SOURCE_DIR}/src)
 
 message(STATUS "Tests:")
 
+add_unit_test(NAME elpp_usage
+    SOURCES elpp_usage.cpp
+    COMPILE_FLAGS "-pthread"
+    LINK_LIBRARIES ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_protocol
     SOURCES test_protocol.cpp
     LINK_LIBRARIES ${Boost_LIBRARIES})
