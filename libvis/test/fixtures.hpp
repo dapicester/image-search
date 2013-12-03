@@ -12,6 +12,7 @@
 #include "vis/standardize.hpp"
 #include "vis/utils/filesystem.hpp"
 
+#include <boost/filesystem/operations.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 namespace test {

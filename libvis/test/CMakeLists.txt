@@ -24,6 +24,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_unit_test(NAME opencv_usage
     SOURCES opencv_usage.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME armadillo_usage
@@ -48,22 +49,26 @@ add_unit_test(NAME test_kdtree
 
 add_unit_test(NAME test_standardize
     SOURCES test_standardize.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hog
     SOURCES test_hog.cpp
             ${SRC_DIR}/hog.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hsv_aux
     SOURCES test_hsv_aux.cpp
             ${SRC_DIR}/hsv_aux.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hsv
     SOURCES test_hsv.cpp
             ${SRC_DIR}/hsv.cpp
             ${SRC_DIR}/hsv_aux.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_subset
@@ -88,20 +93,23 @@ add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
             ${SRC_DIR}/hog.cpp
             ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hog_bow
     SOURCES test_hog_bow.cpp
             ${SRC_DIR}/hog.cpp
             ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_descriptors
-    SOURCES test_descriptors.cpp
+    SOURCES test_descriptors.cpp ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_index
     SOURCES test_index.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
 #add_all_tests_target(${UNIT_TEST_TARGETS})
