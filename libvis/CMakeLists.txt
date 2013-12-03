@@ -35,6 +35,7 @@ set(imsearch_SRCS
     src/hog.cpp
     src/hsv_aux.cpp
     src/hsv.cpp
+    src/imsearch.cpp
     src/index.cpp
     src/vocabulary.cpp
     src/utils/filesystem.cpp

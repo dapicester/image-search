@@ -113,5 +113,10 @@ add_unit_test(NAME test_index
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_imsearch
+    SOURCES test_imsearch.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
+    LINK_LIBRARIES vis ${Boost_LIBRARIES})
+
 #add_all_tests_target(${UNIT_TEST_TARGETS})
 
