@@ -46,7 +46,7 @@ int main(int, char**) {
         size_t length = perf::getLength(type);
 
         perf::Timings t;
-        t.addParam("descriptor", perf::getName(type));
+        t.addParam("descriptor", vis::toString(type));
         t.addParam("length", length);
 
         t.setTimings(computeDescriptors(type, files, vocabulary.get()));
