@@ -68,25 +68,10 @@ categoryFile(const boost::filesystem::path& dataDir, const QString& category);
 boost::filesystem::path
 categoryDir(const boost::filesystem::path& dataDir, const QString& category);
 
-/// Get the path to the vocabulary file for the given category.
-/// @return path to \c dataDir/vocabulary_category.dgz
-boost::filesystem::path
-vocabularyFile(const boost::filesystem::path& dataDir, const QString& category);
-
-/// Get the path to the descriptors file for the given category and query type.
-/// @return path to \c dataDir/descriptors_category_type.dgz
-boost::filesystem::path
-descriptorsFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
-
 /// Get the path to the query file for the given category and query type.
 /// @return path to \c dataDir/query_category_type.dgz
 boost::filesystem::path
 queryFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
-
-/// Get the path to the index file for the given category.
-/// @return path to \c dataDir/index_category_type.dgz
-boost::filesystem::path
-indexFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
 
 void
 extractDescriptors(const QString& category, const QString& queryType,

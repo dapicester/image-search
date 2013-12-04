@@ -8,6 +8,7 @@
 #include "utils.hpp"
 
 #include <vis.hpp>
+#include <vis/utils/filesystem.hpp>
 #include <vis/utils/handlers.hpp>
 
 #include <QDebug>
@@ -52,7 +53,7 @@ Recompute::computeVocabulary(const QString& category) {
                 category.toStdString(), names, vis::vocabulary::NUM_WORDS,
                 PROGRESS_HANDLER(names)));
 
-    fs::path savefile = vocabularyFile(dataPath, category);
+    fs::path savefile = vis::vocabularyFile(dataPath, category.toStdString());
     vocabulary->save(savefile);
 
     qDebug() << "vocabulary computed";
@@ -67,7 +68,7 @@ Recompute::computeDescriptors(const QString& category, const QString& type) {
             descriptors.data(), vocabulary.data(),
             PROGRESS_HANDLER(images));
 
-    fs::path savefile = descriptorsFile(dataPath, category, type);
+    fs::path savefile = vis::descriptorsFile(dataPath, category.toStdString(), type.toStdString());
     descriptors->save(savefile);
 
     qDebug() << "descriptors computed";
@@ -95,7 +96,7 @@ Recompute::computeIndex(const QString& category, const QString& type) {
     index.reset(new vis::Index);
     index->build(category.toStdString(), *descriptors);
 
-    fs::path savefile = indexFile(dataPath, category, type);
+    fs::path savefile = vis::indexFile(dataPath, category.toStdString(), type.toStdString());
     index->save(savefile);
 
     qDebug() << "index computed";

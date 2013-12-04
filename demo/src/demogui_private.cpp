@@ -7,6 +7,7 @@
 #include "demogui.hpp"
 #include "utils.hpp"
 #include <boost/filesystem/operations.hpp>
+#include <vis/utils/filesystem.hpp>
 
 #include <QDebug>
 
@@ -49,7 +50,7 @@ DemoGui::loadIndex() {
         return true;
     }
 
-    fs::path loadfile = indexFile(DATA_PATH, category, queryType);
+    fs::path loadfile = vis::indexFile(DATA_PATH, category.toStdString(), queryType.toStdString());
     if (not fs::exists(loadfile)) {
         qDebug() << "index not found:" << str(loadfile);
         descriptors.reset();
@@ -71,7 +72,7 @@ DemoGui::loadDescriptors() {
         return true;
     }
 
-    fs::path loadfile = descriptorsFile(DATA_PATH, category, queryType);
+    fs::path loadfile = vis::descriptorsFile(DATA_PATH, category.toStdString(), queryType.toStdString());
     if (not fs::exists(loadfile)) {
         qDebug() << "descriptors not found:" << str(loadfile);
         descriptors.reset();
@@ -114,7 +115,7 @@ DemoGui::loadVocabulary() {
         return true;
     }
 
-    fs::path loadfile = vocabularyFile(DATA_PATH, category);
+    fs::path loadfile = vis::vocabularyFile(DATA_PATH, category.toStdString());
     if (not fs::exists(loadfile)) {
         qDebug() << "vocabulary not found:" << str(loadfile);
         vocabulary.reset();

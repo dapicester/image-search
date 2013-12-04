@@ -65,32 +65,8 @@ queryNames(const vector<fs::path>& all, const QString& category) {
 }
 
 fs::path
-vocabularyFile(const fs::path& dataDir, const QString& category) {
-    QString file = "vocabulary_";
-    file.append(category);
-    file.append(DATA_EXT);
-    return dataDir / file.toStdString();
-}
-
-fs::path
-descriptorsFile(const fs::path& dataDir, const QString& category, const QString& type) {
-    QString file = "descriptors_";
-    file.append(category).append("_").append(type);
-    file.append(DATA_EXT);
-    return dataDir / file.toStdString();
-}
-
-fs::path
 queryFile(const fs::path& dataDir, const QString& category, const QString& type) {
     QString file = "query_";
-    file.append(category).append("_").append(type);
-    file.append(DATA_EXT);
-    return dataDir / file.toStdString();
-}
-
-fs::path
-indexFile(const fs::path& dataDir, const QString& category, const QString& type) {
-    QString file = "index_";
     file.append(category).append("_").append(type);
     file.append(DATA_EXT);
     return dataDir / file.toStdString();
