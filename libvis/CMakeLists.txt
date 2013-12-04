@@ -25,7 +25,16 @@ find_package(Boost COMPONENTS filesystem iostreams serialization system REQUIRED
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
-file(GLOB imsearch_SRCS src/*.c src/*.cpp)
+set(imsearch_SRCS
+    src/callbacks.cpp
+    src/descriptors.cpp
+    src/hog.cpp
+    src/hsv_aux.cpp
+    src/hsv.cpp
+    src/index.cpp
+    src/vocabulary.cpp
+    src/utils/filesystem.cpp
+)
 
 list(REMOVE_DUPLICATES includes)
 include_directories(${includes})
