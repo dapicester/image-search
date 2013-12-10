@@ -104,7 +104,8 @@ add_unit_test(NAME test_hog_bow
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_descriptors
-    SOURCES test_descriptors.cpp ${SRC_DIR}/utils/filesystem.cpp
+    SOURCES test_descriptors.cpp
+    ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_index

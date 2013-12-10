@@ -83,26 +83,8 @@ std::vector<fs::path> getFiles() {
 inline void extractDescriptors(vis::DescriptorsType type,
         const std::vector<fs::path>& files, const vis::Vocabulary* vocabulary) {
     vis::Descriptors descriptors;
-    switch (type) {
-        case vis::HSV:
-            {
-            vis::HsvHistogramsCallback cb;
-            descriptors.compute("benchmark", files, cb);
-            }
-            break;
-        case vis::HOG:
-            {
-            vis::HogBagOfWordsCallback cb(*vocabulary);
-            descriptors.compute("benchmark", files, cb);
-            }
-            break;
-        case vis::HOG_HSV:
-            {
-            vis::CompositeCallback cb(*vocabulary);
-            descriptors.compute("benchmark", files, cb);
-            }
-            break;
-    }
+    boost::scoped_ptr<vis::Callback> cb(vis::getCallback(type, vocabulary));
+    descriptors.compute("benchmark", files, *cb);
 }
 
 std::vector<Timer::timestamp_t> computeDescriptors(vis::DescriptorsType type,

@@ -23,7 +23,8 @@ BOOST_FIXTURE_TEST_SUITE(descriptors, test::ImageDir)
 
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
 
-typedef boost::scoped_ptr<vis::Vocabulary> VocabularyPtr;
+typedef boost::scoped_ptr<vis::Callback>    CallbackPtr;
+typedef boost::scoped_ptr<vis::Vocabulary>  VocabularyPtr;
 typedef boost::scoped_ptr<vis::Descriptors> DescriptorsPtr;
 
 void testSerialization(const fs::path& file, const vis::Descriptors& descriptors) {
@@ -38,13 +39,13 @@ void testSerialization(const fs::path& file, const vis::Descriptors& descriptors
 
 BOOST_AUTO_TEST_CASE(hog) {
     VocabularyPtr vocabulary(test::load<vis::Vocabulary>(VOCABULARY_FILE));
-    vis::HogBagOfWordsCallback cb(*vocabulary);
+    CallbackPtr callback(vis::getCallback(vis::HOG, vocabulary.get()));
 
     vis::Descriptors descriptors;
-    descriptors.compute("test", files, cb, vis::ColorMode::GRAYSCALE, PROGRESS);
+    descriptors.compute("test", files, *callback, vis::ColorMode::GRAYSCALE, PROGRESS);
     const arma::fmat& data = descriptors.data();
 
-    BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
+    BOOST_CHECK_EQUAL(callback->length(),  data.n_rows);
     BOOST_CHECK_EQUAL(files.size(), data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG, descriptors.getType());
 
@@ -52,13 +53,13 @@ BOOST_AUTO_TEST_CASE(hog) {
 }
 
 BOOST_AUTO_TEST_CASE(hsv) {
-    vis::HsvHistogramsCallback cb;
+    CallbackPtr callback(vis::getCallback(vis::HSV));
 
     vis::Descriptors histograms;
-    histograms.compute("test", files, cb, vis::ColorMode::COLORS, PROGRESS);
+    histograms.compute("test", files, *callback, vis::ColorMode::COLORS, PROGRESS);
     const arma::fmat& data = histograms.data();
 
-    BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
+    BOOST_CHECK_EQUAL(callback->length(),  data.n_rows);
     BOOST_CHECK_EQUAL(files.size(), data.n_cols);
     BOOST_CHECK_EQUAL(vis::HSV, histograms.getType());
 
@@ -84,13 +85,13 @@ BOOST_AUTO_TEST_CASE(hoghsv) {
      * size_t descriptorSize = hsv.length() + hog.length();
      */
 
-    vis::CompositeCallback cb(*vocabulary);
+    CallbackPtr callback(vis::getCallback(vis::HOG_HSV, vocabulary.get()));
 
     vis::Descriptors descriptors;
-    descriptors.compute("test", files, cb, vis::ColorMode::COLORS, PROGRESS);
+    descriptors.compute("test", files, *callback, vis::ColorMode::COLORS, PROGRESS);
     const arma::fmat& data = descriptors.data();
 
-    BOOST_CHECK_EQUAL(cb.length(),  data.n_rows);
+    BOOST_CHECK_EQUAL(callback->length(),  data.n_rows);
     BOOST_CHECK_EQUAL(files.size(), data.n_cols);
     BOOST_CHECK_EQUAL(vis::HOG_HSV, descriptors.getType());
 

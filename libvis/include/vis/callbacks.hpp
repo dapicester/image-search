@@ -14,27 +14,20 @@
 
 namespace vis {
 
-/// @brief Base class for callbacks.
-template <typename Derived, DescriptorsType t>
+/// @brief Interface for callbacks.
 struct Callback {
-    /// DescriptorsType of the callback.
-    static const DescriptorsType type = t;
-
-    arma::fvec operator()(const cv::Mat& image) const {
-        return static_cast<Derived*>(this)->operator()(image);
-    }
-
-    size_t length() const {
-        return static_cast<Derived*>(this)->length();
-    }
+    virtual arma::fvec operator()(const cv::Mat& image) const = 0;
+    virtual DescriptorsType type() const = 0;
+    virtual size_t length() const = 0;
 };
 
 /// Compute HOG bag-of-words.
-struct HogBagOfWordsCallback : Callback<HogBagOfWordsCallback, vis::HOG> {
+struct HogBagOfWordsCallback : Callback {
     HogBagOfWordsCallback(const Vocabulary& v);
 
     arma::fvec operator()(const cv::Mat& image) const;
 
+    DescriptorsType type() const { return vis::HOG; }
     size_t length() const { return bow.numWords(); }
 
 private:
@@ -42,11 +35,12 @@ private:
 };
 
 /// Compute HSV color histogram.
-struct HsvHistogramsCallback : Callback<HsvHistogramsCallback, vis::HSV> {
+struct HsvHistogramsCallback : Callback {
     HsvHistogramsCallback();
 
     arma::fvec operator()(const cv::Mat& image) const;
 
+    DescriptorsType type() const { return vis::HSV; }
     size_t length() const { return hsv.getNumBins(); }
 
 private:
@@ -54,17 +48,21 @@ private:
 };
 
 /// Compute both HOG bag-of-words and HSV color histogram.
-struct CompositeCallback : Callback<CompositeCallback, vis::HOG_HSV> {
+struct CompositeCallback : Callback {
     CompositeCallback(const Vocabulary& v);
 
     arma::fvec operator()(const cv::Mat& image) const;
 
+    DescriptorsType type() const { return vis::HOG_HSV; }
     size_t length() const { return hsv.length() + hog.length(); }
 
 private:
     HogBagOfWordsCallback hog;
     HsvHistogramsCallback hsv;
 };
+
+/// Callback factory method.
+Callback* getCallback(DescriptorsType type, const Vocabulary* vocabulary = nullptr);
 
 } /* namespace vis */
 
