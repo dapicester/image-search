@@ -25,10 +25,6 @@ find_package(Boost COMPONENTS filesystem iostreams serialization system REQUIRED
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
-set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
-configure_file(src/directories.h.in ${CMAKE_CURRENT_BINARY_DIR}/directories.h)
-list(APPEND includes ${CMAKE_CURRENT_BINARY_DIR})
-
 set(imsearch_SRCS
     src/callbacks.cpp
     src/descriptors.cpp

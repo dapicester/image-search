@@ -6,7 +6,6 @@
 
 #include "vis/imsearch.hpp"
 
-#include "directories.h"
 #include "vis/callbacks.hpp"
 #include "vis/index.hpp"
 #include "vis/vocabulary.hpp"
@@ -19,22 +18,24 @@ namespace vis {
 
 namespace fs = boost::filesystem;
 
-static const fs::path DATA_PATH(DATA_DIR);
+ImageSearch::ImageSearch(const std::string& cat, DescriptorsType t,
+        const fs::path& dir)
+        : category(cat), type(t), dataDir(dir) {}
 
-ImageSearch::ImageSearch(const std::string& cat, DescriptorsType t)
-        : category(cat), type(t) {
+ImageSearch::~ImageSearch() {}
+
+void
+ImageSearch::load() {
     loadIndex();
     if (hasVocabulary()) loadVocabulary();
 }
-
-ImageSearch::~ImageSearch() {}
 
 bool
 ImageSearch::hasVocabulary() const {
     return (type == HOG or type == HOG_HSV);
 }
 
-// for back-compatibility with the gui demo
+// FIXME back-compatibility with the gui demo
 std::string typeString(DescriptorsType type) {
     switch (type) {
     case HOG:
@@ -48,14 +49,14 @@ std::string typeString(DescriptorsType type) {
 
 void
 ImageSearch::loadIndex() {
-    fs::path file = indexFile(DATA_PATH, category, typeString(type));
+    fs::path file = indexFile(dataDir, category, typeString(type));
     index.reset(Index::load(file));
     BOOST_ASSERT_MSG(index.get() != nullptr, "index is null");
 }
 
 void
 ImageSearch::loadVocabulary() {
-    fs::path file = vocabularyFile(DATA_PATH, category);
+    fs::path file = vocabularyFile(dataDir, category);
     vocabulary.reset(Vocabulary::load(file));
     BOOST_ASSERT_MSG(vocabulary.get() != nullptr, "vocabulary is null");
 }
