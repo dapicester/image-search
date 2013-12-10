@@ -49,11 +49,6 @@ categoryFile(const fs::path& dataDir, const QString& category) {
     return dataDir / file.toStdString();
 }
 
-fs::path
-categoryDir(const fs::path& dataDir, const QString& category) {
-    return dataDir / category.toStdString();
-}
-
 vector<fs::path>
 queryNames(const vector<fs::path>& all, const QString& category) {
     vector<fs::path> names;

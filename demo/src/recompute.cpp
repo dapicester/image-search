@@ -24,7 +24,7 @@ Recompute::loadImagePaths(const QString& category) {
     qDebug() << "loading images for" << category;
 
     fs::path file = categoryFile(dataPath, category);
-    fs::path dir = categoryDir(dataPath, category);
+    fs::path dir = dataPath / category.toStdString();
     images = loadNames(file, dir);
 
     qDebug() << "loaded" << images.size() << "images for" << category;
@@ -35,7 +35,7 @@ Recompute::loadQueryImagePaths(const QString& category) {
     qDebug() << "loading images for" << category;
 
     static fs::path file = categoryFile(dataPath, "test");
-    static fs::path dir = categoryDir(dataPath, "test");
+    static fs::path dir = dataPath / "test";
     static vector_path names = loadNames(file, dir);
     queryImages = queryNames(names, category);
 

@@ -134,7 +134,7 @@ DemoGui::recomputeQueries() {
     }
 
     static fs::path file = categoryFile(DATA_PATH, "test");
-    static fs::path dir = categoryDir(DATA_PATH, "test");
+    static fs::path dir = DATA_PATH / "test";
     static PathList allnames = loadNames(file, dir);
     PathList names = ::queryNames(allnames, category);
 

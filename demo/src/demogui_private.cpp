@@ -37,7 +37,7 @@ DemoGui::loadImageNames() {
         QString category = (*it)->text();
 
         fs::path file = categoryFile(DATA_PATH, category);
-        fs::path dir = categoryDir(DATA_PATH, category);
+        fs::path dir = DATA_PATH / category.toStdString();
         imagesMap[category] = loadNames(file, dir);
         qDebug() << "loaded" << imagesMap[category].size() << "images for" << category;
     }

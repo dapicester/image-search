@@ -80,7 +80,7 @@ DemoGui::showQueryImage(int row) {
     }
 
     QString name = queryList->item(row)->text();
-    static fs::path dir = categoryDir(DATA_PATH, "test");
+    static fs::path dir = DATA_PATH / "test";
     queryImagePath = dir / name.toStdString();
     setImage(queryImage, queryImagePath);
 }

@@ -63,11 +63,6 @@ queryNames(const std::vector<boost::filesystem::path>& all, const QString& categ
 boost::filesystem::path
 categoryFile(const boost::filesystem::path& dataDir, const QString& category);
 
-/// Get the path to the directory containing images for the given category.
-/// @return path to \c dataDir/category/
-boost::filesystem::path
-categoryDir(const boost::filesystem::path& dataDir, const QString& category);
-
 /// Get the path to the query file for the given category and query type.
 /// @return path to \c dataDir/query_category_type.dgz
 boost::filesystem::path
