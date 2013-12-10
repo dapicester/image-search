@@ -14,13 +14,13 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 # append the backupd ones
 set(Boost_LIBRARIES ${Boost_LIBRARIES} ${BOOST_LIBRARIES})
 
-message(STATUS "Tests:")
-
 set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/images)
 set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
-configure_file(images.h.in ${CMAKE_CURRENT_BINARY_DIR}/images.h)
-message(STATUS "Test paths written to: ${CMAKE_CURRENT_BINARY_DIR}/images.h")
+configure_file(directories.h.in ${CMAKE_CURRENT_BINARY_DIR}/directories.h)
+message(STATUS "Test directories written to: ${CMAKE_CURRENT_BINARY_DIR}/directories.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+message(STATUS "Tests:")
 
 add_unit_test(NAME opencv_usage
     SOURCES opencv_usage.cpp
