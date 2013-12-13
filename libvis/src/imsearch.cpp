@@ -27,12 +27,7 @@ ImageSearch::~ImageSearch() {}
 void
 ImageSearch::load() {
     loadIndex();
-    if (hasVocabulary()) loadVocabulary();
-}
-
-bool
-ImageSearch::hasVocabulary() const {
-    return (type == HOG or type == HOG_HSV);
+    if (requiresVocabulary(type)) loadVocabulary();
 }
 
 // FIXME back-compatibility with the gui demo
@@ -79,7 +74,7 @@ ImageSearch::query(const cv::Mat& image, std::vector<size_t>& results) const {
 arma::fvec
 ImageSearch::extract(const cv::Mat& image) const {
     cv::Mat standardized = vis::standardizeImage(image);
-    boost::scoped_ptr<Callback> callback(getCallback(type, hasVocabulary() ? vocabulary.get() : nullptr));
+    boost::scoped_ptr<Callback> callback(getCallback(type, requiresVocabulary(type) ? vocabulary.get() : nullptr));
     return (*callback)(standardized);
 }
 

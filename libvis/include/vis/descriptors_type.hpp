@@ -42,6 +42,12 @@ toDescriptorsType(const std::string& type) {
         return vis::HOG_HSV;
 }
 
+/// Returs \c true if the given type requires a vocabulary.
+inline bool
+requiresVocabulary(DescriptorsType type) {
+    return (type == HOG or type == HOG_HSV);
+}
+
 } /* namespace vis */
 
 #endif /* VIS_DESCRIPTORS_TYPE_HPP */

@@ -37,8 +37,6 @@ public:
     arma::fvec extract(const cv::Mat& image) const;
 private:
 
-    bool hasVocabulary() const;
-
     void loadIndex();
     void loadVocabulary();
 
