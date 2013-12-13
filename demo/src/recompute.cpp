@@ -23,9 +23,9 @@ void
 Recompute::loadImagePaths(const QString& category) {
     qDebug() << "loading images for" << category;
 
-    fs::path file = categoryFile(dataPath, category);
+    fs::path file = vis::categoryFile(dataPath, category.toStdString());
     fs::path dir = dataPath / category.toStdString();
-    images = loadNames(file, dir);
+    images = vis::loadNames(file, dir);
 
     qDebug() << "loaded" << images.size() << "images for" << category;
 }
@@ -34,9 +34,9 @@ void
 Recompute::loadQueryImagePaths(const QString& category) {
     qDebug() << "loading images for" << category;
 
-    static fs::path file = categoryFile(dataPath, "test");
+    static fs::path file = vis::categoryFile(dataPath, "test");
     static fs::path dir = dataPath / "test";
-    static vector_path names = loadNames(file, dir);
+    static vector_path names = vis::loadNames(file, dir);
     queryImages = queryNames(names, category);
 
     qDebug() << "loaded" << queryImages.size() << "query images for" << category;

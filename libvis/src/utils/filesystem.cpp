@@ -10,6 +10,7 @@
 #include <boost/format.hpp>
 #include <boost/iterator/filter_iterator.hpp>
 #include <functional>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -40,6 +41,33 @@ getImageFiles(const fs::path& dir) {
               std::back_inserter(files));
 
     return files;
+}
+
+std::vector<std::string>
+loadNames(const fs::path& file) {
+    std::vector<std::string> names;
+    std::ifstream input(file.string());
+    std::copy(std::istream_iterator<std::string>(input),
+              std::istream_iterator<std::string>(),
+              std::back_inserter(names));
+    return names;
+}
+
+std::vector<fs::path>
+loadNames(const fs::path& file, const fs::path& prefix) {
+    std::vector<std::string> lines = loadNames(file);
+    std::vector<fs::path> names;
+    std::for_each (lines.begin(), lines.end(), [&](const std::string& line) {
+        names.push_back(prefix / line);
+    });
+    return names;
+}
+
+fs::path
+categoryFile(const fs::path& dataDir, const std::string& category) {
+    boost::format format("%1%.%2%");
+    format % category % TEXT_EXT;
+    return dataDir / format.str();
 }
 
 fs::path

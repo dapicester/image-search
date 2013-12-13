@@ -133,9 +133,9 @@ DemoGui::recomputeQueries() {
         return;
     }
 
-    static fs::path file = categoryFile(DATA_PATH, "test");
+    static fs::path file = vis::categoryFile(DATA_PATH, "test");
     static fs::path dir = DATA_PATH / "test";
-    static PathList allnames = loadNames(file, dir);
+    static PathList allnames = vis::loadNames(file, dir);
     PathList names = ::queryNames(allnames, category);
 
     QScopedPointer<QProgressDialog> progress(progressDialog("Computing queries ...", this, names.size() + 3));

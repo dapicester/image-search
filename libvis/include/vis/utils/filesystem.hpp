@@ -16,6 +16,19 @@ namespace vis {
 std::vector<boost::filesystem::path>
 getImageFiles(const boost::filesystem::path& dir);
 
+/// Load file content.
+std::vector<std::string>
+loadNames(const boost::filesystem::path& file); // TODO rename into getFileNames
+
+/// Load file names from file.
+std::vector<boost::filesystem::path>
+loadNames(const boost::filesystem::path& file, const boost::filesystem::path& prefix); // TODO rename into getFileNames
+
+/// Get the path to the text file containing images for the given category.
+/// @return path to \c dataDir/category.txt
+boost::filesystem::path
+categoryFile(const boost::filesystem::path& dataDir, const std::string& category);
+
 /// Get the path to the vocabulary file for the given category.
 /// @return path to \c dataDir/vocabulary_category.dgz
 boost::filesystem::path

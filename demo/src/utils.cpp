@@ -22,33 +22,6 @@ using std::vector;
 static const QString DATA_EXT = ".dgz";
 static const QString TEXT_EXT = ".txt";
 
-vector<string>
-loadNames(const fs::path& file) {
-    vector<string> names;
-    std::ifstream input(file.string());
-    std::copy(std::istream_iterator<string>(input),
-              std::istream_iterator<string>(),
-              std::back_inserter(names));
-    return names;
-}
-
-vector<fs::path>
-loadNames(const fs::path& file, const fs::path& prefix) {
-    vector<string> lines = loadNames(file);
-    vector<fs::path> names;
-    std::for_each (lines.begin(), lines.end(), [&](const string& line) {
-        names.push_back(prefix / line);
-    });
-    return names;
-}
-
-fs::path
-categoryFile(const fs::path& dataDir, const QString& category) {
-    QString file(category);
-    file.append(TEXT_EXT);
-    return dataDir / file.toStdString();
-}
-
 vector<fs::path>
 queryNames(const vector<fs::path>& all, const QString& category) {
     vector<fs::path> names;

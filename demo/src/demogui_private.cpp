@@ -13,8 +13,8 @@
 
 void
 DemoGui::loadQueryNames() {
-    fs::path file = categoryFile(DATA_PATH, "test");
-    std::vector<std::string> names = loadNames(file);
+    fs::path file = vis::categoryFile(DATA_PATH, "test");
+    std::vector<std::string> names = vis::loadNames(file);
     foreach(const std::string& name, names) {
         queryNames << QString(name.c_str());
     }
@@ -36,9 +36,9 @@ DemoGui::loadImageNames() {
     for (QList<QRadioButton*>::iterator it = labels.begin(); it != labels.end(); ++it) {
         QString category = (*it)->text();
 
-        fs::path file = categoryFile(DATA_PATH, category);
+        fs::path file = vis::categoryFile(DATA_PATH, category.toStdString());
         fs::path dir = DATA_PATH / category.toStdString();
-        imagesMap[category] = loadNames(file, dir);
+        imagesMap[category] = vis::loadNames(file, dir);
         qDebug() << "loaded" << imagesMap[category].size() << "images for" << category;
     }
 }

@@ -46,22 +46,9 @@ decodeType(vis::DescriptorsType type) {
     }
 }
 
-/// Load file content.
-std::vector<std::string>
-loadNames(const boost::filesystem::path& file);
-
-/// Load file names from file.
-std::vector<boost::filesystem::path>
-loadNames(const boost::filesystem::path& file, const boost::filesystem::path& prefix);
-
 /// Get query images for the given category.
 std::vector<boost::filesystem::path>
 queryNames(const std::vector<boost::filesystem::path>& all, const QString& category);
-
-/// Get the path to the text file containing images for the given category.
-/// @return path to \c dataDir/category.txt
-boost::filesystem::path
-categoryFile(const boost::filesystem::path& dataDir, const QString& category);
 
 /// Get the path to the query file for the given category and query type.
 /// @return path to \c dataDir/query_category_type.dgz
