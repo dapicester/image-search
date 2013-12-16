@@ -26,6 +26,7 @@ list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
 set(imsearch_SRCS
+    src/builder.cpp
     src/callbacks.cpp
     src/descriptors.cpp
     src/hog.cpp

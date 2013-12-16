@@ -17,6 +17,7 @@
 
 namespace vis {
 
+class Descriptors;
 class Index;
 class Vocabulary;
 
@@ -29,6 +30,7 @@ public:
 
     void load();
     void build();
+    void save() const;
 
     void query(unsigned id, std::vector<size_t>& results) const;
     void query(const arma::fvec& descriptors, std::vector<size_t>& results) const;
@@ -41,9 +43,11 @@ private:
     void loadVocabulary();
 
     void buildIndex();
+    void buildDescriptors();
     void buildVocabulary();
 
     void saveIndex() const;
+    void saveDescriptors() const;
     void saveVocabulary() const;
 
 private:
@@ -53,6 +57,7 @@ private:
     boost::filesystem::path dataDir;
 
     boost::scoped_ptr<Index> index;
+    boost::scoped_ptr<Descriptors> descriptors;
     boost::scoped_ptr<Vocabulary> vocabulary;
 };
 

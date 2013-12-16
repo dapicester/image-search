@@ -59,6 +59,16 @@ BOOST_FIXTURE_TEST_CASE(test_load, test::Lena) {
 
 /// Build index/vocabulary and save to files.
 BOOST_AUTO_TEST_CASE(test_build) {
+    const std::string categories[] = { "bag", "shoe", "woman_shoe" };
+    const vis::DescriptorsType types[] = { vis::HOG, vis::HSV, vis::HOG_HSV };
+
+    for (const std::string& category : categories) {
+        for (const vis::DescriptorsType type : types) {
+            vis::ImageSearch imsearch(category, type, DATA_DIR);
+            imsearch.build();
+            imsearch.save();
+        }
+    }
 
 }
 

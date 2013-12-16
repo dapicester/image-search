@@ -6,6 +6,7 @@
 
 #include "vis/imsearch.hpp"
 
+#include "vis/builder.hpp"
 #include "vis/callbacks.hpp"
 #include "vis/index.hpp"
 #include "vis/vocabulary.hpp"
@@ -28,6 +29,20 @@ void
 ImageSearch::load() {
     loadIndex();
     if (requiresVocabulary(type)) loadVocabulary();
+}
+
+void
+ImageSearch::build() {
+    if (requiresVocabulary(type)) buildVocabulary();
+    buildDescriptors();
+    buildIndex();
+}
+
+void
+ImageSearch::save() const {
+    saveIndex();
+    if (requiresVocabulary(type)) saveVocabulary();
+    saveDescriptors(); // XXX serve?
 }
 
 // FIXME back-compatibility with the gui demo
@@ -54,6 +69,42 @@ ImageSearch::loadVocabulary() {
     fs::path file = vocabularyFile(dataDir, category);
     vocabulary.reset(Vocabulary::load(file));
     BOOST_ASSERT_MSG(vocabulary.get() != nullptr, "vocabulary is null");
+}
+
+void
+ImageSearch::buildVocabulary() {
+    Builder builder(dataDir, category, type);
+    vocabulary.reset(builder.computeVocabulary());
+}
+
+void
+ImageSearch::buildDescriptors() {
+    Builder builder(dataDir, category, type);
+    descriptors.reset(builder.computeDescriptors(vocabulary.get()));
+}
+
+void
+ImageSearch::buildIndex() {
+    Builder builder(dataDir, category, type);
+    index.reset(builder.computeIndex(descriptors.get()));
+}
+
+void
+ImageSearch::saveIndex() const {
+    fs::path savefile = vis::indexFile(dataDir, category, typeString(type));
+    index->save(savefile);
+}
+
+void
+ImageSearch::saveDescriptors() const {
+    fs::path savefile = vis::descriptorsFile(dataDir, category, typeString(type));
+    descriptors->save(savefile);
+}
+
+void
+ImageSearch::saveVocabulary() const {
+    fs::path savefile = vis::vocabularyFile(dataDir, category);
+    vocabulary->save(savefile);
 }
 
 void
