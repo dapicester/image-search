@@ -115,9 +115,15 @@ add_unit_test(NAME test_index
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
-add_unit_test(NAME test_imsearch
-    SOURCES test_imsearch.cpp
+add_unit_test(NAME test_imsearch_load
+    SOURCES test_imsearch_load.cpp
             ${SRC_DIR}/utils/filesystem.cpp
+    LINK_LIBRARIES vis ${Boost_LIBRARIES})
+
+add_unit_test(NAME test_imsearch_build
+    SOURCES test_imsearch_build.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
+    DISABLED true # this test performs full extraction/indexing, quite time consuming
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
 #add_all_tests_target(${UNIT_TEST_TARGETS})
