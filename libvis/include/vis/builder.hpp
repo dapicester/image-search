@@ -34,9 +34,9 @@ private:
     void loadImageNames();
 
 private:
-    const boost::filesystem::path& dataPath;
-    const std::string& category;
-    const DescriptorsType& type;
+    const boost::filesystem::path dataPath;
+    const std::string category;
+    const DescriptorsType type;
 
     typedef std::vector<boost::filesystem::path> vector_path;
     vector_path images;
