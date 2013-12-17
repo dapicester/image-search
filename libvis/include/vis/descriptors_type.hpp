@@ -40,6 +40,8 @@ toDescriptorsType(const std::string& type) {
         return vis::HOG;
     else if (type == "HOG_HSV")
         return vis::HOG_HSV;
+    else
+        throw "invalid type";
 }
 
 /// Returs \c true if the given type requires a vocabulary.
