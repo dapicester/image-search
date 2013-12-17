@@ -16,6 +16,8 @@
 
 namespace vis {
 
+struct Callback;
+
 /// @brief Wrapper to descriptors container.
 class Descriptors {
 public:
@@ -26,7 +28,6 @@ public:
     ~Descriptors();
 
     /// @brief Compute descriptors using the given callback.
-    template <typename Callback>
     void compute(const std::string& category,
                  const std::vector<boost::filesystem::path>& files,
                  const Callback& cb,
@@ -66,16 +67,6 @@ Descriptors::serialize(Archive& ar, const unsigned int version) {
     ar & category;
     ar & descriptors;
     ar & type;
-}
-
-template <typename Callback>
-void
-Descriptors::compute(const std::string& category,
-        const std::vector<boost::filesystem::path>& files,
-        const Callback& cb, ColorMode mode, ProgressHandler handler) {
-    this->category = category;
-    this->type = cb.type;
-    vis::extract(files, descriptors, cb, mode, handler);
 }
 
 } /* namespace vis */

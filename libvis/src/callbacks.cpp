@@ -40,5 +40,17 @@ CompositeCallback::operator()(const cv::Mat& image) const {
     return arma::join_cols(d1, d2);
 }
 
+Callback*
+getCallback(DescriptorsType t, const Vocabulary* vocabulary) {
+    switch (t) {
+    case HOG:
+        return new HogBagOfWordsCallback(*vocabulary);
+    case HSV:
+        return new HsvHistogramsCallback;
+    case HOG_HSV:
+        return new CompositeCallback(*vocabulary);
+    }
+}
+
 } /* namespace vis */
 

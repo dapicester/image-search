@@ -6,6 +6,7 @@
 
 #include "demogui.hpp"
 #include "utils.hpp"
+#include <vis/utils/filesystem.hpp>
 
 #include <QDebug>
 #include <QProgressDialog>
@@ -87,7 +88,7 @@ DemoGui::recomputeIndex() {
     index->build(category.toStdString(), *descriptors);
     progress->setValue(2);
 
-    fs::path savefile = indexFile(DATA_PATH, category, queryType);
+    fs::path savefile = vis::indexFile(DATA_PATH, category.toStdString(), queryType.toStdString());
     index->save(savefile);
     progress->setValue(3);
 
@@ -118,7 +119,7 @@ DemoGui::recomputeDescriptors() {
                 qDebug() << "processing file" << str(names[i]);
             });
 
-    fs::path savefile = descriptorsFile(DATA_PATH, category, queryType);
+    fs::path savefile = vis::descriptorsFile(DATA_PATH, category.toStdString(), queryType.toStdString());
     descriptors->save(savefile);
     progress->setValue(names.size() + 3);
 
@@ -132,9 +133,9 @@ DemoGui::recomputeQueries() {
         return;
     }
 
-    static fs::path file = categoryFile(DATA_PATH, "test");
-    static fs::path dir = categoryDir(DATA_PATH, "test");
-    static PathList allnames = loadNames(file, dir);
+    static fs::path file = vis::categoryFile(DATA_PATH, "test");
+    static fs::path dir = DATA_PATH / "test";
+    static PathList allnames = vis::loadNames(file, dir);
     PathList names = ::queryNames(allnames, category);
 
     QScopedPointer<QProgressDialog> progress(progressDialog("Computing queries ...", this, names.size() + 3));
@@ -177,7 +178,7 @@ DemoGui::recomputeVocabulary() {
                     qDebug() << "processing file" << str(names[i]);
                 }));
 
-    fs::path savefile = vocabularyFile(DATA_PATH, category);
+    fs::path savefile = vis::vocabularyFile(DATA_PATH, category.toStdString());
     vocabulary->save(savefile);
     progress->setValue(names.size());
 

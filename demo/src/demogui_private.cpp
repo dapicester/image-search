@@ -7,13 +7,14 @@
 #include "demogui.hpp"
 #include "utils.hpp"
 #include <boost/filesystem/operations.hpp>
+#include <vis/utils/filesystem.hpp>
 
 #include <QDebug>
 
 void
 DemoGui::loadQueryNames() {
-    fs::path file = categoryFile(DATA_PATH, "test");
-    std::vector<std::string> names = loadNames(file);
+    fs::path file = vis::categoryFile(DATA_PATH, "test");
+    std::vector<std::string> names = vis::loadNames(file);
     foreach(const std::string& name, names) {
         queryNames << QString(name.c_str());
     }
@@ -35,9 +36,9 @@ DemoGui::loadImageNames() {
     for (QList<QRadioButton*>::iterator it = labels.begin(); it != labels.end(); ++it) {
         QString category = (*it)->text();
 
-        fs::path file = categoryFile(DATA_PATH, category);
-        fs::path dir = categoryDir(DATA_PATH, category);
-        imagesMap[category] = loadNames(file, dir);
+        fs::path file = vis::categoryFile(DATA_PATH, category.toStdString());
+        fs::path dir = DATA_PATH / category.toStdString();
+        imagesMap[category] = vis::loadNames(file, dir);
         qDebug() << "loaded" << imagesMap[category].size() << "images for" << category;
     }
 }
@@ -49,7 +50,7 @@ DemoGui::loadIndex() {
         return true;
     }
 
-    fs::path loadfile = indexFile(DATA_PATH, category, queryType);
+    fs::path loadfile = vis::indexFile(DATA_PATH, category.toStdString(), queryType.toStdString());
     if (not fs::exists(loadfile)) {
         qDebug() << "index not found:" << str(loadfile);
         descriptors.reset();
@@ -71,7 +72,7 @@ DemoGui::loadDescriptors() {
         return true;
     }
 
-    fs::path loadfile = descriptorsFile(DATA_PATH, category, queryType);
+    fs::path loadfile = vis::descriptorsFile(DATA_PATH, category.toStdString(), queryType.toStdString());
     if (not fs::exists(loadfile)) {
         qDebug() << "descriptors not found:" << str(loadfile);
         descriptors.reset();
@@ -114,7 +115,7 @@ DemoGui::loadVocabulary() {
         return true;
     }
 
-    fs::path loadfile = vocabularyFile(DATA_PATH, category);
+    fs::path loadfile = vis::vocabularyFile(DATA_PATH, category.toStdString());
     if (not fs::exists(loadfile)) {
         qDebug() << "vocabulary not found:" << str(loadfile);
         vocabulary.reset();

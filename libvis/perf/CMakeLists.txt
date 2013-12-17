@@ -52,6 +52,7 @@ add_perf_test(NAME perf_index_query_ann
 
 add_perf_test(NAME perf_descriptors
     SOURCES perf_descriptors.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES vis)
 
 add_executable(perf_results perf_results.cpp)

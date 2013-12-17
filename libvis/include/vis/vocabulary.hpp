@@ -15,6 +15,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/scoped_ptr.hpp>
+#include <opencv2/core/core.hpp>
 #include <string>
 #include <vector>
 
