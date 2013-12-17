@@ -83,6 +83,8 @@ add_unit_test(NAME test_posixtimer
     SOURCES test_posixtimer.cpp
     DISABLED true
     LINK_LIBRARIES ${Boost_LIBRARIES})
+# PosixTimer is deprecated, suppress warning
+set_target_properties(test_posixtimer PROPERTIES COMPILE_FLAGS "-Wno-attributes -Wno-deprecated-declarations")
 
 add_unit_test(NAME test_timer
     SOURCES test_timer.cpp
