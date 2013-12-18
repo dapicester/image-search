@@ -12,7 +12,7 @@
 //#define _ELPP_DEFAULT_LOG_FILE "test_logs.txt"
 
 #include <easylogging++.h>
-#include <thread>
+#include <boost/thread.hpp>
 
 // must be one once
 _INITIALIZE_EASYLOGGINGPP
@@ -55,12 +55,12 @@ BOOST_AUTO_TEST_CASE(elpp_threads) {
     // TODO open issue
     el::Helpers::installCustomFormatSpecifier(el::CustomFormatSpecifier("%tid", []() -> const char* {
         std::stringstream ss;
-        ss << std::this_thread::get_id();
+        ss << boost::this_thread::get_id();
         return ss.str().c_str();
     }));
     el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format, "%datetime %level (%thread) [%tid] %msg");
 
-    std::thread([]{
+    boost::thread([]{
         LOG(INFO) << "log from thread";
     }).join();
 
