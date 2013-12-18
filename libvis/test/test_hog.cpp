@@ -8,7 +8,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include "fixtures.hpp"
-#include "utils/data.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
 

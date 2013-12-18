@@ -22,38 +22,6 @@ using std::vector;
 static const QString DATA_EXT = ".dgz";
 static const QString TEXT_EXT = ".txt";
 
-vector<string>
-loadNames(const fs::path& file) {
-    vector<string> names;
-    std::ifstream input(file.string());
-    std::copy(std::istream_iterator<string>(input),
-              std::istream_iterator<string>(),
-              std::back_inserter(names));
-    return names;
-}
-
-vector<fs::path>
-loadNames(const fs::path& file, const fs::path& prefix) {
-    vector<string> lines = loadNames(file);
-    vector<fs::path> names;
-    std::for_each (lines.begin(), lines.end(), [&](const string& line) {
-        names.push_back(prefix / line);
-    });
-    return names;
-}
-
-fs::path
-categoryFile(const fs::path& dataDir, const QString& category) {
-    QString file(category);
-    file.append(TEXT_EXT);
-    return dataDir / file.toStdString();
-}
-
-fs::path
-categoryDir(const fs::path& dataDir, const QString& category) {
-    return dataDir / category.toStdString();
-}
-
 vector<fs::path>
 queryNames(const vector<fs::path>& all, const QString& category) {
     vector<fs::path> names;
@@ -65,32 +33,8 @@ queryNames(const vector<fs::path>& all, const QString& category) {
 }
 
 fs::path
-vocabularyFile(const fs::path& dataDir, const QString& category) {
-    QString file = "vocabulary_";
-    file.append(category);
-    file.append(DATA_EXT);
-    return dataDir / file.toStdString();
-}
-
-fs::path
-descriptorsFile(const fs::path& dataDir, const QString& category, const QString& type) {
-    QString file = "descriptors_";
-    file.append(category).append("_").append(type);
-    file.append(DATA_EXT);
-    return dataDir / file.toStdString();
-}
-
-fs::path
 queryFile(const fs::path& dataDir, const QString& category, const QString& type) {
     QString file = "query_";
-    file.append(category).append("_").append(type);
-    file.append(DATA_EXT);
-    return dataDir / file.toStdString();
-}
-
-fs::path
-indexFile(const fs::path& dataDir, const QString& category, const QString& type) {
-    QString file = "index_";
     file.append(category).append("_").append(type);
     file.append(DATA_EXT);
     return dataDir / file.toStdString();

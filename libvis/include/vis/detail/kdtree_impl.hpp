@@ -127,6 +127,14 @@ getResults(VlKDForest* forest, const T* query, vl_size numQueries,
 template <typename T>
 template <typename Record>
 std::vector<Record>
+KDTree<T>::search(const arma::uvec& indices,
+        unsigned numNeighbors, unsigned maxNumComparisons) {
+    return search<Record>(data.cols(indices), numNeighbors, maxNumComparisons);
+}
+
+template <typename T>
+template <typename Record>
+std::vector<Record>
 KDTree<T>::search(const arma::Mat<T>& query,
         unsigned numNeighbors, unsigned maxNumComparisons) {
     vl_kdforest_set_max_num_comparisons(forest, maxNumComparisons);

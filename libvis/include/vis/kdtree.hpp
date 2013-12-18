@@ -46,6 +46,12 @@ public:
 
     /// @brief Queries a KD-tree.
     template <typename Record>
+    std::vector<Record> search(const arma::uvec& indices,
+                               unsigned numNeighbors = 1,
+                               unsigned maxNumComparisons = 0);
+
+    /// @brief Queries a KD-tree.
+    template <typename Record>
     std::vector<Record> search(const arma::Mat<T>& query,
                                unsigned numNeighbors = 1,
                                unsigned maxNumComparisons = 0);

@@ -8,6 +8,7 @@
 #include "utils.hpp"
 
 #include <vis.hpp>
+#include <vis/utils/filesystem.hpp>
 #include <vis/utils/handlers.hpp>
 
 #include <QDebug>
@@ -22,9 +23,9 @@ void
 Recompute::loadImagePaths(const QString& category) {
     qDebug() << "loading images for" << category;
 
-    fs::path file = categoryFile(dataPath, category);
-    fs::path dir = categoryDir(dataPath, category);
-    images = loadNames(file, dir);
+    fs::path file = vis::categoryFile(dataPath, category.toStdString());
+    fs::path dir = dataPath / category.toStdString();
+    images = vis::loadNames(file, dir);
 
     qDebug() << "loaded" << images.size() << "images for" << category;
 }
@@ -33,9 +34,9 @@ void
 Recompute::loadQueryImagePaths(const QString& category) {
     qDebug() << "loading images for" << category;
 
-    static fs::path file = categoryFile(dataPath, "test");
-    static fs::path dir = categoryDir(dataPath, "test");
-    static vector_path names = loadNames(file, dir);
+    static fs::path file = vis::categoryFile(dataPath, "test");
+    static fs::path dir = dataPath / "test";
+    static vector_path names = vis::loadNames(file, dir);
     queryImages = queryNames(names, category);
 
     qDebug() << "loaded" << queryImages.size() << "query images for" << category;
@@ -52,7 +53,7 @@ Recompute::computeVocabulary(const QString& category) {
                 category.toStdString(), names, vis::vocabulary::NUM_WORDS,
                 PROGRESS_HANDLER(names)));
 
-    fs::path savefile = vocabularyFile(dataPath, category);
+    fs::path savefile = vis::vocabularyFile(dataPath, category.toStdString());
     vocabulary->save(savefile);
 
     qDebug() << "vocabulary computed";
@@ -67,7 +68,7 @@ Recompute::computeDescriptors(const QString& category, const QString& type) {
             descriptors.data(), vocabulary.data(),
             PROGRESS_HANDLER(images));
 
-    fs::path savefile = descriptorsFile(dataPath, category, type);
+    fs::path savefile = vis::descriptorsFile(dataPath, category.toStdString(), type.toStdString());
     descriptors->save(savefile);
 
     qDebug() << "descriptors computed";
@@ -95,7 +96,7 @@ Recompute::computeIndex(const QString& category, const QString& type) {
     index.reset(new vis::Index);
     index->build(category.toStdString(), *descriptors);
 
-    fs::path savefile = indexFile(dataPath, category, type);
+    fs::path savefile = vis::indexFile(dataPath, category.toStdString(), type.toStdString());
     index->save(savefile);
 
     qDebug() << "index computed";

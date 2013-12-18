@@ -57,20 +57,24 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
 
         // 5. query
 
-        const size_t queryId = 5;
-        arma::fmat query(descriptors.data().col(queryId));
+        const arma::uvec queryId{5};
+        arma::fmat query(descriptors.data().cols(queryId));
 
-        // single result
+        // by value, single result
         std::vector<vis::Index::id_type> match;
         index->query(query, match);
         BOOST_REQUIRE_EQUAL(1, match.size());
-        BOOST_REQUIRE_EQUAL(queryId, match[0]); // exact match
+        BOOST_REQUIRE_EQUAL(queryId[0], match[0]);  // exact match
 
-        // multiple results
+        // by index, multiple results
+        unsigned numResults = 10;
         std::vector<vis::Index::id_type> results;
-        index->query(query, results, 5);
-        BOOST_REQUIRE_EQUAL(5, results.size());
-        BOOST_REQUIRE_EQUAL(queryId, results[0]); // idem
+        index->query(queryId, results, numResults);
+        BOOST_REQUIRE_EQUAL(numResults, results.size());
+        BOOST_REQUIRE_EQUAL(queryId[0], match[0]);  // exact match
+        std::for_each(match.begin() + 1, match.end(), [&](const vis::Index::id_type& id) {
+            BOOST_CHECK_NE(queryId[0], id);         // non-exact match
+        });
     }
 }
 

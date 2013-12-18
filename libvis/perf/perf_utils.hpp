@@ -19,23 +19,13 @@ getRandomData(size_t rows, size_t cols) {
     return arma::randu<arma::fmat>(rows, cols);
 }
 
-// TODO move this to descriptors_type.hpp
+// TODO move this to descriptors_type.hpp ?
 inline size_t
 getLength(vis::DescriptorsType type) {
     switch(type) {
         case vis::HSV: return 166;
         case vis::HOG: return 300;
         case vis::HOG_HSV: return 466;
-    }
-}
-
-// TODO move this to descriptors_type.hpp
-inline std::string
-getName(vis::DescriptorsType type) {
-    switch(type) {
-        case vis::HSV: return "HSV";
-        case vis::HOG: return "HOG";
-        case vis::HOG_HSV: return "HOG_HSV";
     }
 }
 

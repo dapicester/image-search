@@ -7,37 +7,44 @@
 #ifndef VIS_UTILS_FILESYSTEM_HPP
 #define VIS_UTILS_FILESYSTEM_HPP
 
-#include <boost/filesystem.hpp>
-#include <boost/iterator/filter_iterator.hpp>
-#include <functional>
-#include <string>
+#include <boost/filesystem/path.hpp>
 #include <vector>
 
 namespace vis {
 
-/// Match image file paths.
-struct has_image_extension {
-    bool operator()(const boost::filesystem::path& p) {
-        const boost::filesystem::path ext = p.extension();
-        return ext == ".png" || ext == ".jpg";
-    }
-};
-
 /// Get image files in given directory.
-static std::vector<boost::filesystem::path>
-getImageFiles(const boost::filesystem::path& dir) {
-    std::vector<boost::filesystem::path> files;
+std::vector<boost::filesystem::path>
+getImageFiles(const boost::filesystem::path& dir);
 
-    boost::filesystem::directory_iterator
-            it = boost::filesystem::directory_iterator(dir),
-            end = boost::filesystem::directory_iterator();
+/// Load file content.
+std::vector<std::string>
+loadNames(const boost::filesystem::path& file); // TODO rename into getFileNames
 
-    std::copy(boost::make_filter_iterator<has_image_extension>(it, end),
-              boost::make_filter_iterator<has_image_extension>(end, end),
-              std::back_inserter(files));
+/// Load file names from file.
+std::vector<boost::filesystem::path>
+loadNames(const boost::filesystem::path& file, const boost::filesystem::path& prefix); // TODO rename into getFileNames
 
-    return files;
-}
+/// Get the path to the text file containing images for the given category.
+/// @return path to \c dataDir/category.txt
+boost::filesystem::path
+categoryFile(const boost::filesystem::path& dataDir, const std::string& category);
+
+/// Get the path to the vocabulary file for the given category.
+/// @return path to \c dataDir/vocabulary_category.dgz
+boost::filesystem::path
+vocabularyFile(const boost::filesystem::path& dataDir, const std::string& category);
+
+/// Get the path to the descriptors file for the given category and query type.
+/// @return path to \c dataDir/descriptors_category_type.dgz
+boost::filesystem::path
+descriptorsFile(const boost::filesystem::path& dataDir,
+        const std::string& category, const std::string& type);
+
+/// Get the path to the index file for the given category.
+/// @return path to \c dataDir/index_category_type.dgz
+boost::filesystem::path
+indexFile(const boost::filesystem::path& dataDir,
+        const std::string& category, const std::string& type);
 
 } /* namespace vis */
 

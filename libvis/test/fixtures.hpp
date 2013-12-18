@@ -7,11 +7,12 @@
 #ifndef VIS_TEST_FIXTURES_HPP
 #define VIS_TEST_FIXTURES_HPP
 
-#include "images.h"
+#include "directories.h"
 
 #include "vis/standardize.hpp"
 #include "vis/utils/filesystem.hpp"
 
+#include <boost/filesystem/operations.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 namespace test {
