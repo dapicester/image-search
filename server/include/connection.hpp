@@ -28,10 +28,10 @@ private:
     void doRead();
 
     /// Process request.
-    void doProcess(const Request&);
+    void doProcess(const BaseRequest*); // TODO request should be attribute
 
     /// Write response to socket.
-    void doWrite(const Response&);
+    void doWrite(const Response&); // TODO response should be attribute
 
 private:
     boost::asio::ip::tcp::socket socket;

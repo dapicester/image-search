@@ -34,7 +34,7 @@ Connection::doRead() {
                     buf.commit(header);
                     _LOG(INFO) << "read: " << len + sizeof(header) << " bytes";
 
-                    Request request;
+                    BaseRequest* request;
                     get(buf, request);
 
                     doProcess(request);
@@ -45,14 +45,15 @@ Connection::doRead() {
 }
 
 void
-Connection::doProcess(const Request& request) {
-    _LOG(INFO) << "request: " << request;
+Connection::doProcess(const BaseRequest* request) {
+    _LOG(INFO) << "request: " << *request;
 
     Response response;
     // TODO process request here
     _LOG(INFO) << "response: " << response;
 
     doWrite(response);
+    delete request; // XXX
 }
 
 void

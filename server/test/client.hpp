@@ -33,8 +33,8 @@ public:
         }
     }
 
-    Response sendRequest(const Request& request) {
-        _LOG(INFO) << "Sending request";// [" << request << "] ...";
+    Response sendRequest(const BaseRequest* request) {
+        _LOG(INFO) << "Sending request [" << *request << "] ...";
         {
             put(buf, request);
             header = buf.size();

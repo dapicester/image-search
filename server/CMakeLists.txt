@@ -19,9 +19,11 @@ configure_file("include/directories.h.in" ${CMAKE_CURRENT_BINARY_DIR}/directorie
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(server_SRCS
-    src/server.cpp
     src/connection.cpp
-    src/main.cpp)
+    src/protocol.cpp
+    src/main.cpp
+    src/server.cpp
+)
 
 list(APPEND includes ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${includes})

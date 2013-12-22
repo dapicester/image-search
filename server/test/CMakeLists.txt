@@ -19,10 +19,12 @@ add_unit_test(NAME elpp_usage
 
 add_unit_test(NAME test_protocol
     SOURCES test_protocol.cpp
+            ${SRC}/protocol.cpp
     LINK_LIBRARIES ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_server
     SOURCES test_server.cpp
             ${SRC}/connection.cpp
+            ${SRC}/protocol.cpp
             ${SRC}/server.cpp
     LINK_LIBRARIES ${Boost_LIBRARIES})

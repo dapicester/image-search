@@ -9,15 +9,17 @@
 
 #include "protocol_serialization.hpp"
 
+#include <boost/serialization/export.hpp>
+
+BOOST_CLASS_EXPORT(vis::OfflineRequest);
+BOOST_CLASS_EXPORT(vis::RealtimeRequest);
+BOOST_CLASS_EXPORT(vis::UploadRequest);
+
 namespace vis {
 
 inline bool
-operator==(const vis::Request& left, const vis::Request& right) {
-    return left.requestType == right.requestType
-        and left.category == right.category
-        and left.queryType == right.queryType
-        and left.numResults == right.numResults
-        and (left.id == right.id or left.descriptors == right.descriptors);
+operator==(const vis::BaseRequest& left, const vis::BaseRequest& right) {
+    return left.equals(right);
 }
 
 inline bool
@@ -27,27 +29,29 @@ operator==(const vis::Response left, const vis::Response& right) {
 
 } // namespace vis
 
-static const vis::Request offline  = { 'o', "bag", 'c', 20, 42 };
-static const vis::Request realtime = { 'r', "bag", 'c', 20, 0, std::vector<float>(166, 0.f) };
-static const vis::Request upload   = { 'u', "bag", 'c', 20, 0, /*image data*/ };
+static const vis::OfflineRequest offline(vis::RequestType::OFFLINE, "bag", 'c', 20, 42);
+static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "bag", 'c', 20, std::vector<float>(166, 0.f));
+static const vis::UploadRequest upload( vis::RequestType::UPLOAD, "bag", 'c', 20, nullptr /*image data*/);
 
 #define PRINT(X) std::cout << #X << ": " << X << std::endl;
 
 BOOST_AUTO_TEST_CASE(serialize_request) {
-    vis::Request requests[] = { offline, realtime, upload };
-    std::for_each(std::begin(requests), std::end(requests), [](const vis::Request& request) {
-        // serialize
+    const vis::BaseRequest* requests[] = { &offline, &realtime, &upload };
+    std::for_each(std::begin(requests), std::end(requests), [](const vis::BaseRequest* request) {
         boost::asio::streambuf buf;
+
+        // serialize
         vis::put(buf, request);
 
         // deserialize
-        vis::Request deserialized;
+        vis::BaseRequest* deserialized;
         vis::get(buf, deserialized);
 
-        PRINT(request);
-        PRINT(deserialized);
+        PRINT(*request);
+        PRINT(*deserialized);
 
-        BOOST_CHECK_EQUAL(request, deserialized);
+        BOOST_CHECK_EQUAL(*request, *deserialized);
+        delete deserialized;
     });
 }
 

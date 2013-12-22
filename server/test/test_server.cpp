@@ -14,7 +14,13 @@
 #include "protocol.hpp"
 #include "server.hpp"
 
+#include <boost/serialization/export.hpp>
+
 _INITIALIZE_EASYLOGGINGPP
+
+BOOST_CLASS_EXPORT(vis::OfflineRequest);
+BOOST_CLASS_EXPORT(vis::RealtimeRequest);
+BOOST_CLASS_EXPORT(vis::UploadRequest);
 
 static const short PORT = 4567;
 
@@ -43,25 +49,17 @@ BOOST_AUTO_TEST_CASE(connect) {
     BOOST_REQUIRE(not server.isRunning());
 }
 
-const vis::Request offline() {
-    vis::Request r;
-    r.requestType = 'o';
-    r.category = "bag";
-    r.queryType = 'c';
-    r.numResults = 20;
-    r.id = 42;
-    return r;
-}
-//static const vis::Request realtime = { 'r', "bag", 'c', 20, 166, std::vector<float>(166, 0.f) };
-//static const vis::Request upload   = { 'u', "bag", 'c', 20, 255, [>image data<] };
+static const vis::OfflineRequest offline(vis::RequestType::OFFLINE, "bag", 'c', 20, 42);
+static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "bag", 'c', 20, std::vector<float>(166, 0.f));
+static const vis::UploadRequest upload( vis::RequestType::UPLOAD, "bag", 'c', 20, nullptr /*image data*/);
 
 BOOST_AUTO_TEST_CASE(request) {
     vis::Server server(PORT);
     server.start();
     BOOST_REQUIRE(server.isRunning());
 
-    vis::Request requests[] = { offline() };
-    std::for_each(std::begin(requests), std::end(requests), [](const vis::Request& request) {
+    const vis::BaseRequest* requests[] = { &offline, &realtime, &upload };
+    std::for_each(std::begin(requests), std::end(requests), [](const vis::BaseRequest* request) {
         vis::Client client("localhost", PORT);
         BOOST_REQUIRE(client.probe());
 
