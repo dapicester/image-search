@@ -38,15 +38,13 @@ BOOST_AUTO_TEST_CASE(no_connect) {
 }
 
 BOOST_AUTO_TEST_CASE(connect) {
-    vis::Server server(PORT);
-    server.start();
-    BOOST_REQUIRE(server.isRunning());
+    vis::Server server("localhost", "4567");
+    server.startAsync();
     {
         vis::Client client("localhost", PORT);
         BOOST_CHECK(client.probe());
     }
     server.stop();
-    BOOST_REQUIRE(not server.isRunning());
 }
 
 static const vis::OfflineRequest offline(vis::RequestType::OFFLINE, "bag", 'c', 20, 42);
@@ -54,9 +52,8 @@ static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "bag", 'c
 static const vis::UploadRequest upload( vis::RequestType::UPLOAD, "bag", 'c', 20, nullptr /*image data*/);
 
 BOOST_AUTO_TEST_CASE(request) {
-    vis::Server server(PORT);
-    server.start();
-    BOOST_REQUIRE(server.isRunning());
+    vis::Server server("localhost", "4567");
+    server.startAsync();
 
     const vis::BaseRequest* requests[] = { &offline, &realtime, &upload };
     std::for_each(std::begin(requests), std::end(requests), [](const vis::BaseRequest* request) {
@@ -67,7 +64,6 @@ BOOST_AUTO_TEST_CASE(request) {
         BOOST_CHECK(response.results.empty()); // FIXME complete
     });
     server.stop();
-    BOOST_REQUIRE(not server.isRunning());
 }
 
 BOOST_AUTO_TEST_SUITE_END();

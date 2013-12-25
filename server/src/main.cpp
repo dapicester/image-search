@@ -8,12 +8,15 @@
 #include "logging.hpp"
 
 #include <iostream>
-#include <cstdlib>
 
 _INITIALIZE_EASYLOGGINGPP
 
 void usage() {
-    std::cerr << "Usage: server <port>\n";
+    std::cerr << "Usage: server <address> <port>\n";
+    std::cerr << "  For IPv4, try:\n";
+    std::cerr << "    server 0.0.0.0 12345 .\n";
+    std::cerr << "  For IPv6, try:\n";
+    std::cerr << "    server 0::0 12345 .\n";
 }
 
 void init(int argc, char** argv) {
@@ -23,17 +26,16 @@ void init(int argc, char** argv) {
 
 int main(int argc, char** argv) {
     try {
-        if (argc != 2) {
+        if (argc != 3) {
             usage();
             return 1;
         }
 
         init(argc, argv);
 
-        vis::Server server(std::atoi(argv[1]));
+        vis::Server server(argv[1], argv[2]);
         server.start();
 
-        // TODO wait for completion
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << "\n";
         return 1;

@@ -8,38 +8,47 @@
 #define VIS_SERVER_HPP
 
 #include <boost/asio.hpp>
-#include <boost/thread/thread.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/scoped_ptr.hpp>
+
+namespace boost {
+    class thread;
+}
 
 namespace vis {
 
 /// @brief TCP asynchronous server.
-class Server {
+class Server : private boost::noncopyable {
 public:
     /// Create a new server binding port \c port.
-    Server(short port);
+    Server(const std::string& address, const std::string& port);
 
-    virtual ~Server();
+    /// Destructor.
+    ~Server();
 
-    /// Start accepting requests.
+    /// Start accepting requests (blocking call).
     void start();
+
+    /// Start accepting requests (non-blocking call).
+    void startAsync();
 
     /// Stop accepting requests.
     void stop();
 
-    /// @return \c true if the server is running.
-    bool isRunning() const { return running; }
-
 private:
+
     void doAccept();
 
-    boost::asio::io_service io_service;
-    boost::asio::ip::tcp::acceptor acceptor;
-    boost::asio::ip::tcp::socket socket;
-    boost::asio::signal_set signals;
+    void doAwaitStop();
 
-    bool running = false;
-    boost::scoped_ptr<boost::thread> io;
+    boost::asio::io_service io_service;
+    boost::asio::signal_set signals;
+    boost::asio::ip::tcp::acceptor acceptor;
+    // TODO connection manager
+    boost::asio::ip::tcp::socket socket;
+    // TODO request handler
+
+    boost::scoped_ptr<boost::thread> service_thread;
 };
 
 } // namespace vis
