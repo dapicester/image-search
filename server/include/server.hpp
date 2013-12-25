@@ -16,6 +16,7 @@ namespace boost {
 }
 
 namespace vis {
+namespace server {
 
 /// @brief TCP asynchronous server.
 class Server : private boost::noncopyable {
@@ -51,6 +52,7 @@ private:
     boost::scoped_ptr<boost::thread> service_thread;
 };
 
+} // namespace server
 } // namespace vis
 
 #endif // VIS_SERVER_HPP

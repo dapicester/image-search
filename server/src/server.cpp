@@ -13,6 +13,7 @@
 #include <iostream>
 
 namespace vis {
+namespace server {
 
 #define _LOG(X) CLOG(X, "server")
 
@@ -91,5 +92,6 @@ Server::doAccept() {
     });
 }
 
+} // namespace server
 } // namespace vis
 

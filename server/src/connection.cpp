@@ -11,6 +11,7 @@
 #include <iostream>
 
 namespace vis {
+namespace server {
 
 #define _LOG(X) CLOG(X, "connection")
 
@@ -77,5 +78,6 @@ Connection::doWrite(const Response& resp) {
     );
 }
 
+} //namespace server
 } //namespace vis
 

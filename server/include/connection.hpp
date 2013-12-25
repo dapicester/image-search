@@ -10,12 +10,16 @@
 #include "protocol.hpp"
 
 #include <boost/asio.hpp>
+#include <boost/noncopyable.hpp>
 #include <memory>
 
 namespace vis {
+namespace server {
 
 /// @brief TCP connection.
-class Connection : public std::enable_shared_from_this<Connection> {
+class Connection
+        : public std::enable_shared_from_this<Connection>,
+          private boost::noncopyable {
 public:
     /// Create a new connection on the \c socket.
     Connection(boost::asio::ip::tcp::socket socket);
@@ -39,7 +43,8 @@ private:
     boost::asio::streambuf buf;
 };
 
-} //namespace vis
+} // namespace server
+} // namespace vis
 
 #endif // VIS_CONNECTION_HPP
 
