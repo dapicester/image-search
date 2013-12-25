@@ -15,7 +15,7 @@ static const int maxLength = 1024;
 
 class Client {
 public:
-    Client(const std::string& h, short p)
+    Client(const std::string& h, const std::string& p)
         : host(h), port(p), socket(io_service) {}
 
     virtual ~Client() {}
@@ -24,7 +24,7 @@ public:
         _LOG(INFO) << "Probing " << host << ":" << port << " ...";
         try {
             boost::asio::ip::tcp::resolver resolver(io_service);
-            boost::asio::connect(socket, resolver.resolve({host,std::to_string(port)}));
+            boost::asio::connect(socket, resolver.resolve({host,port}));
             _LOG(INFO) << "Probe OK";
             return true;
         } catch (std::exception& e) {
@@ -67,7 +67,7 @@ public:
 
 private:
     const std::string host;
-    const short port;
+    const std::string port;
 
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::socket socket;

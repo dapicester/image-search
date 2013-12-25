@@ -22,7 +22,8 @@ BOOST_CLASS_EXPORT(vis::OfflineRequest);
 BOOST_CLASS_EXPORT(vis::RealtimeRequest);
 BOOST_CLASS_EXPORT(vis::UploadRequest);
 
-static const short PORT = 4567;
+static const std::string HOST = "0.0.0.0";
+static const std::string PORT = "4567";
 
 struct InitLogging {
     InitLogging() {
@@ -33,15 +34,15 @@ struct InitLogging {
 BOOST_FIXTURE_TEST_SUITE(test, InitLogging)
 
 BOOST_AUTO_TEST_CASE(no_connect) {
-    vis::Client client("localhost", PORT);
+    vis::Client client(HOST, PORT);
     BOOST_CHECK(not client.probe());
 }
 
 BOOST_AUTO_TEST_CASE(connect) {
-    vis::server::Server server("localhost", "4567");
+    vis::server::Server server(HOST, PORT);
     server.startAsync();
     {
-        vis::Client client("localhost", PORT);
+        vis::Client client(HOST, PORT);
         BOOST_CHECK(client.probe());
     }
     server.stop();
@@ -52,12 +53,12 @@ static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "bag", 'c
 static const vis::UploadRequest upload( vis::RequestType::UPLOAD, "bag", 'c', 20, nullptr /*image data*/);
 
 BOOST_AUTO_TEST_CASE(request) {
-    vis::server::Server server("localhost", "4567");
+    vis::server::Server server(HOST, PORT);
     server.startAsync();
 
     const vis::BaseRequest* requests[] = { &offline, &realtime, &upload };
     std::for_each(std::begin(requests), std::end(requests), [](const vis::BaseRequest* request) {
-        vis::Client client("localhost", PORT);
+        vis::Client client(HOST, PORT);
         BOOST_REQUIRE(client.probe());
 
         vis::Response response = client.sendRequest(request);
