@@ -49,7 +49,7 @@ public:
             _LOG(INFO) << "Request sent " << n << " bytes";
         }
 
-        _LOG(INFO) << "Receiving response ...";
+        _LOG(INFO) << "Waiting for response ...";
         {
             size_t n = boost::asio::read(socket, boost::asio::buffer(&header, sizeof(header)));
 

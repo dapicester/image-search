@@ -7,6 +7,9 @@
 #ifndef VIS_SERVER_HPP
 #define VIS_SERVER_HPP
 
+#include "connection_manager.hpp"
+#include "request_handler.hpp"
+
 #include <boost/asio.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -45,9 +48,9 @@ private:
     boost::asio::io_service io_service;
     boost::asio::signal_set signals;
     boost::asio::ip::tcp::acceptor acceptor;
-    // TODO connection manager
+    ConnectionManager connectionManager;
     boost::asio::ip::tcp::socket socket;
-    // TODO request handler
+    RequestHandler requestHandler;
 
     boost::scoped_ptr<boost::thread> service_thread;
 };

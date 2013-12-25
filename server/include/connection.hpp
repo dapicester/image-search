@@ -1,6 +1,6 @@
 /**
  * @file connection.hpp
- * @brief TCP connection.
+ * @brief Image search connection.
  * @author Paolo D'Apice
  */
 
@@ -16,32 +16,42 @@
 namespace vis {
 namespace server {
 
-/// @brief TCP connection.
+class ConnectionManager;
+class RequestHandler;
+
+/// @brief A single TCP connection from a client.
 class Connection
         : public std::enable_shared_from_this<Connection>,
           private boost::noncopyable {
 public:
     /// Create a new connection on the \c socket.
-    Connection(boost::asio::ip::tcp::socket socket);
+    Connection(boost::asio::ip::tcp::socket socket,
+            ConnectionManager& manager, RequestHandler& handler);
 
     /// Start processing the connection.
     void start();
+
+    /// Stop operations associated with the connection.
+    void stop();
 
 private:
     /// Read request from socket.
     void doRead();
 
-    /// Process request.
-    void doProcess(const BaseRequest*); // TODO request should be attribute
-
     /// Write response to socket.
-    void doWrite(const Response&); // TODO response should be attribute
+    void doWrite();
 
 private:
     boost::asio::ip::tcp::socket socket;
+    ConnectionManager& manager;
+    RequestHandler& handler;
+
     size_t header;
     boost::asio::streambuf buf;
+    vis::Response response;
 };
+
+typedef std::shared_ptr<Connection> ConnectionPtr;
 
 } // namespace server
 } // namespace vis

@@ -21,7 +21,9 @@ Server::Server(const std::string& address, const std::string& port)
     : io_service(),
       signals(io_service),
       acceptor(io_service),
-      socket(io_service)
+      connectionManager(),
+      socket(io_service),
+      requestHandler()
 {
     _LOG(INFO) << "New server on port " << port << " ...";
     signals.add(SIGINT);
@@ -68,6 +70,7 @@ void
 Server::stop() {
     _LOG(INFO) << "Stopping server ...";
     acceptor.close();
+    connectionManager.stopAll();
     io_service.stop();
     if (service_thread.get() != 0) service_thread->join();
     _LOG(INFO) << "Server stopped";
@@ -84,8 +87,8 @@ Server::doAccept() {
 
         if (not ec) {
             _LOG(INFO) << "Incoming request from " << socket.remote_endpoint();
-            // TODO connection manager
-            std::make_shared<Connection>(std::move(socket))->start();
+            connectionManager.start(std::make_shared<Connection>(
+                    std::move(socket), connectionManager, requestHandler));
         }
 
         doAccept();

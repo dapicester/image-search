@@ -21,7 +21,7 @@ void usage() {
 
 void init(int argc, char** argv) {
     _START_EASYLOGGINGPP(argc, argv);
-    vis::registerLoggers({"server", "connection"});
+    vis::registerLoggers({"server", "connection", "handler", "manager"});
 }
 
 int main(int argc, char** argv) {
