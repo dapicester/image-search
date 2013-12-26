@@ -25,7 +25,8 @@ namespace server {
 class Server : private boost::noncopyable {
 public:
     /// Create a new server binding port \c port.
-    Server(const std::string& address, const std::string& port);
+    Server(const std::string& address, const std::string& port,
+            const std::string& datadir);
 
     /// Destructor.
     ~Server();

@@ -10,6 +10,7 @@
 #define _ELPP_THREAD_SAFE
 
 #include "client.hpp"
+#include "directories.h"
 #include "logging.hpp"
 #include "protocol.hpp"
 #include "server.hpp"
@@ -39,7 +40,7 @@ BOOST_AUTO_TEST_CASE(no_connect) {
 }
 
 BOOST_AUTO_TEST_CASE(connect) {
-    vis::server::Server server(HOST, PORT);
+    vis::server::Server server(HOST, PORT, DATA_DIR);
     server.startAsync();
     {
         vis::Client client(HOST, PORT);
@@ -53,7 +54,7 @@ static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "bag", 'c
 static const vis::UploadRequest upload( vis::RequestType::UPLOAD, "bag", 'c', 20, nullptr /*image data*/);
 
 BOOST_AUTO_TEST_CASE(request) {
-    vis::server::Server server(HOST, PORT);
+    vis::server::Server server(HOST, PORT, DATA_DIR);
     server.startAsync();
 
     const vis::BaseRequest* requests[] = { &offline, &realtime, &upload };
@@ -62,7 +63,9 @@ BOOST_AUTO_TEST_CASE(request) {
         BOOST_REQUIRE(client.probe());
 
         vis::Response response = client.sendRequest(request);
-        BOOST_CHECK(response.results.empty()); // FIXME complete
+
+        const std::vector<vis::id_type>& matches = response.results;
+        BOOST_CHECK(not matches.empty());
     });
     server.stop();
 }

@@ -51,7 +51,8 @@ Connection::doRead() {
                         get(buf, request);
 
                         // TODO handle parse errors
-                        handler.handle(request, response);
+                        handler.handle(*request, response);
+                        delete request;
 
                         doWrite();
                     }

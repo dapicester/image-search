@@ -29,4 +29,4 @@ add_unit_test(NAME test_server
             ${SRC}/protocol.cpp
             ${SRC}/request_handler.cpp
             ${SRC}/server.cpp
-    LINK_LIBRARIES ${Boost_LIBRARIES})
+    LINK_LIBRARIES vis ${Boost_LIBRARIES})
