@@ -30,8 +30,8 @@ add_subdirectory(demo)
 add_subdirectory(server)
 
 if(ENABLE_CTAGS)
-    add_ctags_for(libvis demo)
+    add_ctags_for(libvis demo server)
 endif()
 
-add_notes_for(libvis demo)
+add_notes_for(libvis demo server)
 
