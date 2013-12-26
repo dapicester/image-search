@@ -47,18 +47,18 @@ RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
 
 void RequestHandler::doHandle(const vis::OfflineRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Offline: id=" << req.id;
-    service->query(req.id, res.results);
+    service->query(req.id, res.results, req.numResults);
 }
 
 void RequestHandler::doHandle(const vis::RealtimeRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Realtime: descriptors=" << req.descriptors.size();
-    service->query(req.descriptors, res.results);
+    service->query(req.descriptors, res.results, req.numResults);
 }
 
 void RequestHandler::doHandle(const vis::UploadRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Upload: image=TODO";
-    // TODO service.query(req.image, res.results);
-    res.results.push_back(0);
+    // TODO service.query(req.image, res.results, req.numResults);
+    res.results.resize(req.numResults);
 }
 
 } // namespace server

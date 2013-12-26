@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(request) {
         vis::Response response = client.sendRequest(request);
 
         const std::vector<vis::id_type>& matches = response.results;
-        BOOST_CHECK(not matches.empty());
+        BOOST_CHECK_EQUAL(20, matches.size());
     });
     server.stop();
 }

@@ -108,18 +108,18 @@ ImageSearch::saveVocabulary() const {
 }
 
 void
-ImageSearch::query(unsigned id, std::vector<size_t>& results) const {
-    index->query(arma::uvec{id}, results);
+ImageSearch::query(unsigned id, std::vector<size_t>& results, size_t numResults) const {
+    index->query(arma::uvec{id}, results, numResults);
 }
 
 void
-ImageSearch::query(const arma::fvec& descriptors, std::vector<size_t>& results) const {
-    index->query(descriptors, results);
+ImageSearch::query(const arma::fvec& descriptors, std::vector<size_t>& results, size_t numResults) const {
+    index->query(descriptors, results, numResults);
 }
 
 void
-ImageSearch::query(const cv::Mat& image, std::vector<size_t>& results) const {
-    index->query(extract(image), results);
+ImageSearch::query(const cv::Mat& image, std::vector<size_t>& results, size_t numResults) const {
+    index->query(extract(image), results, numResults);
 }
 
 arma::fvec

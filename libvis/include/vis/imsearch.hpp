@@ -50,22 +50,25 @@ public:
      * Query by image id.
      * @param id Query image id.
      * @param[out] results Search results.
+     * @param numResults Number matches.
      */
-    void query(unsigned id, std::vector<size_t>& results) const;
+    void query(unsigned id, std::vector<size_t>& results, size_t numResults = 1) const;
 
     /**
      * Query by image descriptors.
      * @param descriptors Image descriptors.
      * @param[out] results Search results.
+     * @param numResults Number matches.
      */
-    void query(const arma::fvec& descriptors, std::vector<size_t>& results) const;
+    void query(const arma::fvec& descriptors, std::vector<size_t>& results, size_t numResults = 1) const;
 
     /**
      * Query by image.
      * @param image Image as read with OpenCV.
      * @param[out] results Search results.
+     * @param numResults Number matches.
      */
-    void query(const cv::Mat& image, std::vector<size_t>& results) const;
+    void query(const cv::Mat& image, std::vector<size_t>& results, size_t numResults = 1) const;
 
     /// Extract descriptors from image.
     arma::fvec extract(const cv::Mat& image) const;
