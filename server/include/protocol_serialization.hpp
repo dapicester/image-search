@@ -47,7 +47,7 @@ template <typename Archive>
 void
 serialize(Archive & ar, vis::UploadRequest& req, const unsigned int version) {
     ar & base_object<vis::BaseRequest>(req);
-    // TODO
+    // TODO upload request serialization
 }
 
 template <typename Archive>

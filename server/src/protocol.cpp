@@ -84,14 +84,14 @@ UploadRequest::~UploadRequest() {}
 void
 UploadRequest::print(std::ostream& os) const {
     BaseRequest::print(os);
-    //TODO
+    //TODO print upload request
 }
 
 bool
 UploadRequest::equals(const BaseRequest& o) const {
     std::cout<<"up"<<std::endl;
     return BaseRequest::equals(o);
-    // TODO
+    // TODO equals upload request
 }
 
 } // namespace vis

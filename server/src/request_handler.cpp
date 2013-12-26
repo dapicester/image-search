@@ -29,7 +29,6 @@ void
 RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Handling request" << req;
 
-    // TODO process request here
     switch (req.requestType) {
     case vis::RequestType::OFFLINE:
         doHandle(dynamic_cast<const vis::OfflineRequest&>(req), res);
