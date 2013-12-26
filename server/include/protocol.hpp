@@ -13,6 +13,8 @@
 
 namespace vis {
 
+typedef size_t id_type; // XXX vis::Index::id_type
+
 enum class RequestType : char {
     OFFLINE  = 'o',
     REALTIME = 'r',
@@ -50,7 +52,7 @@ struct OfflineRequest : BaseRequest {
     void print(std::ostream&) const;
     bool equals(const BaseRequest&) const;
 
-    unsigned id;
+    id_type id;
 };
 
 struct RealtimeRequest : BaseRequest {
@@ -84,7 +86,7 @@ struct UploadRequest : BaseRequest {
 };
 
 struct Response {
-    std::vector<unsigned> results;
+    std::vector<id_type> results;
 };
 
 template <typename T>
