@@ -21,6 +21,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(server_SRCS
     src/connection.cpp
     src/connection_manager.cpp
+    src/logging.cpp
     src/protocol.cpp
     src/main.cpp
     src/request_handler.cpp

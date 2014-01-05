@@ -26,6 +26,7 @@ add_unit_test(NAME test_server
     SOURCES test_server.cpp
             ${SRC}/connection.cpp
             ${SRC}/connection_manager.cpp
+            ${SRC}/logging.cpp
             ${SRC}/protocol.cpp
             ${SRC}/request_handler.cpp
             ${SRC}/server.cpp

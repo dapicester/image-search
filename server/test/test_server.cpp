@@ -28,7 +28,7 @@ static const std::string PORT = "4567";
 
 struct InitLogging {
     InitLogging() {
-        vis::registerLoggers({ "server", "client", "connection", "handler", "manager" });
+        vis::logging::registerLoggers({ "server", "client", "connection", "handler", "manager" });
     }
 };
 
