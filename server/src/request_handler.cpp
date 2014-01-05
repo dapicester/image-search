@@ -10,17 +10,26 @@
 #include "protocol.hpp"
 
 #include <vis/imsearch.hpp>
+#include <boost/assign/ptr_map_inserter.hpp>
 
 #define _LOG(X) CLOG(X, "handler")
 
 namespace vis {
 namespace server {
 
-RequestHandler::RequestHandler(const std::string& datadir) {
+RequestHandler::RequestHandler(const std::string& datadir,
+        const std::vector<std::string>& categories) {
     _LOG(INFO) << "Initializing image search to dir: " << datadir;
-    // TODO category/type
-    service.reset(new vis::ImageSearch("bag", vis::DescriptorsType::HSV, datadir));
-    service->load();
+
+    // TODO descriptors type
+    vis::DescriptorsType type = vis::DescriptorsType::HSV;
+
+    std::for_each(categories.begin(), categories.end(), [&] (const std::string& category) {
+        _LOG(INFO) << "Added " << category << "/" << typeString(type);
+        boost::assign::ptr_map_insert<vis::ImageSearch>(service)(category, category, type, datadir);
+        service[category].load();
+    });
+
 }
 
 RequestHandler::~RequestHandler() {}
@@ -28,6 +37,8 @@ RequestHandler::~RequestHandler() {}
 void
 RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Handling request" << req;
+
+    // TODO check category
 
     switch (req.requestType) {
     case vis::RequestType::OFFLINE:
@@ -46,17 +57,17 @@ RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
 
 void RequestHandler::doHandle(const vis::OfflineRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Offline: id=" << req.id;
-    service->query(req.id, res.results, req.numResults);
+    service[req.category].query(req.id, res.results, req.numResults);
 }
 
 void RequestHandler::doHandle(const vis::RealtimeRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Realtime: descriptors=" << req.descriptors.size();
-    service->query(req.descriptors, res.results, req.numResults);
+    service[req.category].query(req.descriptors, res.results, req.numResults);
 }
 
 void RequestHandler::doHandle(const vis::UploadRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Upload: image=TODO";
-    // TODO service.query(req.image, res.results, req.numResults);
+    // TODO service[req.category].query(req.image, res.results, req.numResults);
     res.results.resize(req.numResults);
 }
 

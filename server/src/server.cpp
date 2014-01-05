@@ -18,13 +18,13 @@ namespace server {
 #define _LOG(X) CLOG(X, "server")
 
 Server::Server(const std::string& address, const std::string& port,
-        const std::string& datadir)
+        const std::string& datadir, const std::vector<std::string>& categories)
     : io_service(),
       signals(io_service),
       acceptor(io_service),
       connectionManager(),
       socket(io_service),
-      requestHandler(datadir)
+      requestHandler(datadir, categories)
 {
     _LOG(INFO) << "New server on port " << port << " ...";
     signals.add(SIGINT);

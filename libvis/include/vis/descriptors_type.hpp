@@ -18,7 +18,7 @@ enum DescriptorsType {
     HOG_HSV,    ///< Both HOG descriptors and HSV color histograms.
 };
 
-/// Return a textual representation of the enum value.
+/// Returns a textual representation of the enum value.
 inline std::string
 toString(DescriptorsType type) {
     switch(type) {
@@ -31,7 +31,7 @@ toString(DescriptorsType type) {
     }
 }
 
-/// Return enum value from string.
+/// Returns enum value from string.
 inline DescriptorsType
 toDescriptorsType(const std::string& type) {
     if (type == "HSV")
@@ -44,10 +44,24 @@ toDescriptorsType(const std::string& type) {
         throw "invalid type";
 }
 
-/// Returs \c true if the given type requires a vocabulary.
+/// Returns \c true if the given type requires a vocabulary.
 inline bool
 requiresVocabulary(DescriptorsType type) {
     return (type == HOG or type == HOG_HSV);
+}
+
+/// Returns a more friendly description of the enum type.
+/// To be used in the UI.
+inline std::string
+typeString(DescriptorsType type) {
+    switch (type) {
+    case HOG:
+        return "shape";
+    case HSV:
+        return "color";
+    case HOG_HSV:
+        return "combined";
+    }
 }
 
 } /* namespace vis */

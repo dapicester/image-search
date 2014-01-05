@@ -19,6 +19,8 @@ namespace vis {
 
 namespace fs = boost::filesystem;
 
+ImageSearch::ImageSearch() {}
+
 ImageSearch::ImageSearch(const std::string& cat, DescriptorsType t,
         const fs::path& dir)
         : category(cat), type(t), dataDir(dir) {}
@@ -43,18 +45,6 @@ ImageSearch::save() const {
     saveIndex();
     if (requiresVocabulary(type)) saveVocabulary();
     saveDescriptors(); // XXX serve?
-}
-
-// FIXME back-compatibility with the gui demo
-std::string typeString(DescriptorsType type) {
-    switch (type) {
-    case HOG:
-        return "shape";
-    case HSV:
-        return "color";
-    case HOG_HSV:
-        return "combined";
-    }
 }
 
 void

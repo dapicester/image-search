@@ -11,6 +11,7 @@
 
 #include <armadillo>
 #include <boost/filesystem/path.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <opencv2/core/core.hpp>
 #include <vector>
@@ -22,8 +23,11 @@ class Index;
 class Vocabulary;
 
 /// Façade class to the image search system.
-class ImageSearch {
+class ImageSearch : boost::noncopyable {
 public:
+
+    /// Default constructor (do not use).
+    ImageSearch();
 
     /**
      * Instantiate a new search system.

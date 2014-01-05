@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(no_connect) {
 }
 
 BOOST_AUTO_TEST_CASE(connect) {
-    vis::server::Server server(HOST, PORT, DATA_DIR);
+    vis::server::Server server(HOST, PORT, DATA_DIR, {"bag"});
     server.startAsync();
     {
         vis::Client client(HOST, PORT);
@@ -54,7 +54,7 @@ static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "bag", 'c
 static const vis::UploadRequest upload( vis::RequestType::UPLOAD, "bag", 'c', 20, nullptr /*image data*/);
 
 BOOST_AUTO_TEST_CASE(request) {
-    vis::server::Server server(HOST, PORT, DATA_DIR);
+    vis::server::Server server(HOST, PORT, DATA_DIR, {"bag"});
     server.startAsync();
 
     const vis::BaseRequest* requests[] = { &offline, &realtime, &upload };

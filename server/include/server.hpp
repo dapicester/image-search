@@ -26,7 +26,7 @@ class Server : private boost::noncopyable {
 public:
     /// Create a new server binding port \c port.
     Server(const std::string& address, const std::string& port,
-            const std::string& datadir);
+            const std::string& datadir, const std::vector<std::string>& categories);
 
     /// Destructor.
     ~Server();

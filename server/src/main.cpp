@@ -12,7 +12,7 @@
 _INITIALIZE_EASYLOGGINGPP
 
 void usage() {
-    std::cerr << "Usage: server <address> <port> <datadir>\n";
+    std::cerr << "Usage: server <address> <port> <datadir> <category> [<category ...]\n";
     std::cerr << "  For IPv4, try:\n";
     std::cerr << "    server 0.0.0.0 12345 .\n";
     std::cerr << "  For IPv6, try:\n";
@@ -26,14 +26,16 @@ void init(int argc, char** argv) {
 
 int main(int argc, char** argv) {
     try {
-        if (argc != 4) {
+        if (argc < 5) {
             usage();
             return 1;
         }
 
         init(argc, argv);
 
-        vis::server::Server server(argv[1], argv[2], argv[3]);
+        std::vector<std::string> categories(argv + 4, argv + argc);
+
+        vis::server::Server server(argv[1], argv[2], argv[3], categories);
         server.start();
 
     } catch (std::exception& e) {
