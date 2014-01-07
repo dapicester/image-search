@@ -14,8 +14,11 @@ find_package(Boost COMPONENTS iostreams serialization thread REQUIRED)
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
+find_package(YamlCpp REQUIRED)
+
 set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
 configure_file("include/directories.h.in" ${CMAKE_CURRENT_BINARY_DIR}/directories.h)
+configure_file("src/config.yml.in" ${CMAKE_CURRENT_BINARY_DIR}/config.yml)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(server_SRCS
