@@ -34,11 +34,11 @@ toString(DescriptorsType type) {
 /// Returns enum value from string.
 inline DescriptorsType
 toDescriptorsType(const std::string& type) {
-    if (type == "HSV")
+    if (type == "HSV" or type == "color")
         return vis::HSV;
-    else if (type == "HOG")
+    else if (type == "HOG" or type == "shape")
         return vis::HOG;
-    else if (type == "HOG_HSV")
+    else if (type == "HOG_HSV" or type == "combined")
         return vis::HOG_HSV;
     else
         throw "invalid type";
