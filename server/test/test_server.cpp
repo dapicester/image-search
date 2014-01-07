@@ -10,6 +10,7 @@
 #define _ELPP_THREAD_SAFE
 
 #include "client.hpp"
+#include "configuration.hpp"
 #include "directories.h"
 #include "logging.hpp"
 #include "protocol.hpp"
@@ -32,6 +33,14 @@ struct InitLogging {
     }
 };
 
+struct ServerConfig {
+    ServerConfig() {
+        config.categories.push_back({ "bag", DATA_DIR, "color" });
+        config.categories.push_back({ "shoe", DATA_DIR, "shape" });
+    }
+    vis::server::Configuration config;
+};
+
 BOOST_FIXTURE_TEST_SUITE(test, InitLogging)
 
 BOOST_AUTO_TEST_CASE(no_connect) {
@@ -39,8 +48,8 @@ BOOST_AUTO_TEST_CASE(no_connect) {
     BOOST_CHECK(not client.probe());
 }
 
-BOOST_AUTO_TEST_CASE(connect) {
-    vis::server::Server server(HOST, PORT, DATA_DIR, {"bag"});
+BOOST_FIXTURE_TEST_CASE(connect, ServerConfig) {
+    vis::server::Server server(HOST, PORT, config);
     server.startAsync();
     {
         vis::Client client(HOST, PORT);
@@ -53,8 +62,8 @@ static const vis::OfflineRequest offline(vis::RequestType::OFFLINE, "bag", 'c', 
 static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "bag", 'c', 20, std::vector<float>(166, 0.f));
 static const vis::UploadRequest upload( vis::RequestType::UPLOAD, "bag", 'c', 20, nullptr /*image data*/);
 
-BOOST_AUTO_TEST_CASE(request) {
-    vis::server::Server server(HOST, PORT, DATA_DIR, {"bag"});
+BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
+    vis::server::Server server(HOST, PORT, config);
     server.startAsync();
 
     const vis::BaseRequest* requests[] = { &offline, &realtime, &upload };

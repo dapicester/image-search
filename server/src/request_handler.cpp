@@ -10,24 +10,24 @@
 #include "protocol.hpp"
 
 #include <vis/imsearch.hpp>
-#include <boost/assign/ptr_map_inserter.hpp>
 
 #define _LOG(X) CLOG(X, "handler")
 
 namespace vis {
 namespace server {
 
-RequestHandler::RequestHandler(const std::string& datadir,
-        const std::vector<std::string>& categories) {
-    _LOG(INFO) << "Initializing image search to dir: " << datadir;
+RequestHandler::RequestHandler(const Configuration& config) {
+    _LOG(INFO) << "Initializing image search";
 
-    // TODO descriptors type
-    vis::DescriptorsType type = vis::DescriptorsType::HSV;
+    std::for_each(config.categories.begin(),
+                  config.categories.end(),
+                  [&] (const Category& category) {
+        std::string name = category.name;
+        DescriptorsType type = toDescriptorsType(category.type);
 
-    std::for_each(categories.begin(), categories.end(), [&] (const std::string& category) {
-        _LOG(INFO) << "Added " << category << "/" << typeString(type);
-        boost::assign::ptr_map_insert<vis::ImageSearch>(service)(category, category, type, datadir);
-        service[category].load();
+        _LOG(INFO) << "Adding " << name << "/" << typeString(type);
+        service.insert(name, new ImageSearch(name, type, category.dir));
+        service[name].load();
     });
 
 }

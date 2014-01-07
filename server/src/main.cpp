@@ -4,20 +4,21 @@
  * @author Paolo D'Apice
  */
 
-#include "server.hpp"
 #include "logging.hpp"
+#include "configuration.hpp"
+#include "server.hpp"
 
+#include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
 #include <iostream>
 
 _INITIALIZE_EASYLOGGINGPP
 
-void usage() {
-    std::cerr << "Usage: server <address> <port> <datadir> <category> [<category ...]\n";
-    std::cerr << "  For IPv4, try:\n";
-    std::cerr << "    server 0.0.0.0 12345 .\n";
-    std::cerr << "  For IPv6, try:\n";
-    std::cerr << "    server 0::0 12345 .\n";
-}
+namespace fs = boost::filesystem;
+namespace po = boost::program_options;
+
+static const std::string DEFAULT_ADDRESS = "0.0.0.0";
+static const std::string DEFAULT_PORT    = "4567";
 
 void init(int argc, char** argv) {
     _START_EASYLOGGINGPP(argc, argv);
@@ -26,16 +27,59 @@ void init(int argc, char** argv) {
 
 int main(int argc, char** argv) {
     try {
-        if (argc < 5) {
-            usage();
+        init(argc, argv);
+
+        // TODO move to function
+
+        po::options_description genericOptions("Generic options");
+        genericOptions.add_options()
+            ("help,h", "Print help message")
+            ("file,f",
+                po::value<std::string>(),
+                "Configuration file")
+            ;
+
+        std::string address, port, dataDir;
+
+        po::options_description serverOptions("Server options");
+        serverOptions.add_options()
+            ("address,a",
+                 po::value<std::string>(&address)->default_value(DEFAULT_ADDRESS),
+                "Bind address\n"
+                "Supports both IPv4 (e.g.: 0.0.0.0)\n"
+                "and IPv6 (e.g.: 0::0)")
+            ("port,p",
+                 po::value<std::string>(&port)->default_value(DEFAULT_PORT),
+                "Bind port")
+            ;
+
+        po::options_description cmdlineOptions;
+        cmdlineOptions.add(genericOptions).add(serverOptions);
+
+        po::variables_map vm;
+        po::store(po::parse_command_line(argc, argv, cmdlineOptions), vm);
+        po::notify(vm);
+
+        if (vm.empty() or vm.count("help")) {
+            std::cout << cmdlineOptions << std::endl;
             return 1;
         }
 
-        init(argc, argv);
+        if (!vm.count("file")) {
+            std::cerr << "Missing required options" << std::endl;
+            std::cout << cmdlineOptions << std::endl;
+            return 1;
+        }
 
-        std::vector<std::string> categories(argv + 4, argv + argc);
+        std::string file = vm["file"].as<std::string>();
+        if (not fs::is_regular_file(file)) {
+            std::cerr << "cannot read file: " << file << std::endl;
+            return 1;
+        }
 
-        vis::server::Server server(argv[1], argv[2], argv[3], categories);
+        vis::server::Configuration conf = vis::server::loadConfiguration(file);
+
+        vis::server::Server server(address, port, conf);
         server.start();
 
     } catch (std::exception& e) {

@@ -7,11 +7,10 @@
 #ifndef VIS_REQUEST_HANDLER_HPP
 #define VIS_REQUEST_HANDLER_HPP
 
+#include "configuration.hpp"
+
 #include <boost/noncopyable.hpp>
 #include <boost/ptr_container/ptr_map.hpp>
-
-#include <string>
-#include <vector>
 
 namespace vis {
 
@@ -30,8 +29,7 @@ class RequestHandler : private boost::noncopyable {
 public:
 
     /// Construct with path to image search data dir.
-    RequestHandler(const std::string& datadir,
-            const std::vector<std::string>& categories);
+    RequestHandler(const Configuration& config);
 
     /// Destructor
     ~RequestHandler();

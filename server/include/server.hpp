@@ -7,6 +7,7 @@
 #ifndef VIS_SERVER_HPP
 #define VIS_SERVER_HPP
 
+#include "configuration.hpp"
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
 
@@ -26,7 +27,7 @@ class Server : private boost::noncopyable {
 public:
     /// Create a new server binding port \c port.
     Server(const std::string& address, const std::string& port,
-            const std::string& datadir, const std::vector<std::string>& categories);
+            const Configuration& config);
 
     /// Destructor.
     ~Server();
