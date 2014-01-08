@@ -19,6 +19,7 @@
 
 namespace ar = boost::archive;
 namespace io = boost::iostreams;
+namespace fs = boost::filesystem;
 
 template <typename InputArchive, typename OutputArchive, typename Matrix>
 void doTest(const Matrix& input, const char* filename, bool compression) {
@@ -157,6 +158,22 @@ BOOST_AUTO_TEST_CASE(kdtree_serialization) {
         vis::KDTreeNeighbor record = results.front();
         BOOST_CHECK_EQUAL(index, record.index);
         BOOST_CHECK_EQUAL(0.0, record.distance);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(path_serialization) {
+    {
+        fs::path path = "/path/to/file";
+        vis::BinarySerializer<fs::path>::Saver saver;
+        saver("path.dat", path);
+    }
+    {
+        vis::BinarySerializer<fs::path>::Loader loader;
+
+        fs::path path;
+        loader("path.dat", path);
+
+        BOOST_CHECK_EQUAL(path, fs::path("/path/to/file"));
     }
 }
 

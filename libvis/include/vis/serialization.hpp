@@ -130,6 +130,7 @@ save(const fs::path& file, const Object& obj) {
 
 #include "detail/serialization_matrix.hpp"
 #include "detail/serialization_kdtree.hpp"
+#include "detail/serialization_path.hpp"
 
 #endif /* VIS_SERIALIZATION_HPP */
 
