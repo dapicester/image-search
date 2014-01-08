@@ -76,7 +76,6 @@ void RequestHandler::doHandle(const vis::RealtimeRequest& req, vis::Response& re
 void RequestHandler::doHandle(const vis::UploadRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Upload: image=TODO";
     // TODO service[req.category].query(req.image, res.results, req.numResults);
-    res.results.resize(req.numResults);
 }
 
 } // namespace server

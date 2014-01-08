@@ -58,15 +58,21 @@ BOOST_FIXTURE_TEST_CASE(connect, ServerConfig) {
     server.stop();
 }
 
-static const vis::OfflineRequest offline(vis::RequestType::OFFLINE, "bag", 'c', 20, 42);
-static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "shoe", 's', 20, std::vector<float>(300, 0.f));
-static const vis::UploadRequest upload( vis::RequestType::UPLOAD, "bag", 'c', 20, nullptr /*image data*/);
+static const vis::OfflineRequest offline(
+        vis::RequestType::OFFLINE, "bag", 'c', 20,
+        42);
+static const vis::RealtimeRequest realtime(
+        vis::RequestType::REALTIME, "shoe", 's', 10,
+        std::vector<float>(300, 0.f));
+static const vis::UploadRequest upload(vis::RequestType::UPLOAD,
+        "none", 'c', 20,
+        nullptr /* TODO image data*/);
 
 BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
     vis::server::Server server(HOST, PORT, config);
     server.startAsync();
 
-    const vis::BaseRequest* requests[] = { &offline, &realtime, &upload };
+    const vis::BaseRequest* requests[] = { &offline, &realtime };
     std::for_each(std::begin(requests), std::end(requests), [](const vis::BaseRequest* request) {
         vis::Client client(HOST, PORT);
         BOOST_REQUIRE(client.probe());
@@ -78,6 +84,22 @@ BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
         BOOST_CHECK(response.message.empty());
         BOOST_CHECK_EQUAL(request->numResults, matches.size()); // XXX actually should be CHECK_GE
     });
+
+    const vis::BaseRequest* failures[] = { &upload };
+    std::for_each(std::begin(failures), std::end(failures), [](const vis::BaseRequest* request) {
+        vis::Client client(HOST, PORT);
+        BOOST_REQUIRE(client.probe());
+
+        vis::Response response = client.sendRequest(request);
+
+        const std::vector<vis::id_type>& matches = response.results;
+        BOOST_CHECK_EQUAL((int) vis::ResponseStatus::ERROR, (int) response.status);
+        BOOST_CHECK(not response.message.empty());
+        BOOST_CHECK(matches.empty());
+    });
+
+
+
     server.stop();
 }
 
