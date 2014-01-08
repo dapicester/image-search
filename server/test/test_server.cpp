@@ -59,7 +59,7 @@ BOOST_FIXTURE_TEST_CASE(connect, ServerConfig) {
 }
 
 static const vis::OfflineRequest offline(vis::RequestType::OFFLINE, "bag", 'c', 20, 42);
-static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "bag", 'c', 20, std::vector<float>(166, 0.f));
+static const vis::RealtimeRequest realtime(vis::RequestType::REALTIME, "shoe", 's', 20, std::vector<float>(300, 0.f));
 static const vis::UploadRequest upload( vis::RequestType::UPLOAD, "bag", 'c', 20, nullptr /*image data*/);
 
 BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
@@ -74,7 +74,9 @@ BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
         vis::Response response = client.sendRequest(request);
 
         const std::vector<vis::id_type>& matches = response.results;
-        BOOST_CHECK_EQUAL(20, matches.size());
+        BOOST_CHECK_EQUAL((int) vis::ResponseStatus::OK, (int) response.status);
+        BOOST_CHECK(response.message.empty());
+        BOOST_CHECK_EQUAL(request->numResults, matches.size()); // XXX actually should be CHECK_GE
     });
     server.stop();
 }

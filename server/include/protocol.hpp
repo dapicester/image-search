@@ -85,7 +85,20 @@ struct UploadRequest : BaseRequest {
     // TODO opencv image
 };
 
+enum class ResponseStatus : int {
+    OK,
+    ERROR,
+};
+
 struct Response {
+    Response();
+    Response(ResponseStatus status,
+            const std::string& message,
+            const std::vector<id_type>& results);
+    ~Response();
+
+    ResponseStatus status;
+    std::string message;
     std::vector<id_type> results;
 };
 
@@ -106,7 +119,8 @@ operator<<(std::ostream& os, const vis::BaseRequest& r) {
 
 inline std::ostream&
 operator<<(std::ostream& os, const vis::Response& r) {
-    return os << r.results;
+    return os << static_cast<int>(r.status) << ":" << r.message
+        << " " << r.results;
 }
 
 } // namespace vis

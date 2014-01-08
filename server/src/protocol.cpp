@@ -94,5 +94,13 @@ UploadRequest::equals(const BaseRequest& o) const {
     // TODO equals upload request
 }
 
+Response::Response() {}
+
+Response::Response(ResponseStatus st, const std::string& msg,
+            const std::vector<id_type>& res)
+        : status(st), message(msg), results(res) {}
+
+Response::~Response() {}
+
 } // namespace vis
 

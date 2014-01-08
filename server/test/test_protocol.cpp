@@ -24,7 +24,9 @@ operator==(const vis::BaseRequest& left, const vis::BaseRequest& right) {
 
 inline bool
 operator==(const vis::Response left, const vis::Response& right) {
-    return left.results == right.results;
+    return left.status == right.status
+        and left.message == right.message
+        and left.results == right.results;
 }
 
 } // namespace vis
@@ -52,6 +54,28 @@ BOOST_AUTO_TEST_CASE(serialize_request) {
 
         BOOST_CHECK_EQUAL(*request, *deserialized);
         delete deserialized;
+    });
+}
+
+static const vis::Response ok(vis::ResponseStatus::OK, "", std::vector<vis::id_type>(1, 0));
+static const vis::Response error(vis::ResponseStatus::OK, "message", {});
+
+BOOST_AUTO_TEST_CASE(serialize_response) {
+    const vis::Response responses[] = { ok, error };
+    std::for_each(std::begin(responses), std::end(responses), [](const vis::Response response) {
+        boost::asio::streambuf buf;
+
+        // serialize
+        vis::put(buf, response);
+
+        // deserialize
+        vis::Response deserialized;
+        vis::get(buf, deserialized);
+
+        PRINT(response);
+        PRINT(deserialized);
+
+        BOOST_CHECK_EQUAL(response, deserialized);
     });
 }
 

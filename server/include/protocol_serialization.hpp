@@ -53,6 +53,8 @@ serialize(Archive & ar, vis::UploadRequest& req, const unsigned int version) {
 template <typename Archive>
 void
 serialize(Archive & ar, vis::Response& res, const unsigned int version) {
+    ar & res.status;
+    ar & res.message;
     ar & res.results;
 }
 

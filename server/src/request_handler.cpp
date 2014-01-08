@@ -38,7 +38,14 @@ void
 RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
     _LOG(DEBUG) << "Handling request" << req;
 
-    // TODO check category
+    if (!service.count(req.category)) {
+        res.status = vis::ResponseStatus::ERROR;
+        res.message = "Category not found";
+
+        goto handled;
+    }
+
+    // TODO check type
 
     switch (req.requestType) {
     case vis::RequestType::OFFLINE:
@@ -52,6 +59,7 @@ RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
         break;
     }
 
+    handled:
     _LOG(DEBUG) << "Response: " << res;
 }
 
