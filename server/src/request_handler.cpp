@@ -36,7 +36,7 @@ RequestHandler::~RequestHandler() {}
 
 void
 RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
-    _LOG(DEBUG) << "Handling request" << req;
+    _LOG(DEBUG) << "Handling request: " << req;
 
     if (!service.count(req.category)) {
         res.status = vis::ResponseStatus::ERROR;

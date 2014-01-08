@@ -107,7 +107,8 @@ inline std::ostream&
 operator<<(std::ostream& os, const std::vector<T>& v) {
     os << "[";
     std::copy(v.begin(), v.end(), std::ostream_iterator<T>(os, ","));
-    os << "\b]";
+    if (not v.empty()) os << "\b";
+    os << "]";
     return os;
 }
 
