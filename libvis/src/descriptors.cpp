@@ -22,6 +22,8 @@ Descriptors::compute(const std::string& category,
         const Callback& cb, ColorMode mode, ProgressHandler handler) {
     this->category = category;
     this->type = cb.type();
+    this->files = files;
+
     vis::extract(files, descriptors, cb, mode, handler);
 }
 

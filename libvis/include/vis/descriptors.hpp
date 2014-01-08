@@ -13,6 +13,7 @@
 #include <armadillo>
 #include <boost/filesystem/path.hpp>
 #include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
 
 namespace vis {
 
@@ -43,6 +44,9 @@ public:
     /// @return The actual descriptor type.
     vis::DescriptorsType getType() const { return type; }
 
+    /// @return The path of indexed images.
+    const std::vector<boost::filesystem::path>& getFiles() const { return files; }
+
     /// @brief Load descriptors from file.
     static Descriptors* load(const boost::filesystem::path& file);
 
@@ -59,6 +63,7 @@ private:
     std::string category;
     arma::fmat descriptors;
     vis::DescriptorsType type;
+    std::vector<boost::filesystem::path> files;
 };
 
 template <typename Archive>
@@ -67,6 +72,7 @@ Descriptors::serialize(Archive& ar, const unsigned int version) {
     ar & category;
     ar & descriptors;
     ar & type;
+    ar & files;
 }
 
 } /* namespace vis */
