@@ -50,6 +50,12 @@ public:
     /// Save data to files.
     void save() const;
 
+    /// Get the image category.
+    const std::string& getCategory() const { return category; }
+
+    /// Get the descriptors used.
+    const DescriptorsType& getType() const  { return type; }
+
     /**
      * Query by image id.
      * @param id Query image id.

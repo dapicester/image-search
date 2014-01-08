@@ -20,16 +20,18 @@ BOOST_AUTO_TEST_CASE(load) {
 
     vis::server::Configuration config = vis::server::loadConfiguration(argv[1]);
 
-    BOOST_CHECK_EQUAL(config.categories.size(), 2);
+    BOOST_CHECK_EQUAL(config.categories.size(), 3);
     for (auto cat : config.categories) {
         BOOST_CHECK_EQUAL(cat.dir, DATA_DIR);
+        BOOST_CHECK_GE(cat.type.size(), 1);
     }
 }
 
 BOOST_AUTO_TEST_CASE(dump) {
     vis::server::Configuration conf;
-    conf.categories.push_back({ "bag", "path/to/dir", "color" });
-    conf.categories.push_back({ "shoe", "path/to/dir", "shape" });
+    conf.categories.push_back({ "bag", "path/to/dir", {"color"} });
+    conf.categories.push_back({ "shoe", "path/to/dir", {"shape"} });
+    conf.categories.push_back({ "woman_shoe", "path/to/dir", {"color", "shape"} });
 
     std::ostringstream ss;
     vis::server::dumpConfiguration(ss, conf);

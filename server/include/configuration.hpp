@@ -17,7 +17,7 @@ namespace server {
 struct Category {
     std::string name;
     std::string dir;
-    std::string type;
+    std::vector<std::string> type;
 };
 
 /// Image server configuration.

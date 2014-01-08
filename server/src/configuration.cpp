@@ -33,7 +33,9 @@ namespace YAML {
         static Node encode(const vis::server::Category& category) {
             Node node;
             node["dir"] = category.dir;
-            node["type"] = category.type;
+            for (auto type : category.type) {
+                node["type"].push_back(type);
+            }
             return node;
         }
         static bool decode(const Node& node, vis::server::Category& category) {
@@ -42,7 +44,7 @@ namespace YAML {
                 return false;
 
             category.dir = node["dir"].as<std::string>();
-            category.type = node["type"].as<std::string>();
+            category.type = node["type"].as<std::vector<std::string>>();
             return true;
         }
     };

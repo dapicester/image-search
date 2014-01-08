@@ -36,7 +36,7 @@ struct BaseRequest {
 
     RequestType requestType;
     std::string category;
-    char queryType;
+    char queryType; // XXX enum, string or DescriptorsType
     unsigned numResults;
 };
 

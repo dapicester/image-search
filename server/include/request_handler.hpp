@@ -38,12 +38,12 @@ public:
     void handle(const vis::BaseRequest& req, vis::Response& res);
 
 private:
-    void doHandle(const vis::OfflineRequest& req, vis::Response& res);
-    void doHandle(const vis::RealtimeRequest& req, vis::Response& res);
-    void doHandle(const vis::UploadRequest& req, vis::Response& res);
+    void doHandle(const vis::OfflineRequest&, vis::Response&, const ImageSearch&);
+    void doHandle(const vis::RealtimeRequest&, vis::Response&, const ImageSearch&);
+    void doHandle(const vis::UploadRequest&, vis::Response&, const ImageSearch&);
 
 private:
-    boost::ptr_map<std::string, vis::ImageSearch> service;
+    boost::ptr_multimap<std::string, vis::ImageSearch> service;
 };
 
 } // namespace server
