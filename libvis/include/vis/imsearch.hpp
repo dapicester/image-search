@@ -83,6 +83,9 @@ public:
     /// Extract descriptors from image.
     arma::fvec extract(const cv::Mat& image) const;
 
+    /// Get the image paths for the given results.
+    std::vector<boost::filesystem::path> getImages(const std::vector<size_t>& results) const;
+
 private:
 
     void loadIndex();

@@ -119,5 +119,15 @@ ImageSearch::extract(const cv::Mat& image) const {
     return (*callback)(standardized);
 }
 
+std::vector<fs::path>
+ImageSearch::getImages(const std::vector<size_t>& results) const {
+    std::vector<fs::path> images;
+    const std::vector<fs::path>& indexed = index->getFiles();
+    for (size_t id : results) {
+        images.push_back(indexed[id]);
+    }
+    return images;
+}
+
 } // namespace vis
 
