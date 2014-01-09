@@ -44,6 +44,10 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
         vis::Index index;
         index.build("test", descriptors);
 
+        auto indexed = index.getFiles();
+        BOOST_REQUIRE_EQUAL_COLLECTIONS(indexed.begin(), indexed.end(),
+                                        files.begin(), files.end());
+
         // 3. save
         test::save(INDEX_FILE, index);
     }
@@ -54,6 +58,10 @@ BOOST_FIXTURE_TEST_CASE(test_index, test::ImageDir) {
         IndexPtr index(test::load<vis::Index>(INDEX_FILE));
         BOOST_REQUIRE_EQUAL("test", index->getCategory());
         BOOST_REQUIRE_EQUAL(vis::HOG_HSV, index->getType());
+
+        auto indexed = index->getFiles();
+        BOOST_REQUIRE_EQUAL_COLLECTIONS(indexed.begin(), indexed.end(),
+                                        files.begin(), files.end());
 
         // 5. query
 
