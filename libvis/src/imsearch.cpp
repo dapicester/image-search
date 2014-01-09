@@ -119,12 +119,20 @@ ImageSearch::extract(const cv::Mat& image) const {
     return (*callback)(standardized);
 }
 
+inline fs::path
+relative(const fs::path& dir, const fs::path& path) {
+    std::string ps = path.string();
+    auto pair = std::mismatch(ps.begin(), ps.end(), dir.string().begin());
+    return fs::path(pair.first, ps.end());
+}
+
 std::vector<fs::path>
-ImageSearch::getImages(const std::vector<size_t>& results) const {
+ImageSearch::get(const std::vector<size_t>& results, bool absolute) const {
     std::vector<fs::path> images;
     const std::vector<fs::path>& indexed = index->getFiles();
     for (size_t id : results) {
-        images.push_back(indexed[id]);
+        images.push_back(absolute ? indexed[id]
+                                  : relative(dataDir, indexed[id]));
     }
     return images;
 }

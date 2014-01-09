@@ -83,8 +83,14 @@ public:
     /// Extract descriptors from image.
     arma::fvec extract(const cv::Mat& image) const;
 
-    /// Get the image paths for the given results.
-    std::vector<boost::filesystem::path> getImages(const std::vector<size_t>& results) const;
+    /**
+     * Get the image paths for the given results.
+     * @param results Results as returned by \c query().
+     * @param absolute Use absolute path instead of relative to \c dataDir.
+     * @return Image paths.
+     */
+    std::vector<boost::filesystem::path>
+    get(const std::vector<size_t>& results, bool absolute = false) const;
 
 private:
 
