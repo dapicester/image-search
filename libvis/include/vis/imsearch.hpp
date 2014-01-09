@@ -35,7 +35,8 @@ public:
      * @param type Descriptors used.
      * @param dataDir Path the data directory containing images.
      */
-    ImageSearch(const std::string& category, DescriptorsType type,
+    ImageSearch(const std::string& category,
+            DescriptorsType type,
             const boost::filesystem::path& dataDir);
 
     /// Destructor.
@@ -54,7 +55,7 @@ public:
     const std::string& getCategory() const { return category; }
 
     /// Get the descriptors used.
-    const DescriptorsType& getType() const  { return type; }
+    DescriptorsType getType() const  { return type; }
 
     /**
      * Query by image id.
@@ -62,7 +63,9 @@ public:
      * @param[out] results Search results.
      * @param numResults Number matches.
      */
-    void query(unsigned id, std::vector<size_t>& results, size_t numResults = 1) const;
+    void query(unsigned id,
+            std::vector<size_t>& results,
+            size_t numResults = 1) const;
 
     /**
      * Query by image descriptors.
@@ -70,7 +73,9 @@ public:
      * @param[out] results Search results.
      * @param numResults Number matches.
      */
-    void query(const arma::fvec& descriptors, std::vector<size_t>& results, size_t numResults = 1) const;
+    void query(const arma::fvec& descriptors,
+            std::vector<size_t>& results,
+            size_t numResults = 1) const;
 
     /**
      * Query by image.
@@ -78,7 +83,9 @@ public:
      * @param[out] results Search results.
      * @param numResults Number matches.
      */
-    void query(const cv::Mat& image, std::vector<size_t>& results, size_t numResults = 1) const;
+    void query(const cv::Mat& image,
+            std::vector<size_t>& results,
+            size_t numResults = 1) const;
 
     /// Extract descriptors from image.
     arma::fvec extract(const cv::Mat& image) const;
