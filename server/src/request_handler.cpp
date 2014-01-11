@@ -57,9 +57,9 @@ RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
         vis::DescriptorsType type = it->second->getType();
         char t = req.queryType;
         // XXX quick'n dirty (TM)
-        if (t == 'c' and type == vis::HSV
-                or t == 's' and type == vis::HOG
-                or t == 'b' and type == vis::HOG_HSV)
+        if ((t == 'c' and type == vis::HSV)
+                or (t == 's' and type == vis::HOG)
+                or (t == 'b' and type == vis::HOG_HSV))
             break;
     }
 
