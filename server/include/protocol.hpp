@@ -94,12 +94,14 @@ struct Response {
     Response();
     Response(ResponseStatus status,
             const std::string& message,
-            const std::vector<id_type>& results);
+            const std::vector<id_type>& results,
+            const std::vector<std::string>& paths);
     ~Response();
 
     ResponseStatus status;
     std::string message;
     std::vector<id_type> results;
+    std::vector<std::string> paths;
 };
 
 template <typename T>
@@ -121,7 +123,7 @@ operator<<(std::ostream& os, const vis::BaseRequest& r) {
 inline std::ostream&
 operator<<(std::ostream& os, const vis::Response& r) {
     return os << static_cast<int>(r.status) << ":" << r.message
-        << " " << r.results;
+        << " " << r.results << " " << r.paths;
 }
 
 } // namespace vis

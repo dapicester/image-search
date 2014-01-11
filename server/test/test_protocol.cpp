@@ -26,7 +26,8 @@ inline bool
 operator==(const vis::Response left, const vis::Response& right) {
     return left.status == right.status
         and left.message == right.message
-        and left.results == right.results;
+        and left.results == right.results
+        and left.paths == right.paths;
 }
 
 } // namespace vis
@@ -57,8 +58,8 @@ BOOST_AUTO_TEST_CASE(serialize_request) {
     });
 }
 
-static const vis::Response ok(vis::ResponseStatus::OK, "", std::vector<vis::id_type>(1, 0));
-static const vis::Response error(vis::ResponseStatus::OK, "message", {});
+static const vis::Response ok(vis::ResponseStatus::OK, "", { 0 }, { "" });
+static const vis::Response error(vis::ResponseStatus::OK, "message", {}, {});
 
 BOOST_AUTO_TEST_CASE(serialize_response) {
     const vis::Response responses[] = { ok, error };

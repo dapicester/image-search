@@ -16,6 +16,7 @@
 #include "protocol.hpp"
 #include "server.hpp"
 
+#include <boost/filesystem.hpp>
 #include <boost/serialization/export.hpp>
 
 _INITIALIZE_EASYLOGGINGPP
@@ -23,6 +24,8 @@ _INITIALIZE_EASYLOGGINGPP
 BOOST_CLASS_EXPORT(vis::OfflineRequest);
 BOOST_CLASS_EXPORT(vis::RealtimeRequest);
 BOOST_CLASS_EXPORT(vis::UploadRequest);
+
+namespace fs = boost::filesystem;
 
 static const std::string HOST = "0.0.0.0";
 static const std::string PORT = "4567";
@@ -84,10 +87,14 @@ BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
 
         vis::Response response = client.sendRequest(request);
 
-        const std::vector<vis::id_type>& matches = response.results;
         BOOST_CHECK_EQUAL((int) vis::ResponseStatus::OK, (int) response.status);
         BOOST_CHECK(response.message.empty());
-        BOOST_CHECK_EQUAL(request->numResults, matches.size()); // XXX actually should be CHECK_GE
+        BOOST_CHECK_EQUAL(request->numResults, response.results.size()); // XXX actually should be CHECK_GE
+        BOOST_CHECK_EQUAL(request->numResults, response.paths.size()); // XXX actually should be CHECK_GE
+        for (const std::string& s : response.paths) {
+            static fs::path dir(DATA_DIR);
+            BOOST_CHECK(fs::is_regular_file(dir/s));
+        }
     });
 
     const vis::BaseRequest* failures[] = { &bad_category, &bad_type };
@@ -97,10 +104,10 @@ BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
 
         vis::Response response = client.sendRequest(request);
 
-        const std::vector<vis::id_type>& matches = response.results;
         BOOST_CHECK_EQUAL((int) vis::ResponseStatus::ERROR, (int) response.status);
         BOOST_CHECK(not response.message.empty()); // TODO define error messages or error status codes
-        BOOST_CHECK(matches.empty());
+        BOOST_CHECK(response.results.empty());
+        BOOST_CHECK(response.paths.empty());
     });
 
 

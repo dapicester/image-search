@@ -97,8 +97,9 @@ UploadRequest::equals(const BaseRequest& o) const {
 Response::Response() {}
 
 Response::Response(ResponseStatus st, const std::string& msg,
-            const std::vector<id_type>& res)
-        : status(st), message(msg), results(res) {}
+            const std::vector<id_type>& res,
+            const std::vector<std::string>& pat)
+        : status(st), message(msg), results(res), paths(pat) {}
 
 Response::~Response() {}
 

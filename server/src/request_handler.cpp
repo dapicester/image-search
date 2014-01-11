@@ -10,6 +10,7 @@
 #include "protocol.hpp"
 
 #include <vis/imsearch.hpp>
+#include <vis/utils/filesystem.hpp>
 
 #define _LOG(X) CLOG(X, "handler")
 
@@ -83,6 +84,9 @@ RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
         doHandle(dynamic_cast<const vis::UploadRequest&>(req), res, imsearch);
         break;
     }
+
+    res.status = vis::ResponseStatus::OK;
+    toStrings(imsearch.get(res.results), res.paths);
 
     _LOG(DEBUG) << "Response: " << res;
 }

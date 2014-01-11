@@ -56,6 +56,7 @@ serialize(Archive & ar, vis::Response& res, const unsigned int version) {
     ar & res.status;
     ar & res.message;
     ar & res.results;
+    ar & res.paths;
 }
 
 }} // namespace boost::serialization
