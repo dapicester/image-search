@@ -46,6 +46,10 @@ boost::filesystem::path
 indexFile(const boost::filesystem::path& dataDir,
         const std::string& category, const std::string& type);
 
+/// Converts a vector of paths into a vector of strings.
+void toStrings(const std::vector<boost::filesystem::path>& paths,
+        std::vector<std::string>& strings);
+
 } /* namespace vis */
 
 #endif /* VIS_UTILS_FILESYSTEM_HPP */
