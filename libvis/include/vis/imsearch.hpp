@@ -100,6 +100,15 @@ public:
     std::vector<boost::filesystem::path>
     get(const std::vector<size_t>& results, bool absolute = false) const;
 
+    /**
+     * Get the image paths for all the indexed images.
+     * @param absolute Use absolute path instead of relative to \c dataDir.
+     * @return Image paths.
+     */
+    std::vector<boost::filesystem::path> getAll(bool absolute = false) const;
+
+    Vocabulary* getVocabulary() const;
+
 private:
 
     void loadIndex();

@@ -677,7 +677,7 @@
      <rect>
       <x>300</x>
       <y>530</y>
-      <width>411</width>
+      <width>211</width>
       <height>61</height>
      </rect>
     </property>
@@ -697,36 +697,10 @@
       <string>Index</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="recomputeDescriptorsButton">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>20</y>
-       <width>91</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Descriptors</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="recomputeVocabularyButton">
-     <property name="geometry">
-      <rect>
-       <x>210</x>
-       <y>20</y>
-       <width>91</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Vocabulary</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="recomputeQueriesButton">
      <property name="geometry">
       <rect>
-       <x>310</x>
+       <x>110</x>
        <y>20</y>
        <width>91</width>
        <height>23</height>

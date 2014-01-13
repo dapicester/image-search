@@ -7,6 +7,8 @@
 #include "demogui.hpp"
 #include "utils.hpp"
 
+#include <vis/imsearch.hpp>
+
 #include <QDebug>
 
 #define connectbtn(BTN, FUNC) connect(BTN, SIGNAL(clicked()), this, SLOT(FUNC))
@@ -39,9 +41,7 @@ DemoGui::DemoGui() {
     connectbtn(searchButton, search());
     connectbtn(showAllButton, showAll());
     connectbtn(recomputeIndexButton, recomputeIndex());
-    connectbtn(recomputeDescriptorsButton, recomputeDescriptors());
     connectbtn(recomputeQueriesButton, recomputeQueries());
-    connectbtn(recomputeVocabularyButton, recomputeVocabulary());
 
     connect(categoryGroup, SIGNAL(buttonClicked(QAbstractButton*)),
             this, SLOT(setQueryNames(QAbstractButton*)));
@@ -52,11 +52,11 @@ DemoGui::DemoGui() {
 
     // other gui initializations
     loadQueryNames();
-    loadImageNames();
     setQueryNames(categoryGroup->checkedButton());
     setQueryType(queryTypeGroup->checkedButton());
 
     // other initializations
+    initService();
 }
 
 DemoGui::~DemoGui() {

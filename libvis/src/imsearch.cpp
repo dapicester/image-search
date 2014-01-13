@@ -137,5 +137,20 @@ ImageSearch::get(const std::vector<size_t>& results, bool absolute) const {
     return images;
 }
 
+std::vector<fs::path>
+ImageSearch::getAll(bool absolute) const {
+    std::vector<fs::path> images;
+    const std::vector<fs::path>& indexed = index->getFiles();
+    std::for_each(indexed.begin(), indexed.end(), [&](const fs::path& p) {
+        images.push_back(absolute ? p : relative(dataDir, p));
+    });
+    return images;
+}
+
+Vocabulary*
+ImageSearch::getVocabulary() const {
+    return requiresVocabulary(type) ? vocabulary.get() : nullptr;
+}
+
 } // namespace vis
 

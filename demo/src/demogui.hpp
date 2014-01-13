@@ -15,10 +15,16 @@
 #include <QMainWindow>
 #include <QScopedPointer>
 
+#include <boost/ptr_container/ptr_map.hpp>
+
 class QAbstractButton;
 template <typename T> class QList;
 class QListWidgetItem;
 class QStringList;
+
+namespace vis {
+class ImageSearch;
+}
 
 namespace fs = boost::filesystem;
 
@@ -46,14 +52,8 @@ public slots:
     /// Recompute index for selected category and query type.
     void recomputeIndex();
 
-    /// Recompute descriptors for selected category and query type.
-    void recomputeDescriptors();
-
     /// Recompute query descriptors for selected category and query type.
     void recomputeQueries();
-
-    /// Recompute vocabulary for selected category.
-    void recomputeVocabulary();
 
     /// Properly set image query names according to selected category.
     void setQueryNames(QAbstractButton*);
@@ -66,39 +66,30 @@ public slots:
 
 private:
 
+    void initService();
+
+    vis::ImageSearch& get();
+
     /// Display image into label.
     void setImage(QLabel* label, const fs::path& file);
 
     /// Load query image names.
     void loadQueryNames();
 
-    /// Load image names.
-    void loadImageNames();
-
-    /// Load index.
-    bool loadIndex();
-
-    /// Load descriptors.
-    bool loadDescriptors();
-
     /// Load query descriptors.
     bool loadQueries();
 
-    /// Load visual word vocabulary.
-    bool loadVocabulary();
-
 private:
     QStringList queryNames;                         ///< Names of the query images.
-    QMap<QString, PathList> imagesMap;              ///< Full path to indexed images by category.
 
     QString category;                               ///< Currently selected category.
     QString queryType;                              ///< Currently selected query type.
     fs::path queryImagePath;
 
-    QScopedPointer<vis::Index> index;               ///< Index for the current category and query type.
-    QScopedPointer<vis::Descriptors> descriptors;   ///< Descriptors for the current category and query type.
     QScopedPointer<vis::Descriptors> queries;       ///< Query descriptors for the current category and query type.
-    QScopedPointer<vis::Vocabulary> vocabulary;     ///< Vocabulary for the current category and query type.
+
+    typedef boost::ptr_multimap<QString, vis::ImageSearch> ServiceMap;
+    ServiceMap service;
 
     QList<QLabel*> results;                         ///< Pointers to result labels displaying matching images.
 };
