@@ -7,6 +7,7 @@
 #ifndef VIS_IMSEARCH_HPP
 #define VIS_IMSEARCH_HPP
 
+#include "vis/configuration.hpp"
 #include "vis/descriptors_type.hpp"
 
 #include <armadillo>

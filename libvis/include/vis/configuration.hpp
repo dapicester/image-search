@@ -1,17 +1,17 @@
 /**
  * @file configuration.hpp
- * @brief Server configuration.
+ * @brief Image search configuration.
  * @author Paolo D'Apice
  */
 
-#ifndef VIS_SERVER_CONFIGURATION_HPP
-#define VIS_SERVER_CONFIGURATION_HPP
+#ifndef VIS_CONFIGURATION_HPP
+#define VIS_CONFIGURATION_HPP
 
 #include <string>
 #include <vector>
 
 namespace vis {
-namespace server {
+namespace config {
 
 /// Image search category configuration.
 struct Category {
@@ -31,8 +31,8 @@ Configuration loadConfiguration(const std::string& file);
 /// Dump configuration to stream.
 void dumpConfiguration(std::ostream& os, const Configuration& conf);
 
-} // namespace server
+} // namespace config
 } // namespace vis
 
-#endif // VIS_SERVER_CONFIGURATION_HPP
+#endif // VIS_CONFIGURATION_HPP
 

@@ -9,6 +9,7 @@
 #include "logging.hpp"
 #include "protocol.hpp"
 
+#include <vis/configuration.hpp>
 #include <vis/imsearch.hpp>
 #include <vis/utils/filesystem.hpp>
 
@@ -17,12 +18,12 @@
 namespace vis {
 namespace server {
 
-RequestHandler::RequestHandler(const Configuration& config) {
+RequestHandler::RequestHandler(const vis::config::Configuration& config) {
     _LOG(INFO) << "Initializing image search";
 
     std::for_each(config.categories.begin(),
                   config.categories.end(),
-                  [&] (const Category& category) {
+                  [&] (const vis::config::Category& category) {
         std::string name = category.name;
         for (auto type_str : category.type) {
             DescriptorsType type = toDescriptorsType(type_str);

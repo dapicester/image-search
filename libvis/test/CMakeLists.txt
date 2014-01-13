@@ -115,6 +115,12 @@ add_unit_test(NAME test_index
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_configuration
+    SOURCES test_configuration.cpp
+            ${SRC_DIR}/configuration.cpp
+    ARGS ${server_BINARY_DIR}/config.yml
+    LINK_LIBRARIES ${YAML_CPP_LIBRARIES} ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_imsearch_load
     SOURCES test_imsearch_load.cpp
             ${SRC_DIR}/utils/filesystem.cpp

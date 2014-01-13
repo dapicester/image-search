@@ -5,8 +5,9 @@
  */
 
 #include "logging.hpp"
-#include "configuration.hpp"
 #include "server.hpp"
+
+#include <vis/configuration.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
@@ -77,7 +78,7 @@ int main(int argc, char** argv) {
             return 1;
         }
 
-        vis::server::Configuration conf = vis::server::loadConfiguration(file);
+        vis::config::Configuration conf = vis::config::loadConfiguration(file);
 
         vis::server::Server server(address, port, conf);
         server.start();

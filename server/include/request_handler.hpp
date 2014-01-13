@@ -7,8 +7,6 @@
 #ifndef VIS_REQUEST_HANDLER_HPP
 #define VIS_REQUEST_HANDLER_HPP
 
-#include "configuration.hpp"
-
 #include <boost/noncopyable.hpp>
 #include <boost/ptr_container/ptr_map.hpp>
 
@@ -22,6 +20,12 @@ struct RealtimeRequest;
 struct UploadRequest;
 struct Response;
 
+namespace config {
+
+struct Configuration;
+
+} // namespace config
+
 namespace server {
 
 /// The common handler for all incoming requests.
@@ -29,7 +33,7 @@ class RequestHandler : private boost::noncopyable {
 public:
 
     /// Construct with path to image search data dir.
-    RequestHandler(const Configuration& config);
+    RequestHandler(const vis::config::Configuration& config);
 
     /// Destructor
     ~RequestHandler();

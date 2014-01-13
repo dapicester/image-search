@@ -18,12 +18,6 @@ add_unit_test(NAME elpp_usage
     DISABLED true
     LINK_LIBRARIES ${Boost_LIBRARIES})
 
-add_unit_test(NAME test_configuration
-    SOURCES test_configuration.cpp
-            ${SRC}/configuration.cpp
-    ARGS ${server_BINARY_DIR}/config.yml
-    LINK_LIBRARIES ${YAML_CPP_LIBRARIES} ${Boost_LIBRARIES})
-
 add_unit_test(NAME test_protocol
     SOURCES test_protocol.cpp
             ${SRC}/protocol.cpp

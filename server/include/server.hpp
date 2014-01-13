@@ -7,7 +7,6 @@
 #ifndef VIS_SERVER_HPP
 #define VIS_SERVER_HPP
 
-#include "configuration.hpp"
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
 
@@ -20,6 +19,13 @@ namespace boost {
 }
 
 namespace vis {
+
+namespace config {
+
+struct Configuration;
+
+} // namespace config
+
 namespace server {
 
 /// @brief TCP asynchronous server.
@@ -27,7 +33,7 @@ class Server : private boost::noncopyable {
 public:
     /// Create a new server binding port \c port.
     Server(const std::string& address, const std::string& port,
-            const Configuration& config);
+            const vis::config::Configuration& config);
 
     /// Destructor.
     ~Server();

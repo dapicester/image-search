@@ -1,15 +1,15 @@
 /**
  * @file configuration.cpp
- * @brief Server configuration.
+ * @brief Image search configuration.
  * @author Paolo D'Apice
  */
 
-#include "configuration.hpp"
+#include "vis/configuration.hpp"
 
 #include <yaml-cpp/yaml.h>
 
 namespace vis {
-namespace server {
+namespace config {
 
 Configuration
 loadConfiguration(const std::string& file) {
@@ -23,14 +23,14 @@ dumpConfiguration(std::ostream& os, const Configuration& conf) {
     os << YAML::Dump(node);
 }
 
-} // namespace server
+} // namespace config
 } // namespace vis
 
 namespace YAML {
 
     template <>
-    struct convert<vis::server::Category> {
-        static Node encode(const vis::server::Category& category) {
+    struct convert<vis::config::Category> {
+        static Node encode(const vis::config::Category& category) {
             Node node;
             node["dir"] = category.dir;
             for (auto type : category.type) {
@@ -38,7 +38,7 @@ namespace YAML {
             }
             return node;
         }
-        static bool decode(const Node& node, vis::server::Category& category) {
+        static bool decode(const Node& node, vis::config::Category& category) {
             if (!node.IsMap()
                     or !node["dir"] or !node["type"])
                 return false;
@@ -50,15 +50,15 @@ namespace YAML {
     };
 
     template <>
-    struct convert<vis::server::Configuration> {
-        static Node encode(const vis::server::Configuration& conf) {
+    struct convert<vis::config::Configuration> {
+        static Node encode(const vis::config::Configuration& conf) {
             Node categories;
             for (auto cat : conf.categories) {
-                categories[cat.name] = convert<vis::server::Category>::encode(cat);
+                categories[cat.name] = convert<vis::config::Category>::encode(cat);
             }
             return categories;
         }
-        static bool decode(const Node& node, vis::server::Configuration& conf) {
+        static bool decode(const Node& node, vis::config::Configuration& conf) {
             if (!node["categories"])
                 return false;
 
@@ -67,7 +67,7 @@ namespace YAML {
                 return false;
 
             for (auto pair : categories) {
-                vis::server::Category cat = pair.second.as<vis::server::Category>();
+                vis::config::Category cat = pair.second.as<vis::config::Category>();
                 cat.name = pair.first.as<std::string>();
                 conf.categories.push_back(cat);
             }
@@ -76,6 +76,5 @@ namespace YAML {
         }
     };
 
-}
-
+} // namespace YAML
 

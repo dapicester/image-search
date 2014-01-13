@@ -26,9 +26,14 @@ find_package(Boost COMPONENTS filesystem iostreams serialization system REQUIRED
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
+find_package(YamlCpp REQUIRED)
+list(APPEND includes ${YAML_CPP_INCLUDE_DIRS})
+list(APPEND libraries ${YAML_CPP_LIBRARIES})
+
 set(imsearch_SRCS
     src/builder.cpp
     src/callbacks.cpp
+    src/configuration.cpp
     src/descriptors.cpp
     src/hog.cpp
     src/hsv_aux.cpp

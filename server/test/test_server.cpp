@@ -10,11 +10,12 @@
 #define _ELPP_THREAD_SAFE
 
 #include "client.hpp"
-#include "configuration.hpp"
 #include "directories.h"
 #include "logging.hpp"
 #include "protocol.hpp"
 #include "server.hpp"
+
+#include <vis/configuration.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/serialization/export.hpp>
@@ -41,7 +42,7 @@ struct ServerConfig {
         config.categories.push_back({ "bag", DATA_DIR, {"color"} });
         config.categories.push_back({ "shoe", DATA_DIR, {"color","shape"} });
     }
-    vis::server::Configuration config;
+    vis::config::Configuration config;
 };
 
 BOOST_FIXTURE_TEST_SUITE(test, InitLogging)
