@@ -7,6 +7,7 @@ set(libvis_VERSION_PATCH 0)
 
 message(STATUS "Building libvis")
 
+#list(APPEND includes ${CMAKE_SOURCE_DIR}/easylogging++)
 list(APPEND includes ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_package(OpenCV COMPONENTS core imgproc highgui REQUIRED)

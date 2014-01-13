@@ -83,6 +83,9 @@ public:
     /// @return The descriptor type used to build the index.
     DescriptorsType getType() const { return type; }
 
+    /// @return The path of indexed images.
+    const std::vector<boost::filesystem::path>& getFiles() const { return files; }
+
     /// @brief Read index from file.
     static Index* load(const boost::filesystem::path& file);
 
@@ -93,6 +96,7 @@ private:
     std::string category;
     DescriptorsType type;
     boost::scoped_ptr<KDTree<float>> kdtree;
+    std::vector<boost::filesystem::path> files;
 
 private:
     friend class boost::serialization::access;
@@ -107,6 +111,7 @@ Index::serialize(Archive& ar, const unsigned int version) {
     ar & category;
     ar & type;
     ar & kdtree;
+    ar & files;
 }
 
 } /* namespace vis */

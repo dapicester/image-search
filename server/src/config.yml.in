@@ -1,0 +1,21 @@
+server:
+  address: 0.0.0.0
+  port: 4567
+
+categories:
+  bag:
+    dir: ${DATA_DIR}
+    type: [color]
+
+  shoe:
+    dir: ${DATA_DIR}
+    type:
+      - shape
+
+  woman_shoe:
+    dir: ${DATA_DIR}
+    type:
+      - color
+      - shape
+
+# vim: set ft=yaml ts=2 sw=2:
