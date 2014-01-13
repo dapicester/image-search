@@ -68,14 +68,6 @@ static const vis::RealtimeRequest realtime(
         vis::RequestType::REALTIME, "shoe", 's', 10,
         std::vector<float>(300, 0.f));
 
-static const vis::UploadRequest bad_category(vis::RequestType::UPLOAD,
-        "none", 'c', 20,
-        nullptr /* TODO image data*/);
-
-static const vis::UploadRequest bad_type(vis::RequestType::UPLOAD,
-        "bag", 's', 20,
-        nullptr /* TODO image data*/);
-
 BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
     vis::server::Server server(HOST, PORT, config);
     server.startAsync();
@@ -90,12 +82,27 @@ BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
         BOOST_CHECK_EQUAL((int) vis::ResponseStatus::OK, (int) response.status);
         BOOST_CHECK(response.message.empty());
         BOOST_CHECK_EQUAL(request->numResults, response.results.size()); // XXX actually should be CHECK_GE
-        BOOST_CHECK_EQUAL(request->numResults, response.paths.size()); // XXX actually should be CHECK_GE
+        BOOST_CHECK_EQUAL(request->numResults, response.paths.size());   // XXX actually should be CHECK_GE
         for (const std::string& s : response.paths) {
             static fs::path dir(DATA_DIR);
             BOOST_CHECK(fs::is_regular_file(dir/s));
         }
     });
+
+    server.stop();
+}
+
+static const vis::UploadRequest bad_category(vis::RequestType::UPLOAD,
+        "none", 'c', 20,
+        nullptr /* TODO image data*/);
+
+static const vis::UploadRequest bad_type(vis::RequestType::UPLOAD,
+        "bag", 's', 20,
+        nullptr /* TODO image data*/);
+
+BOOST_FIXTURE_TEST_CASE(failure, ServerConfig) {
+    vis::server::Server server(HOST, PORT, config);
+    server.startAsync();
 
     const vis::BaseRequest* failures[] = { &bad_category, &bad_type };
     std::for_each(std::begin(failures), std::end(failures), [](const vis::BaseRequest* request) {
@@ -109,8 +116,6 @@ BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
         BOOST_CHECK(response.results.empty());
         BOOST_CHECK(response.paths.empty());
     });
-
-
 
     server.stop();
 }
