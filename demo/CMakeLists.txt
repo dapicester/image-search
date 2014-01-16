@@ -52,7 +52,7 @@ target_link_libraries(demo ${libraries})
 
 # remove warnings in Qt
 foreach (target demo recompute)
-    set_target_properties(${target} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized -Wno-deprecated-register")
+    set_target_properties(${target} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
 endforeach()
 
 if(ENABLE_CTAGS)
