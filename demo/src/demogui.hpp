@@ -11,6 +11,7 @@
 #include "ui_demo.h"
 
 #include <vis.hpp>
+#include <vis/configuration.hpp>
 
 #include <QMainWindow>
 #include <QScopedPointer>
@@ -39,7 +40,7 @@ class DemoGui : public QMainWindow, private Ui::MainWindow {
     Q_OBJECT
 
 public:
-    DemoGui();
+    DemoGui(const vis::config::Configuration&);
     ~DemoGui();
 
 public slots:
@@ -80,6 +81,8 @@ private:
     bool loadQueries();
 
 private:
+    vis::config::Configuration config;              ///< Current configuration.
+
     QStringList queryNames;                         ///< Names of the query images.
 
     QString category;                               ///< Currently selected category.

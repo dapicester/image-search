@@ -15,20 +15,20 @@
 
 void
 DemoGui::initService() {
-    static auto categories = { "bag", "shoe", "woman_shoe" };
-    static auto types = { "color", "shape", "combined" };
-    for (auto category : categories) {
-        QString key(category);
-        for (auto type : types) {
-            qDebug() << "Adding" << category << "/" << type;
+    std::for_each(config.categories.begin(),
+                  config.categories.end(),
+                  [&](const vis::config::Category& category) {
+        QString cat = str(category.name);
+        for (const std::string& type : category.type) {
+            qDebug() << "Adding" << cat << "/" << str(type);
 
             vis::DescriptorsType dt = vis::toDescriptorsType(type);
-            vis::ImageSearch* imsearch = new vis::ImageSearch(category, dt, DATA_PATH);
+            vis::ImageSearch* imsearch = new vis::ImageSearch(category.name, dt, DATA_PATH);
             imsearch->load();
 
-            service.insert(key, imsearch);
+            service.insert(cat, imsearch);
         }
-    }
+    });
 }
 
 void

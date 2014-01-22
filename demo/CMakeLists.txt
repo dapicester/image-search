@@ -40,6 +40,7 @@ macro_build_info()
 set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/images)
 set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
 configure_file(src/directories.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/directories.hpp)
+configure_file(src/config.yml.in ${CMAKE_CURRENT_BINARY_DIR}/config.yml)
 message(STATUS "Test paths written to: ${CMAKE_CURRENT_BINARY_DIR}/directories.hpp")
 
 include_directories(${includes})

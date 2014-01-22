@@ -13,7 +13,7 @@
 
 #define connectbtn(BTN, FUNC) connect(BTN, SIGNAL(clicked()), this, SLOT(FUNC))
 
-DemoGui::DemoGui() {
+DemoGui::DemoGui(const vis::config::Configuration& c) : config(c) {
     setupUi(this);
     this->setFixedSize(this->size());
 

@@ -1,0 +1,23 @@
+categories:
+  bag:
+    dir: ${DATA_DIR}
+    type:
+      - color
+      - shape
+      - combined
+
+  shoe:
+    dir: ${DATA_DIR}
+    type:
+      - color
+      - shape
+      - combined
+
+  woman_shoe:
+    dir: ${DATA_DIR}
+    type:
+      - color
+      - shape
+      - combined
+
+# vim: set ft=yaml ts=2 sw=2:
