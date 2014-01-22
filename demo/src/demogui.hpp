@@ -57,7 +57,7 @@ public slots:
     void recomputeQueries();
 
     /// Properly set image query names according to selected category.
-    void setQueryNames(QAbstractButton*);
+    void setQueryNames(const QString&);
 
     /// Display the currently selected query image.
     void showQueryImage(int);

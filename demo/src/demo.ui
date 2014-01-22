@@ -14,70 +14,6 @@
    <string>Image Search Demo</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGroupBox" name="categoryBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>131</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Category</string>
-    </property>
-    <widget class="QRadioButton" name="bagRadioButton">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>91</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>bag</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">categoryGroup</string>
-     </attribute>
-    </widget>
-    <widget class="QRadioButton" name="shoeRadioButton">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>91</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>shoe</string>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">categoryGroup</string>
-     </attribute>
-    </widget>
-    <widget class="QRadioButton" name="womanShoeRadioButton">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>60</y>
-       <width>101</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>woman_shoe</string>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">categoryGroup</string>
-     </attribute>
-    </widget>
-   </widget>
    <widget class="QLabel" name="queryListLabel">
     <property name="geometry">
      <rect>
@@ -760,6 +696,29 @@
     </property>
     <property name="text">
      <string>realtime query</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="categoryBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>141</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Category</string>
     </property>
    </widget>
   </widget>

@@ -19,6 +19,8 @@ DemoGui::initService() {
                   config.categories.end(),
                   [&](const vis::config::Category& category) {
         QString cat = str(category.name);
+        categoryBox->addItem(cat);
+
         for (const std::string& type : category.type) {
             qDebug() << "Adding" << cat << "/" << str(type);
 

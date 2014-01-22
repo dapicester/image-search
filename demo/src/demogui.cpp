@@ -43,8 +43,8 @@ DemoGui::DemoGui(const vis::config::Configuration& c) : config(c) {
     connectbtn(recomputeIndexButton, recomputeIndex());
     connectbtn(recomputeQueriesButton, recomputeQueries());
 
-    connect(categoryGroup, SIGNAL(buttonClicked(QAbstractButton*)),
-            this, SLOT(setQueryNames(QAbstractButton*)));
+    connect(categoryBox, SIGNAL(currentIndexChanged(const QString&)),
+            this, SLOT(setQueryNames(const QString&)));
     connect(queryList, SIGNAL(currentRowChanged(int)),
             this, SLOT(showQueryImage(int)));
     connect(queryTypeGroup, SIGNAL(buttonClicked(QAbstractButton*)),
@@ -52,7 +52,7 @@ DemoGui::DemoGui(const vis::config::Configuration& c) : config(c) {
 
     // other gui initializations
     loadQueryNames();
-    setQueryNames(categoryGroup->checkedButton());
+    setQueryNames(categoryBox->currentText());
     setQueryType(queryTypeGroup->checkedButton());
 
     // other initializations
@@ -63,8 +63,8 @@ DemoGui::~DemoGui() {
 }
 
 void
-DemoGui::setQueryNames(QAbstractButton* button) {
-    category = button->text();
+DemoGui::setQueryNames(const QString& label) {
+    category = label;
     QStringList names = queryNames.filter(QRegExp("^" + category));
 
     queryList->clear();
