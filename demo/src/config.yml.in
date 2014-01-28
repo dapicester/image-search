@@ -1,4 +1,11 @@
 categories:
+  art:
+    dir: ${DATA_DIR}
+    type:
+      - color
+      - shape
+      - combined
+
   bag:
     dir: ${DATA_DIR}
     type:
