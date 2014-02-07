@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    boost::filesystem::path cat(category);
+    boost::filesystem::path cat = boost::filesystem::path(DATA_DIR)/category;
     if (not boost::filesystem::is_directory(cat)) {
         std::cout << "Wrong category" << std::endl;
         return 1;
