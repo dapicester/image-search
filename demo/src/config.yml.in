@@ -3,6 +3,30 @@ categories:
     dir: ${DATA_DIR}
     type: [color, shape, combined]
 
+  art_abstract:
+    dir: ${DATA_DIR}
+    type: [color, shape, combined]
+
+  art_animal:
+    dir: ${DATA_DIR}
+    type: [color, shape, combined]
+
+  art_landscape:
+    dir: ${DATA_DIR}
+    type: [color, shape, combined]
+
+  art_other:
+    dir: ${DATA_DIR}
+    type: [color, shape, combined]
+
+  art_portrait:
+    dir: ${DATA_DIR}
+    type: [color, shape, combined]
+
+  art_still_life:
+    dir: ${DATA_DIR}
+    type: [color, shape, combined]
+
   bag:
     dir: ${DATA_DIR}
     type: [color, shape, combined]
