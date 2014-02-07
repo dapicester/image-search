@@ -755,6 +755,5 @@
  </connections>
  <buttongroups>
   <buttongroup name="queryTypeGroup"/>
-  <buttongroup name="categoryGroup"/>
  </buttongroups>
 </ui>

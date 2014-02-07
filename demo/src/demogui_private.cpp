@@ -31,14 +31,18 @@ DemoGui::initService() {
             service.insert(cat, imsearch);
         }
     });
+
+    categoryBox->model()->sort(0);
 }
 
 void
 DemoGui::loadQueryNames() {
+    qDebug() << "Loading query names";
+
     fs::path file = vis::categoryFile(DATA_PATH, "test");
     std::vector<std::string> names = vis::loadNames(file);
     foreach(const std::string& name, names) {
-        queryNames << QString(name.c_str());
+        queryNames << str(name);
     }
 }
 
