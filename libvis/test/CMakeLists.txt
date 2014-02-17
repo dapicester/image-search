@@ -17,6 +17,7 @@ set(Boost_LIBRARIES ${Boost_LIBRARIES} ${BOOST_LIBRARIES})
 set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/images)
 set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
 configure_file(directories.h.in ${CMAKE_CURRENT_BINARY_DIR}/directories.h)
+configure_file(${CMAKE_SOURCE_DIR}/server/src/config.yml.in ${CMAKE_CURRENT_BINARY_DIR}/config.yml)
 message(STATUS "Test directories written to: ${CMAKE_CURRENT_BINARY_DIR}/directories.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -118,7 +119,7 @@ add_unit_test(NAME test_index
 add_unit_test(NAME test_configuration
     SOURCES test_configuration.cpp
             ${SRC_DIR}/configuration.cpp
-    ARGS ${server_BINARY_DIR}/config.yml
+    ARGS ${CMAKE_CURRENT_BINARY_DIR}/config.yml
     LINK_LIBRARIES ${YAML_CPP_LIBRARIES} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_imsearch_load
