@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(libvis)
 
-set(libvis_VERSION_MAJOR 0)
-set(libvis_VERSION_MINOR 1)
-set(libvis_VERSION_PATCH 0)
-
 message(STATUS "Building libvis")
 
 #list(APPEND includes ${CMAKE_SOURCE_DIR}/easylogging++)

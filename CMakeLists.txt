@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(image-search)
 
+set(image-search_VERSION_MAJOR 0)
+set(image-search_VERSION_MINOR 1)
+set(image-search_VERSION_PATCH 0)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 include(EnableCXX11)
