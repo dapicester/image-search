@@ -26,7 +26,7 @@ public:
 
     // TODO expose handler argument
 
-    Vocabulary* computeVocabulary();
+    Vocabulary* computeVocabulary(size_t size = 100);
     Descriptors* computeDescriptors(const Vocabulary* vocabulary = nullptr);
     Index* computeIndex(const Descriptors* descriptors);
 

@@ -7,48 +7,50 @@
 #include "directories.hpp"
 #include "recompute.hpp"
 
-#include <QString>
-#include <QtDebug>
+#include <boost/filesystem.hpp>
+#include <vis/descriptors_type.hpp>
+#include <iostream>
+#include <vector>
 
 int main(int argc, char** argv) {
     // available categories/types
-    QVector<QString> CATEGORIES, TYPES;
-    CATEGORIES << "bag" << "shoe" << "woman_shoe";
-    TYPES << "color" << "shape" << "combined";
+    std::vector<std::string> TYPES = { "color", "shape", "combined" }; // TODO use DescriptorsType
 
-    QVector<QString> categories, types;
+    std::string category, type;
 
     switch (argc) {
     case 3:
-        types << QString(argv[2]);
+        type = argv[2];
+        try {
+            vis::toDescriptorsType(type);
+        } catch (...) {
+            std::cout << "Wrong type" << std::endl;
+            return 1;
+        }
     case 2:
-        categories << QString(argv[1]);
-    case 1:
+        category = argv[1];
         break;
     default:
-        qCritical("wrong number of arguments");
+        std::cout << "Wrong number of arguments" << std::endl;
+        std::cout << "usage: " << argv[0] << " category [type]" << std::endl;
         return 1;
     }
 
-    if (categories.empty()) categories = CATEGORIES;
-    if (types.empty()) types = TYPES;
-
-    qDebug() << "categories:" << categories;
-    qDebug() << "types     :" << types;
+    boost::filesystem::path cat = boost::filesystem::path(DATA_DIR)/category;
+    if (not boost::filesystem::is_directory(cat)) {
+        std::cout << "Wrong category" << std::endl;
+        return 1;
+    }
 
     Recompute worker(DATA_DIR);
-    foreach (const QString& category, categories) {
-        if (not CATEGORIES.contains(category)) {
-            qCritical() << "Skipping not supported category:" << category;
-            continue;
+    if (type.empty()) {
+        // no type specified, recomputing for all
+        for (auto t : TYPES) {
+            worker.recompute(category, t);
         }
-        foreach (const QString& type, types) {
-            if (not TYPES.contains(type)) {
-                qCritical() << "Skipping not supported type:" << type;
-                continue;
-            }
-            worker.recompute(category, type);
-        }
+    } else {
+        // recomputing only for specified type
+        worker.recompute(category, type);
     }
 }
 

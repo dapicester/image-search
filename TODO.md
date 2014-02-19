@@ -1,0 +1,7 @@
+- Use msgpack for protocol
+- Cleanup core classes (Descriptors, Index)
+- ImageServer
+  - use in demogui
+  - use in server
+- Server
+  - interact with ImageServer

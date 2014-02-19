@@ -6,40 +6,45 @@
 
 #include "demogui.hpp"
 #include "utils.hpp"
+
+#include <vis/imsearch.hpp>
 #include <vis/utils/filesystem.hpp>
 
 #include <QDebug>
 #include <QProgressDialog>
 
+vis::ImageSearch&
+DemoGui::get() {
+    auto range = service.equal_range(category);
+    auto it = range.begin();
+    for (auto end = range.end(); it != end; ++it) {
+        QString t = str(vis::typeString(it->second->getType()));
+        if (t == queryType)
+            break;
+    }
+    Q_ASSERT(it != range.end());
+
+    return *(it->second);
+}
+
 void
 DemoGui::search() {
-    if (not loadIndex()) {
-        messageBox("No index file found, please recompute index.", QMessageBox::Critical);
-        return;
-    }
-    if (queryType != "color" and not loadVocabulary()) {
-        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
-        return;
-    }
+    qDebug() << "searching" << category << "by" << queryType;
 
-    if (queryType != "color") Q_ASSERT(category == str(vocabulary->getCategory()));
-    Q_ASSERT(category == str(index->getCategory()));
-    Q_ASSERT(queryType == decodeType(index->getType()));
-    qDebug() << "search " << category << " by " << queryType;
+    vis::ImageSearch& imsearch = get();
 
     arma::fmat query;
     if (realtimeCheckBox->isChecked()) {
         qDebug() << "computing descriptors ...";
 
-        vis::Descriptors descriptors;
-        extractDescriptors(category, queryType, PathList(1, queryImagePath), &descriptors, vocabulary.data());
-        query = descriptors.data();
+        cv::Mat image = cv::imread(queryImagePath.string());
+        query = imsearch.extract(image);
 
         qDebug() << "descriptors computed";
     }
     else {
         if (not loadQueries()) {
-            messageBox("No queries file found, please recompute queries.", QMessageBox::Critical);
+            messageBox("No queries file not found, please recompute queries.", QMessageBox::Critical);
             return;
         }
         Q_ASSERT(queryType == decodeType(queries->getType()));
@@ -49,21 +54,18 @@ DemoGui::search() {
         try {
             query = queries->data().col(queryId);
         } catch (...) {
-            messageBox("Query file found, please recompute queries.", QMessageBox::Critical);
+            messageBox("Query file not found, please recompute queries.", QMessageBox::Critical);
             return;
         }
     }
     Q_ASSERT(query.n_cols == 1);
 
     std::vector<vis::Index::id_type> matches;
-    index->query(query, matches, results.size());
+    imsearch.query(query, matches, results.size());
 
-    const PathList& images = imagesMap[category];
+    PathList images = imsearch.get(matches, true);
     for (int n = 0; n < results.size(); n++) {
-        vis::Index::id_type i = matches[n];
-        const fs::path& file = images[i];
-        qDebug() << "(" << i << ")" << str(file);
-        setImage(results[n], file);
+        setImage(results[n], images[n]);
     }
 
     qDebug() << "search done";
@@ -77,53 +79,16 @@ DemoGui::recomputeIndex() {
     }
 
     QScopedPointer<QProgressDialog> progress(progressDialog("Computing index ...", this, 3));
-
-    if (not loadDescriptors()) {
-        messageBox("No descriptors file found, please recompute descriptors.", QMessageBox::Critical);
-        return;
-    }
     progress->setValue(1);
 
-    index.reset(new vis::Index);
-    index->build(category.toStdString(), *descriptors);
+    vis::ImageSearch& imsearch = get();
+    imsearch.build();
     progress->setValue(2);
 
-    fs::path savefile = vis::indexFile(DATA_PATH, category.toStdString(), queryType.toStdString());
-    index->save(savefile);
+    imsearch.save();
     progress->setValue(3);
 
-    qDebug() << "index done!";
-}
-
-void
-DemoGui::recomputeDescriptors() {
-    if (not confirmMessageBox("Recompute descriptors")) {
-        qDebug() << "canceled";
-        return;
-    }
-
-    const PathList& names = imagesMap[category];
-
-    QScopedPointer<QProgressDialog> progress(progressDialog("Computing descriptors ...", this, names.size() + 3));
-
-    if (not loadVocabulary()) {
-        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
-        return;
-    }
-    progress->setValue(1);
-
-    descriptors.reset(new vis::Descriptors);
-    extractDescriptors(category, queryType, names,
-            descriptors.data(), vocabulary.data(), [&](int i) {
-                progress->setValue(i+2);
-                qDebug() << "processing file" << str(names[i]);
-            });
-
-    fs::path savefile = vis::descriptorsFile(DATA_PATH, category.toStdString(), queryType.toStdString());
-    descriptors->save(savefile);
-    progress->setValue(names.size() + 3);
-
-    qDebug() << "descriptors done!";
+    qDebug() << "indexing done!";
 }
 
 void
@@ -140,15 +105,13 @@ DemoGui::recomputeQueries() {
 
     QScopedPointer<QProgressDialog> progress(progressDialog("Computing queries ...", this, names.size() + 3));
 
-    if (not loadVocabulary()) {
-        messageBox("No vocabulary file found, please recompute vocabulary.", QMessageBox::Critical);
-        return;
-    }
+    vis::ImageSearch& imsearch = get();
+    vis::Vocabulary* vocabulary = imsearch.getVocabulary();
     progress->setValue(1);
 
     queries.reset(new vis::Descriptors);
     extractDescriptors(category, queryType, names,
-            queries.data(), vocabulary.data(), [&](int i) {
+            queries.data(), vocabulary, [&](int i) {
                 progress->setValue(i+2);
                 qDebug() << "processing file" << str(names[i]);
             });
@@ -158,30 +121,5 @@ DemoGui::recomputeQueries() {
     progress->setValue(names.size());
 
     qDebug() << "queries done!";
-}
-
-void
-DemoGui::recomputeVocabulary() {
-    if (not confirmMessageBox("Recompute vocabulary")) {
-        qDebug() << "canceled";
-        return;
-    }
-
-    PathList names = vis::subset(imagesMap[category], 100);
-
-    QScopedPointer<QProgressDialog> progress(progressDialog("Computing vocabulary ...", this, names.size() + 3));
-    progress->setValue(1);
-
-    vocabulary.reset(vis::Vocabulary::fromImageList<vis::HogExtractor>(
-                category.toStdString(), names, vis::vocabulary::NUM_WORDS, [&](int i) {
-                    progress->setValue(i+2);
-                    qDebug() << "processing file" << str(names[i]);
-                }));
-
-    fs::path savefile = vis::vocabularyFile(DATA_PATH, category.toStdString());
-    vocabulary->save(savefile);
-    progress->setValue(names.size());
-
-    qDebug() << "vocabulary done!";
 }
 

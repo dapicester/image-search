@@ -19,6 +19,8 @@ namespace vis {
 
 namespace fs = boost::filesystem;
 
+ImageSearch::ImageSearch() {}
+
 ImageSearch::ImageSearch(const std::string& cat, DescriptorsType t,
         const fs::path& dir)
         : category(cat), type(t), dataDir(dir) {}
@@ -43,18 +45,6 @@ ImageSearch::save() const {
     saveIndex();
     if (requiresVocabulary(type)) saveVocabulary();
     saveDescriptors(); // XXX serve?
-}
-
-// FIXME back-compatibility with the gui demo
-std::string typeString(DescriptorsType type) {
-    switch (type) {
-    case HOG:
-        return "shape";
-    case HSV:
-        return "color";
-    case HOG_HSV:
-        return "combined";
-    }
 }
 
 void
@@ -108,18 +98,18 @@ ImageSearch::saveVocabulary() const {
 }
 
 void
-ImageSearch::query(unsigned id, std::vector<size_t>& results) const {
-    index->query(arma::uvec{id}, results);
+ImageSearch::query(unsigned id, std::vector<size_t>& results, size_t numResults) const {
+    index->query(arma::uvec{id}, results, numResults);
 }
 
 void
-ImageSearch::query(const arma::fvec& descriptors, std::vector<size_t>& results) const {
-    index->query(descriptors, results);
+ImageSearch::query(const arma::fvec& descriptors, std::vector<size_t>& results, size_t numResults) const {
+    index->query(descriptors, results, numResults);
 }
 
 void
-ImageSearch::query(const cv::Mat& image, std::vector<size_t>& results) const {
-    index->query(extract(image), results);
+ImageSearch::query(const cv::Mat& image, std::vector<size_t>& results, size_t numResults) const {
+    index->query(extract(image), results, numResults);
 }
 
 arma::fvec
@@ -127,6 +117,39 @@ ImageSearch::extract(const cv::Mat& image) const {
     cv::Mat standardized = vis::standardizeImage(image);
     boost::scoped_ptr<Callback> callback(getCallback(type, requiresVocabulary(type) ? vocabulary.get() : nullptr));
     return (*callback)(standardized);
+}
+
+inline fs::path
+relative(const fs::path& dir, const fs::path& path) {
+    std::string ps = path.string();
+    auto pair = std::mismatch(ps.begin(), ps.end(), dir.string().begin());
+    return fs::path(pair.first, ps.end());
+}
+
+std::vector<fs::path>
+ImageSearch::get(const std::vector<size_t>& results, bool absolute) const {
+    std::vector<fs::path> images;
+    const std::vector<fs::path>& indexed = index->getFiles();
+    for (size_t id : results) {
+        images.push_back(absolute ? indexed[id]
+                                  : relative(dataDir, indexed[id]));
+    }
+    return images;
+}
+
+std::vector<fs::path>
+ImageSearch::getAll(bool absolute) const {
+    std::vector<fs::path> images;
+    const std::vector<fs::path>& indexed = index->getFiles();
+    std::for_each(indexed.begin(), indexed.end(), [&](const fs::path& p) {
+        images.push_back(absolute ? p : relative(dataDir, p));
+    });
+    return images;
+}
+
+Vocabulary*
+ImageSearch::getVocabulary() const {
+    return requiresVocabulary(type) ? vocabulary.get() : nullptr;
 }
 
 } // namespace vis

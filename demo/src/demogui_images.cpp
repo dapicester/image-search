@@ -8,6 +8,7 @@
 #include "ui_images.h"
 #include "utils.hpp"
 
+#include <vis/imsearch.hpp>
 #include <QDebug>
 
 void
@@ -17,7 +18,8 @@ DemoGui::showAll() {
     Ui_Dialog imagesUi;
     imagesUi.setupUi(dialog);
 
-    PathList files = imagesMap[category];
+    vis::ImageSearch& imsearch = get();
+    PathList files = imsearch.getAll(true);
     foreach (const fs::path& file, files) {
         imagesUi.imagesList->addItem(new QListWidgetItem(QIcon(str(file)), ""));
     }

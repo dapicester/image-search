@@ -91,5 +91,12 @@ indexFile(const fs::path& dataDir, const std::string& category, const std::strin
     return dataDir / format.str();
 }
 
+void
+toStrings(const std::vector<fs::path>& paths, std::vector<std::string>& strings) {
+    for (const fs::path& p : paths) {
+        strings.push_back(p.string());
+    }
+}
+
 } /* namespace vis */
 

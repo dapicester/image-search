@@ -33,10 +33,10 @@ Builder::loadImageNames() {
 #define PROGRESS_HANDLER(files) [&](int i) { vis::handlers::PrintFile(i, files); }
 
 Vocabulary*
-Builder::computeVocabulary() {
+Builder::computeVocabulary(size_t size) {
     if (images.empty()) loadImageNames();
 
-    vector_path names = vis::subset(images, 100); // XXX magic number!
+    vector_path names = vis::subset(images, size);
     return Vocabulary::fromImageList<HogExtractor>(
                 category, names, vocabulary::NUM_WORDS,
                 PROGRESS_HANDLER(names));
