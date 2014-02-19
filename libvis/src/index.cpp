@@ -4,10 +4,9 @@
  * @author Paolo D'Apice
  */
 
-#include "index.hpp"
-#include "kdtree.hpp"
-#include "serialization.hpp"
-#include <iostream>
+#include "vis/index.hpp"
+#include "vis/kdtree.hpp"
+#include "vis/serialization.hpp"
 
 namespace vis {
 
@@ -28,7 +27,18 @@ void
 Index::build(const std::string& cat, const Descriptors& descriptors, size_t numTrees) {
     category = cat;
     type = descriptors.getType();
+    files = descriptors.getFiles();
+
     kdtree->build(descriptors.data(), numTrees);
+}
+
+void
+Index::query(const arma::uvec& ids, std::vector<id_type>& results,
+        size_t numResults, size_t maxNumComparisons) const {
+    std::vector<KDTreeIndex> items = kdtree->search<KDTreeIndex>(ids, numResults, maxNumComparisons);
+    for (const KDTreeIndex& item : items) {
+        results.push_back(item.index);
+    }
 }
 
 void
@@ -42,17 +52,12 @@ Index::query(const arma::fmat& data, std::vector<id_type>& results,
 
 Index*
 Index::load(const fs::path& file) {
-    std::cout << "Loading index from file: " << file << " ... ";
-    Index* index = vis::load<Index, BinarySerializer>(file);
-    std::cout << "done" << std::endl;
-    return index;
+    return vis::load<Index, BinarySerializer>(file);
 }
 
 void
 Index::save(const fs::path& file) const {
-    std::cout << "Saving index to file: " << file << " ... ";
     vis::save<Index, BinarySerializer>(file, *this);
-    std::cout << "done" << std::endl;
 }
 
 } /* namespace vis */

@@ -1,0 +1,14 @@
+/**
+ * @file images.hpp
+ * @brief Fullpaths to data directories (preprocessed by CMake).
+ * @author Paolo D'Apice
+ */
+
+#ifndef TEST_DIRECTORIES_HPP
+#define TEST_DIRECTORIES_HPP
+
+#define IMAGES_DIR  "${IMAGES_DIR}"
+#define DATA_DIR    "${DATA_DIR}"
+
+#endif // TEST_DIR
+

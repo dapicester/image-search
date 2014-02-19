@@ -1,9 +1,10 @@
 #define BOOST_TEST_MODULE utils_ported
 #include <boost/test/unit_test.hpp>
 
-#include "utils/subset.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
+
+#include "vis/utils/subset.hpp"
 
 BOOST_AUTO_TEST_CASE(test_subset_mat) {
     arma::mat input = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };

@@ -7,12 +7,14 @@
 #define BOOST_TEST_MODULE hog_bow
 #include <boost/test/unit_test.hpp>
 
-#include "bow.hpp"
-#include "hog.hpp"
-#include "vocabulary.hpp"
 #include "fixtures.hpp"
 #include "utils/print.hpp"
 #include "test_commons.hpp"
+
+#include "vis/bow.hpp"
+#include "vis/hog.hpp"
+#include "vis/vocabulary.hpp"
+
 #include <boost/scoped_ptr.hpp>
 
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";

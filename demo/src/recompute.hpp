@@ -7,9 +7,8 @@
 #ifndef DEMO_RECOMPUTE_HPP
 #define DEMO_RECOMPUTE_HPP
 
-#include <QString>
-#include <QScopedPointer>
 #include <boost/filesystem/path.hpp>
+#include <memory>
 
 namespace vis {
     class Descriptors;
@@ -23,29 +22,28 @@ class Recompute {
     typedef std::vector<fs::path> vector_path;
 
 public:
-    Recompute(const char* dataPath);
     Recompute(const fs::path& dataPath);
     ~Recompute();
 
-    void recompute(const QString& category, const QString& type);
+    void recompute(const std::string& category, const std::string& type);
 
 private:
-    void loadImagePaths(const QString& category);
-    void loadQueryImagePaths(const QString& category);
-    void computeVocabulary(const QString& category);
-    void computeDescriptors(const QString& category, const QString& type);
-    void computeQueries(const QString& category, const QString& type);
-    void computeIndex(const QString& category, const QString& type);
+    void loadImagePaths(const std::string& category);
+    void loadQueryImagePaths(const std::string& category);
+    void computeVocabulary(const std::string& category);
+    void computeDescriptors(const std::string& category, const std::string& type);
+    void computeQueries(const std::string& category, const std::string& type);
+    void computeIndex(const std::string& category, const std::string& type);
 
 private:
     const fs::path dataPath;
 
     vector_path images;
     vector_path queryImages;
-    QScopedPointer<vis::Vocabulary> vocabulary;
-    QScopedPointer<vis::Descriptors> descriptors;
-    QScopedPointer<vis::Descriptors> queries;
-    QScopedPointer<vis::Index> index;
+    std::unique_ptr<vis::Vocabulary> vocabulary;
+    std::unique_ptr<vis::Descriptors> descriptors;
+    std::unique_ptr<vis::Descriptors> queries;
+    std::unique_ptr<vis::Index> index;
 };
 
 #endif

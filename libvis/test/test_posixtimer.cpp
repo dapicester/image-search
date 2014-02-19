@@ -7,7 +7,7 @@
 #define BOOST_TEST_MODULE posixtimer
 #include <boost/test/unit_test.hpp>
 
-#include "utils/posixtimer.hpp"
+#include "vis/utils/posixtimer.hpp"
 
 #define _CHECK_CLOSE(A,B,DELTA)
 

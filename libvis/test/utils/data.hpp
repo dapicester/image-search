@@ -8,6 +8,7 @@
 #define VIS_TEST_UTILS_DATA_HPP
 
 #include "random.hpp"
+
 #include <armadillo>
 #include <opencv2/core/core.hpp>
 
@@ -30,15 +31,6 @@ template <typename T>
 arma::Mat<T>
 testData(int rows, int columns) {
     return arma::randu<arma::Mat<T>>(rows, columns);
-}
-
-/// @return A matrix with rows x columns random data
-template <typename T>
-cv::Mat
-getTestData[[deprecated]](int rows, int columns) {
-    cv::Mat data(rows, columns, cv::DataType<T>::type);
-    cv::randu(data, cv::Scalar(0), cv::Scalar(1));
-    return data;
 }
 
 } /* namespace test */

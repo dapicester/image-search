@@ -7,9 +7,10 @@
 #define BOOST_TEST_MODULE conversions
 #include <boost/test/unit_test.hpp>
 
-#include "utils/conversions.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
+
+#include "vis/utils/conversions.hpp"
 
 BOOST_AUTO_TEST_CASE(test_arma2cv) {
     arma::Mat<int> input = { 1, 2, 3, 4, 5, 6 };

@@ -40,6 +40,7 @@ macro_build_info()
 set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/images)
 set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
 configure_file(src/directories.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/directories.hpp)
+configure_file(src/config.yml.in ${CMAKE_CURRENT_BINARY_DIR}/config.yml)
 message(STATUS "Test paths written to: ${CMAKE_CURRENT_BINARY_DIR}/directories.hpp")
 
 include_directories(${includes})
@@ -52,7 +53,7 @@ target_link_libraries(demo ${libraries})
 
 # remove warnings in Qt
 foreach (target demo recompute)
-    set_target_properties(${target} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized -Wno-deprecated-register")
+    set_target_properties(${target} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
 endforeach()
 
 if(ENABLE_CTAGS)

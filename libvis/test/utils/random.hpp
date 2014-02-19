@@ -7,7 +7,8 @@
 #ifndef VIS_TEST_UTILS_RANDOM_HPP
 #define VIS_TEST_UTILS_RANDOM_HPP
 
-#include "traits.hpp"
+#include "vis/traits.hpp"
+
 extern "C" {
 #include <vl/random.h>
 }

@@ -7,15 +7,15 @@
 #ifndef VIS_HPP
 #define VIS_HPP
 
-#include "callbacks.hpp"
-#include "descriptors.hpp"
-#include "index.hpp"
-#include "kdtree.hpp"
-#include "kmeans.hpp"
-#include "standardize.hpp"
-#include "traits.hpp"
-#include "vocabulary.hpp"
-#include "serialization.hpp"
+#include "vis/callbacks.hpp"
+#include "vis/descriptors.hpp"
+#include "vis/index.hpp"
+#include "vis/kdtree.hpp"
+#include "vis/kmeans.hpp"
+#include "vis/standardize.hpp"
+#include "vis/traits.hpp"
+#include "vis/vocabulary.hpp"
+#include "vis/serialization.hpp"
 
 #endif /* VIS_HPP */
 

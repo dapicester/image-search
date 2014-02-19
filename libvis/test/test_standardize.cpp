@@ -8,8 +8,10 @@
 #include <boost/test/unit_test.hpp>
 
 #include "fixtures.hpp"
-#include "standardize.hpp"
 #include "utils/print.hpp"
+
+#include "vis/standardize.hpp"
+
 #include <opencv2/opencv.hpp>
 
 using cv::Mat;

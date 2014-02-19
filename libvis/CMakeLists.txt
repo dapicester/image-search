@@ -1,12 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(libvis)
 
-set(libvis_VERSION_MAJOR 0)
-set(libvis_VERSION_MINOR 1)
-set(libvis_VERSION_PATCH 0)
-
 message(STATUS "Building libvis")
 
+#list(APPEND includes ${CMAKE_SOURCE_DIR}/easylogging++)
 list(APPEND includes ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_package(OpenCV COMPONENTS core imgproc highgui REQUIRED)
@@ -25,7 +22,23 @@ find_package(Boost COMPONENTS filesystem iostreams serialization system REQUIRED
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
-file(GLOB imsearch_SRCS src/*.c src/*.cpp)
+find_package(YamlCpp REQUIRED)
+list(APPEND includes ${YAML_CPP_INCLUDE_DIRS})
+list(APPEND libraries ${YAML_CPP_LIBRARIES})
+
+set(imsearch_SRCS
+    src/builder.cpp
+    src/callbacks.cpp
+    src/configuration.cpp
+    src/descriptors.cpp
+    src/hog.cpp
+    src/hsv_aux.cpp
+    src/hsv.cpp
+    src/imsearch.cpp
+    src/index.cpp
+    src/vocabulary.cpp
+    src/utils/filesystem.cpp
+)
 
 list(REMOVE_DUPLICATES includes)
 include_directories(${includes})

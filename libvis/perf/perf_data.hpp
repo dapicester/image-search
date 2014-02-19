@@ -7,9 +7,11 @@
 #ifndef VIS_PERF_DATA_HPP
 #define VIS_PERF_DATA_HPP
 
-#include "descriptors_type.hpp"
 #include "perf_serialization.hpp"
-#include "utils/timer.hpp"
+
+#include "vis/descriptors_type.hpp"
+#include "vis/utils/timer.hpp"
+
 #include <boost/lexical_cast.hpp>
 #include <numeric>
 

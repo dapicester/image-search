@@ -6,11 +6,14 @@
 
 #include "demogui.hpp"
 #include "utils.hpp"
+
+#include <vis/imsearch.hpp>
+
 #include <QDebug>
 
 #define connectbtn(BTN, FUNC) connect(BTN, SIGNAL(clicked()), this, SLOT(FUNC))
 
-DemoGui::DemoGui() {
+DemoGui::DemoGui(const vis::config::Configuration& c) : config(c) {
     setupUi(this);
     this->setFixedSize(this->size());
 
@@ -38,12 +41,10 @@ DemoGui::DemoGui() {
     connectbtn(searchButton, search());
     connectbtn(showAllButton, showAll());
     connectbtn(recomputeIndexButton, recomputeIndex());
-    connectbtn(recomputeDescriptorsButton, recomputeDescriptors());
     connectbtn(recomputeQueriesButton, recomputeQueries());
-    connectbtn(recomputeVocabularyButton, recomputeVocabulary());
 
-    connect(categoryGroup, SIGNAL(buttonClicked(QAbstractButton*)),
-            this, SLOT(setQueryNames(QAbstractButton*)));
+    connect(categoryBox, SIGNAL(currentIndexChanged(const QString&)),
+            this, SLOT(setQueryNames(const QString&)));
     connect(queryList, SIGNAL(currentRowChanged(int)),
             this, SLOT(showQueryImage(int)));
     connect(queryTypeGroup, SIGNAL(buttonClicked(QAbstractButton*)),
@@ -51,19 +52,19 @@ DemoGui::DemoGui() {
 
     // other gui initializations
     loadQueryNames();
-    loadImageNames();
-    setQueryNames(categoryGroup->checkedButton());
+    setQueryNames(categoryBox->currentText());
     setQueryType(queryTypeGroup->checkedButton());
 
     // other initializations
+    initService();
 }
 
 DemoGui::~DemoGui() {
 }
 
 void
-DemoGui::setQueryNames(QAbstractButton* button) {
-    category = button->text();
+DemoGui::setQueryNames(const QString& label) {
+    category = label;
     QStringList names = queryNames.filter(QRegExp("^" + category));
 
     queryList->clear();
@@ -79,7 +80,7 @@ DemoGui::showQueryImage(int row) {
     }
 
     QString name = queryList->item(row)->text();
-    static fs::path dir = categoryDir(DATA_PATH, "test");
+    static fs::path dir = DATA_PATH / "test";
     queryImagePath = dir / name.toStdString();
     setImage(queryImage, queryImagePath);
 }

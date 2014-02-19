@@ -5,11 +5,12 @@
  */
 
 #include "dir.h"
-#include "vis.hpp"
-#include "utils.hpp"
-
 #include "perf_data.hpp"
 #include "perf_utils.hpp"
+
+#include "vis.hpp"
+#include "vis/utils.hpp"
+
 #include <boost/scoped_ptr.hpp>
 
 /// Number of times a single test is executed.
@@ -45,7 +46,7 @@ int main(int, char**) {
         size_t length = perf::getLength(type);
 
         perf::Timings t;
-        t.addParam("descriptor", perf::getName(type));
+        t.addParam("descriptor", vis::toString(type));
         t.addParam("length", length);
 
         t.setTimings(computeDescriptors(type, files, vocabulary.get()));
@@ -82,26 +83,8 @@ std::vector<fs::path> getFiles() {
 inline void extractDescriptors(vis::DescriptorsType type,
         const std::vector<fs::path>& files, const vis::Vocabulary* vocabulary) {
     vis::Descriptors descriptors;
-    switch (type) {
-        case vis::HSV:
-            {
-            vis::HsvHistogramsCallback cb;
-            descriptors.compute("benchmark", files, cb);
-            }
-            break;
-        case vis::HOG:
-            {
-            vis::HogBagOfWordsCallback cb(*vocabulary);
-            descriptors.compute("benchmark", files, cb);
-            }
-            break;
-        case vis::HOG_HSV:
-            {
-            vis::CompositeCallback cb(*vocabulary);
-            descriptors.compute("benchmark", files, cb);
-            }
-            break;
-    }
+    boost::scoped_ptr<vis::Callback> cb(vis::getCallback(type, vocabulary));
+    descriptors.compute("benchmark", files, *cb);
 }
 
 std::vector<Timer::timestamp_t> computeDescriptors(vis::DescriptorsType type,
