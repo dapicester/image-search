@@ -30,7 +30,7 @@ find_package(VLFeat REQUIRED)
 list(APPEND libraries ${VLFEAT_LIBRARIES})
 list(APPEND includes ${VLFEAT_INCLUDE_DIRS})
 
-find_package(Boost COMPONENTS filesystem iostreams serialization system REQUIRED)
+find_package(Boost COMPONENTS filesystem iostreams serialization system thread REQUIRED)
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
@@ -50,6 +50,7 @@ set(imsearch_SRCS
     src/index.cpp
     src/vocabulary.cpp
     src/utils/filesystem.cpp
+    src/utils/thread_pool.cpp
 )
 
 list(REMOVE_DUPLICATES includes)
