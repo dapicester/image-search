@@ -10,9 +10,21 @@ find_package(OpenCV COMPONENTS core imgproc highgui REQUIRED)
 list(APPEND libraries ${OpenCV_LIBS})
 list(APPEND includes ${OpenCV_INCLUDE_DIRS})
 
+find_package(BLAS)
+if(BLAS_FOUND)
+    message(STATUS "BLAS found: ${BLAS_LIBRARIES}")
+    set(MATH_LIBRARIES ${BLAS_LIBRARIES})
+    add_definitions(-DARMA_DONT_USE_WRAPPER)
+endif()
+
 find_package(Armadillo REQUIRED)
 list(APPEND includes ${ARMADILLO_INCLUDE_DIRS})
-list(APPEND libraries ${ARMADILLO_LIBRARIES})
+if(NOT BLAS_FOUND)
+    message(STATUS "BLAS not found, linking to Armadillo")
+    set(MATH_LIBRARIES ${ARMADILLO_LIBRARIES})
+endif()
+
+list(APPEND libraries ${MATH_LIBRARIES})
 
 find_package(VLFeat REQUIRED)
 list(APPEND libraries ${VLFEAT_LIBRARIES})
