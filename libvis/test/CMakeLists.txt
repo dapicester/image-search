@@ -5,9 +5,6 @@ include_directories(${SRC_DIR})
 # new version of cmake overwrite instead of append, so let's backup
 set(BOOST_LIBRARIES ${Boost_LIBRARIES})
 
-# new version of cmake overwrite instead of append, so let's backup
-set(BOOST_LIBRARIES ${Boost_LIBRARIES})
-
 find_package(Boost COMPONENTS system unit_test_framework REQUIRED)
 add_definitions(-DBOOST_TEST_DYN_LINK)
 
