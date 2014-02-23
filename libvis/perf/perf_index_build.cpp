@@ -9,7 +9,7 @@
 #include "perf_utils.hpp"
 
 static const vis::DescriptorsType TYPE = vis::HOG_HSV;
-static const size_t LEN                = perf::getLength(TYPE);
+static const size_t LEN                = vis::getLength(TYPE);
 
 static const std::string SAVE_FILE     = "build_index.xml";
 

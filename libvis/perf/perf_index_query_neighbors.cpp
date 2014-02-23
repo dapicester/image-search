@@ -10,7 +10,7 @@
 
 static const size_t NUM_DATA           = 1e5;
 static const vis::DescriptorsType TYPE = vis::HOG_HSV;
-static const size_t LEN                = perf::getLength(TYPE);
+static const size_t LEN                = vis::getLength(TYPE);
 
 static const std::string SAVE_FILE     = "query_index_neighbors.xml";
 

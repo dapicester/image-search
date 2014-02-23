@@ -19,16 +19,6 @@ getRandomData(size_t rows, size_t cols) {
     return arma::randu<arma::fmat>(rows, cols);
 }
 
-// TODO move this to descriptors_type.hpp ?
-inline size_t
-getLength(vis::DescriptorsType type) {
-    switch(type) {
-        case vis::HSV: return 166;
-        case vis::HOG: return 300;
-        case vis::HOG_HSV: return 466;
-    }
-}
-
 } /* namespace perf */
 
 #endif /* VIS_PERF_UTILS_HPP */
