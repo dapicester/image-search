@@ -19,6 +19,7 @@
 
 namespace vis {
 
+class Builder;
 class Descriptors;
 class Index;
 class Vocabulary;
@@ -125,9 +126,9 @@ private:
 private:
     std::string category;
     DescriptorsType type;
-
     boost::filesystem::path dataDir;
 
+    boost::scoped_ptr<Builder> builder;
     boost::scoped_ptr<Index> index;
     boost::scoped_ptr<Descriptors> descriptors;
     boost::scoped_ptr<Vocabulary> vocabulary;

@@ -35,6 +35,7 @@ ImageSearch::load() {
 
 void
 ImageSearch::build() {
+    builder.reset(new Builder(dataDir, category, type));
     if (requiresVocabulary(type)) buildVocabulary();
     buildDescriptors();
     buildIndex();
@@ -63,20 +64,17 @@ ImageSearch::loadVocabulary() {
 
 void
 ImageSearch::buildVocabulary() {
-    Builder builder(dataDir, category, type);
-    vocabulary.reset(builder.computeVocabulary());
+    vocabulary.reset(builder->computeVocabulary());
 }
 
 void
 ImageSearch::buildDescriptors() {
-    Builder builder(dataDir, category, type);
-    descriptors.reset(builder.computeDescriptors(vocabulary.get()));
+    descriptors.reset(builder->computeDescriptors(vocabulary.get()));
 }
 
 void
 ImageSearch::buildIndex() {
-    Builder builder(dataDir, category, type);
-    index.reset(builder.computeIndex(descriptors.get()));
+    index.reset(builder->computeIndex(descriptors.get()));
 }
 
 void
