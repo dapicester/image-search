@@ -122,7 +122,7 @@ Vocabulary::fromImageList(
     arma::fmat descriptors;
 
     VocabularyCallback<Extractor> cb(numFeatures);
-    extract(names, descriptors, cb, ColorMode::COLORS, handler);
+    extract_mat(names, descriptors, cb, ColorMode::COLORS, handler);
 
     Vocabulary* vocabulary = new Vocabulary(numWords);
     vocabulary->build(category, descriptors);
