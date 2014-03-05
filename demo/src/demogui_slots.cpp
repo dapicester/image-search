@@ -9,6 +9,7 @@
 
 #include <vis/imsearch.hpp>
 #include <vis/utils/filesystem.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 #include <QDebug>
 #include <QProgressDialog>

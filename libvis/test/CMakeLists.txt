@@ -101,6 +101,7 @@ add_unit_test(NAME test_timer
 
 add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
+            ${SRC_DIR}/extract.cpp
             ${SRC_DIR}/hog.cpp
             ${SRC_DIR}/vocabulary.cpp
             ${SRC_DIR}/standardize.cpp

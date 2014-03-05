@@ -7,14 +7,16 @@
 #ifndef VIS_EXTRACT_HPP
 #define VIS_EXTRACT_HPP
 
-#include "standardize.hpp"
 #include <armadillo>
 #include <boost/filesystem/path.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
 #include <functional>
 #include <vector>
 
 namespace vis {
+
+struct Callback;
+template <typename E> struct VocabularyCallback;
 
 enum class ColorMode {
     COLORS,
@@ -23,17 +25,8 @@ enum class ColorMode {
 
 typedef std::function<void (int)> ProgressHandler;
 
-/// @brief Read and standardize an image from file.
-static inline
 cv::Mat
-readStandardized(const std::string& name, ColorMode mode) {
-    cv::Mat input = cv::imread(name,
-                               mode == ColorMode::GRAYSCALE ? CV_LOAD_IMAGE_GRAYSCALE
-                                                            : CV_LOAD_IMAGE_COLOR);
-    BOOST_ASSERT(input.channels() == (mode == ColorMode::GRAYSCALE ? 1 : 3));
-
-    return standardizeImage(input);
-}
+readStandardized(const std::string& name, ColorMode mode);
 
 /**
  * @brief Extract descriptor vectors on a list of images.
@@ -43,22 +36,12 @@ readStandardized(const std::string& name, ColorMode mode) {
  * @param mode Color type of loaded images.
  * @param handler Callback to monitor extraction progress (e.g. adjust a progress counter).
  */
-template <typename Callback>
 void
 extract(const std::vector<boost::filesystem::path>& names,
         arma::fmat& data,
         const Callback& cb,
         ColorMode mode = ColorMode::COLORS,
-        ProgressHandler handler = NULL) {
-
-    data.set_size(cb.length(), names.size());
-    for (int i = 0; i < names.size(); ++i) {
-        if (handler) handler(i);
-
-        cv::Mat image = readStandardized(names[i].string(), mode);
-        data.col(i) = cb(image);
-    }
-}
+        ProgressHandler handler = NULL);
 
 /**
  * @brief Extract descriptor matrices on a list of images.
@@ -68,11 +51,12 @@ extract(const std::vector<boost::filesystem::path>& names,
  * @param mode Color type of loaded images.
  * @param handler Callback to monitor extraction progress (e.g. adjust a progress counter).
  */
-template <typename Callback>
+// TODO move this into vocabulary
+template <typename Extractor>
 void
 extract_mat(const std::vector<boost::filesystem::path>& names,
         arma::fmat& data,
-        const Callback& cb,
+        const VocabularyCallback<Extractor>& cb,
         ColorMode mode = ColorMode::COLORS,
         ProgressHandler handler = NULL) {
 
@@ -88,7 +72,6 @@ extract_mat(const std::vector<boost::filesystem::path>& names,
         data = arma::join_rows(data, temp[i]); // XXX this is slow
     }
 }
-
 
 } /* namespace vis */
 

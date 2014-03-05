@@ -9,6 +9,7 @@
 #include "vis/builder.hpp"
 #include "vis/callbacks.hpp"
 #include "vis/index.hpp"
+#include "vis/standardize.hpp"
 #include "vis/vocabulary.hpp"
 #include "vis/utils/filesystem.hpp"
 

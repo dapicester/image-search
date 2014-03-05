@@ -41,6 +41,7 @@ list(APPEND libraries ${YAML_CPP_LIBRARIES})
 set(imsearch_SRCS
     src/builder.cpp
     src/callbacks.cpp
+    src/extract.cpp
     src/configuration.cpp
     src/descriptors.cpp
     src/hog.cpp
