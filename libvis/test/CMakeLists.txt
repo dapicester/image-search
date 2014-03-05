@@ -22,6 +22,7 @@ message(STATUS "Tests:")
 
 add_unit_test(NAME opencv_usage
     SOURCES opencv_usage.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
@@ -52,18 +53,21 @@ add_unit_test(NAME test_kdtree
 
 add_unit_test(NAME test_standardize
     SOURCES test_standardize.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hog
     SOURCES test_hog.cpp
             ${SRC_DIR}/hog.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hsv_aux
     SOURCES test_hsv_aux.cpp
             ${SRC_DIR}/hsv_aux.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
@@ -71,6 +75,7 @@ add_unit_test(NAME test_hsv
     SOURCES test_hsv.cpp
             ${SRC_DIR}/hsv.cpp
             ${SRC_DIR}/hsv_aux.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
@@ -98,6 +103,7 @@ add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
             ${SRC_DIR}/hog.cpp
             ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
@@ -105,6 +111,7 @@ add_unit_test(NAME test_hog_bow
     SOURCES test_hog_bow.cpp
             ${SRC_DIR}/hog.cpp
             ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 

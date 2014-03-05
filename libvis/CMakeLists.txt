@@ -48,6 +48,7 @@ set(imsearch_SRCS
     src/hsv.cpp
     src/imsearch.cpp
     src/index.cpp
+    src/standardize.cpp
     src/vocabulary.cpp
     src/utils/filesystem.cpp
     src/utils/thread_pool.cpp
