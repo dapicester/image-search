@@ -11,7 +11,6 @@
 
 #include "client.hpp"
 #include "directories.h"
-#include "logging.hpp"
 #include "protocol.hpp"
 #include "server.hpp"
 
@@ -19,8 +18,6 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/serialization/export.hpp>
-
-_INITIALIZE_EASYLOGGINGPP
 
 BOOST_CLASS_EXPORT(vis::OfflineRequest);
 BOOST_CLASS_EXPORT(vis::RealtimeRequest);
@@ -33,7 +30,10 @@ static const std::string PORT = "4567";
 
 struct InitLogging {
     InitLogging() {
-        vis::logging::registerLoggers({ "server", "client", "connection", "handler", "manager" });
+        google::InitGoogleLogging("vis_server");
+    }
+    ~InitLogging() {
+        google::ShutdownGoogleLogging();
     }
 };
 

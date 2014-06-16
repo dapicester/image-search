@@ -38,6 +38,10 @@ add_unit_test(NAME vlfeat_usage
     SOURCES vlfeat_usage.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${Boost_LIBRARIES})
 
+add_unit_test(NAME glog_usage
+    SOURCES glog_usage.cpp
+    LINK_LIBRARIES ${GLOG_LIBRARIES} ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_thread_pool
     SOURCES test_thread_pool.cpp
             ${SRC_DIR}/utils/thread_pool.cpp

@@ -34,6 +34,10 @@ find_package(Boost COMPONENTS filesystem iostreams serialization system thread R
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
+find_package(Glog REQUIRED)
+list(APPEND includes ${GLOG_INCLUDE_DIRS})
+list(APPEND libraries ${GLOG_LIBRARIES})
+
 find_package(YamlCpp REQUIRED)
 list(APPEND includes ${YAML_CPP_INCLUDE_DIRS})
 list(APPEND libraries ${YAML_CPP_LIBRARIES})

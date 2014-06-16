@@ -6,16 +6,14 @@
 
 #include "server.hpp"
 #include "connection.hpp"
-#include "logging.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
+#include <glog/logging.h>
 #include <iostream>
 
 namespace vis {
 namespace server {
-
-#define _LOG(X) CLOG(X, "server")
 
 Server::Server(const std::string& address, const std::string& port,
         const vis::config::Configuration& config)
@@ -26,7 +24,7 @@ Server::Server(const std::string& address, const std::string& port,
       socket(io_service),
       requestHandler(config)
 {
-    _LOG(INFO) << "New server on port " << port << " ...";
+    LOG(INFO) << "New server on port " << port << " ...";
     signals.add(SIGINT);
     signals.add(SIGTERM);
 #if defined(SIGQUIT)
@@ -50,36 +48,36 @@ Server::~Server() {}
 void
 Server::doAwaitStop() {
     signals.async_wait([this](boost::system::error_code, int signal) {
-        _LOG(INFO) << "Received signal " << signal;
+        LOG(INFO) << "Received signal " << signal;
         stop();
     });
 }
 
 void
 Server::start() {
-    _LOG(INFO) << "Server started";
+    LOG(INFO) << "Server started";
     io_service.run();
 }
 
 void
 Server::startAsync() {
-    _LOG(INFO) << "Server started (async)";
+    LOG(INFO) << "Server started (async)";
     service_thread.reset(new boost::thread(boost::bind(&boost::asio::io_service::run, &io_service)));
 }
 
 void
 Server::stop() {
-    _LOG(INFO) << "Stopping server ...";
+    LOG(INFO) << "Stopping server ...";
     acceptor.close();
     connectionManager.stopAll();
     io_service.stop();
     if (service_thread.get() != 0) service_thread->join();
-    _LOG(INFO) << "Server stopped";
+    LOG(INFO) << "Server stopped";
 }
 
 void
 Server::doAccept() {
-    _LOG(INFO) << "Waiting for requests";
+    LOG(INFO) << "Waiting for requests";
     acceptor.async_accept(socket, [this](boost::system::error_code ec) {
         if (not acceptor.is_open()) {
             // acceptors has been stopped
@@ -87,7 +85,7 @@ Server::doAccept() {
         }
 
         if (not ec) {
-            _LOG(INFO) << "Incoming request from " << socket.remote_endpoint();
+            LOG(INFO) << "Incoming request from " << socket.remote_endpoint();
             connectionManager.start(std::make_shared<Connection>(
                     std::move(socket), connectionManager, requestHandler));
         }
