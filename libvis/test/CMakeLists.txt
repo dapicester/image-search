@@ -5,34 +5,34 @@ include_directories(${SRC_DIR})
 # new version of cmake overwrite instead of append, so let's backup
 set(BOOST_LIBRARIES ${Boost_LIBRARIES})
 
-# new version of cmake overwrite instead of append, so let's backup
-set(BOOST_LIBRARIES ${Boost_LIBRARIES})
-
 find_package(Boost COMPONENTS system unit_test_framework REQUIRED)
 add_definitions(-DBOOST_TEST_DYN_LINK)
 
 # append the backupd ones
 set(Boost_LIBRARIES ${Boost_LIBRARIES} ${BOOST_LIBRARIES})
 
-message(STATUS "Tests:")
-
 set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/images)
 set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
-configure_file(images.h.in ${CMAKE_CURRENT_BINARY_DIR}/images.h)
-message(STATUS "Test paths written to: ${CMAKE_CURRENT_BINARY_DIR}/images.h")
+configure_file(directories.h.in ${CMAKE_CURRENT_BINARY_DIR}/directories.h)
+configure_file(${CMAKE_SOURCE_DIR}/server/src/config.yml.in ${CMAKE_CURRENT_BINARY_DIR}/config.yml)
+message(STATUS "Test directories written to: ${CMAKE_CURRENT_BINARY_DIR}/directories.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+message(STATUS "Tests:")
 
 add_unit_test(NAME opencv_usage
     SOURCES opencv_usage.cpp
+            ${SRC_DIR}/standardize.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME armadillo_usage
     SOURCES armadillo_usage.cpp
-    LINK_LIBRARIES ${ARMADILLO_LIBRARIES} ${Boost_LIBRARIES})
+    LINK_LIBRARIES ${MATH_LIBRARIES} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_conversions
     SOURCES test_conversions.cpp
-    LINK_LIBRARIES ${ARMADILLO_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+    LINK_LIBRARIES ${MATH_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME vlfeat_usage
     SOURCES vlfeat_usage.cpp
@@ -42,14 +42,14 @@ add_unit_test(NAME glog_usage
     SOURCES glog_usage.cpp
     LINK_LIBRARIES ${GLOG_LIBRARIES} ${Boost_LIBRARIES})
 
+add_unit_test(NAME test_thread_pool
+    SOURCES test_thread_pool.cpp
+            ${SRC_DIR}/utils/thread_pool.cpp
+    LINK_LIBRARIES ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_kmeans
     SOURCES test_kmeans.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
-
-add_unit_test(NAME test_vl_kdtree
-    SOURCES test_vl_kdtree.c
-    DISABLED true
-    LINK_LIBRARIES ${VLFEAT_LIBRARIES})
 
 add_unit_test(NAME test_kdtree
     SOURCES test_kdtree.cpp
@@ -57,28 +57,30 @@ add_unit_test(NAME test_kdtree
 
 add_unit_test(NAME test_standardize
     SOURCES test_standardize.cpp
+            ${SRC_DIR}/standardize.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hog
     SOURCES test_hog.cpp
             ${SRC_DIR}/hog.cpp
-    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
-
-add_unit_test(NAME test_hog_bow
-    SOURCES test_hog_bow.cpp
-            ${SRC_DIR}/hog.cpp
-            ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/standardize.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hsv_aux
     SOURCES test_hsv_aux.cpp
             ${SRC_DIR}/hsv_aux.cpp
+            ${SRC_DIR}/standardize.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hsv
     SOURCES test_hsv.cpp
             ${SRC_DIR}/hsv.cpp
             ${SRC_DIR}/hsv_aux.cpp
+            ${SRC_DIR}/standardize.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_subset
@@ -93,6 +95,8 @@ add_unit_test(NAME test_posixtimer
     SOURCES test_posixtimer.cpp
     DISABLED true
     LINK_LIBRARIES ${Boost_LIBRARIES})
+# PosixTimer is deprecated, suppress warning
+set_target_properties(test_posixtimer PROPERTIES COMPILE_FLAGS "-Wno-attributes -Wno-deprecated-declarations")
 
 add_unit_test(NAME test_timer
     SOURCES test_timer.cpp
@@ -101,16 +105,46 @@ add_unit_test(NAME test_timer
 
 add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
+            ${SRC_DIR}/extract.cpp
             ${SRC_DIR}/hog.cpp
             ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/standardize.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
+    LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+
+add_unit_test(NAME test_hog_bow
+    SOURCES test_hog_bow.cpp
+            ${SRC_DIR}/hog.cpp
+            ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/standardize.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_descriptors
     SOURCES test_descriptors.cpp
+    ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_index
     SOURCES test_index.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
+    LINK_LIBRARIES vis ${Boost_LIBRARIES})
+
+add_unit_test(NAME test_configuration
+    SOURCES test_configuration.cpp
+            ${SRC_DIR}/configuration.cpp
+    ARGS ${CMAKE_CURRENT_BINARY_DIR}/config.yml
+    LINK_LIBRARIES ${YAML_CPP_LIBRARIES} ${Boost_LIBRARIES})
+
+add_unit_test(NAME test_imsearch_load
+    SOURCES test_imsearch_load.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
+    LINK_LIBRARIES vis ${Boost_LIBRARIES})
+
+add_unit_test(NAME test_imsearch_build
+    SOURCES test_imsearch_build.cpp
+            ${SRC_DIR}/utils/filesystem.cpp
+    DISABLED true # this test performs full extraction/indexing, quite time consuming
     LINK_LIBRARIES vis ${Boost_LIBRARIES})
 
 #add_all_tests_target(${UNIT_TEST_TARGETS})

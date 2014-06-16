@@ -6,15 +6,43 @@
 
 #include "demogui.hpp"
 #include "utils.hpp"
+
 #include <boost/filesystem/operations.hpp>
+#include <vis/imsearch.hpp>
+#include <vis/utils/filesystem.hpp>
+
 #include <QDebug>
 
 void
+DemoGui::initService() {
+    std::for_each(config.categories.begin(),
+                  config.categories.end(),
+                  [&](const vis::config::Category& category) {
+        QString cat = str(category.name);
+        categoryBox->addItem(cat);
+
+        for (const std::string& type : category.type) {
+            qDebug() << "Adding" << cat << "/" << str(type);
+
+            vis::DescriptorsType dt = vis::toDescriptorsType(type);
+            vis::ImageSearch* imsearch = new vis::ImageSearch(category.name, dt, DATA_PATH);
+            imsearch->load();
+
+            service.insert(cat, imsearch);
+        }
+    });
+
+    categoryBox->model()->sort(0);
+}
+
+void
 DemoGui::loadQueryNames() {
-    fs::path file = categoryFile(DATA_PATH, "test");
-    std::vector<std::string> names = loadNames(file);
+    qDebug() << "Loading query names";
+
+    fs::path file = vis::categoryFile(DATA_PATH, "test");
+    std::vector<std::string> names = vis::loadNames(file);
     foreach(const std::string& name, names) {
-        queryNames << QString(name.c_str());
+        queryNames << str(name);
     }
 }
 
@@ -26,63 +54,6 @@ bool checkCategory(const Container& c, const QString& category) {
 template <typename Container>
 bool checkType(const Container& c, const QString& type) {
     return decodeType(c.getType()) == type;
-}
-
-void
-DemoGui::loadImageNames() {
-    QList<QRadioButton*> labels = categoryBox->findChildren<QRadioButton*>();
-    for (QList<QRadioButton*>::iterator it = labels.begin(); it != labels.end(); ++it) {
-        QString category = (*it)->text();
-
-        fs::path file = categoryFile(DATA_PATH, category);
-        fs::path dir = categoryDir(DATA_PATH, category);
-        imagesMap[category] = loadNames(file, dir);
-        qDebug() << "loaded" << imagesMap[category].size() << "images for" << category;
-    }
-}
-
-bool
-DemoGui::loadIndex() {
-    if (index and checkCategory(*index, category) and checkType(*index, queryType)) {
-        qDebug() << "index already loaded";
-        return true;
-    }
-
-    fs::path loadfile = indexFile(DATA_PATH, category, queryType);
-    if (not fs::exists(loadfile)) {
-        qDebug() << "index not found:" << str(loadfile);
-        descriptors.reset();
-        return false;
-    }
-    index.reset(vis::Index::load(loadfile));
-
-    qDebug() << "index loaded from:" << str(loadfile);
-    Q_ASSERT_X(str(index->getCategory()) == category, "loadIndex", "index category mismatch");
-    Q_ASSERT_X(decodeType(index->getType()) == queryType, "loadIndex", "index type mismatch");
-
-    return true;
-}
-
-bool
-DemoGui::loadDescriptors() {
-    if (descriptors and checkCategory(*descriptors, category) and checkType(*descriptors, queryType)) {
-        qDebug() << "descriptors already loaded";
-        return true;
-    }
-
-    fs::path loadfile = descriptorsFile(DATA_PATH, category, queryType);
-    if (not fs::exists(loadfile)) {
-        qDebug() << "descriptors not found:" << str(loadfile);
-        descriptors.reset();
-        return false;
-    }
-    descriptors.reset(vis::Descriptors::load(loadfile));
-
-    qDebug() << "descriptors loaded from:" << str(loadfile);
-    Q_ASSERT_X(str(descriptors->getCategory()) == category, "loadDescriptors", "descriptors category mismatch");
-    Q_ASSERT_X(decodeType(descriptors->getType()) == queryType, "loadDescriptors", "descriptors type mismatch");
-
-    return true;
 }
 
 bool
@@ -105,23 +76,4 @@ DemoGui::loadQueries() {
 
     return true;
 }
-
-bool
-DemoGui::loadVocabulary() {
-    if (vocabulary and checkCategory(*vocabulary, category)) {
-        qDebug() << "vocabulary already loaded";
-        return true;
-    }
-
-    fs::path loadfile = vocabularyFile(DATA_PATH, category);
-    if (not fs::exists(loadfile)) {
-        qDebug() << "vocabulary not found:" << str(loadfile);
-        vocabulary.reset();
-        return false;
-    }
-    vocabulary.reset(vis::Vocabulary::load(loadfile));
-    qDebug() << "vocabulary loaded from:" << str(loadfile);
-    return true;
-}
-
 

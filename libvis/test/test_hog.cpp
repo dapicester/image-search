@@ -7,12 +7,13 @@
 #define BOOST_TEST_MODULE hog
 #include <boost/test/unit_test.hpp>
 
-#include "hog.hpp"
 #include "fixtures.hpp"
-#include "utils/data.hpp"
 #include "utils/matrix.hpp"
 #include "utils/print.hpp"
-#include "utils/conversions.hpp"
+
+#include "vis/hog.hpp"
+#include "vis/utils/conversions.hpp"
+
 #include <opencv2/highgui/highgui.hpp>
 
 #define argc boost::unit_test::framework::master_test_suite().argc

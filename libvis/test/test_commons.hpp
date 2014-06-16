@@ -18,8 +18,10 @@ Object*
 load(const fs::path& file) {
     BOOST_REQUIRE_MESSAGE(fs::is_regular_file(file), "Cannot find file: " << file);
 
+    std::cout << "Loading from file: " << file << " ... ";
     Object* ptr = Object::load(file);
     BOOST_REQUIRE(ptr);
+    std::cout << "done" << std::endl;
 
     return ptr;
 };
@@ -30,8 +32,10 @@ void save(const fs::path file, const Object& obj) {
         fs::remove(file);
     BOOST_CHECK(not fs::exists(file));
 
+    std::cout << "Saving to file: " << file << " ... ";
     obj.save(file);
     BOOST_CHECK(fs::is_regular_file(file));
+    std::cout << "done" << std::endl;
 }
 
 } /* namespace test */

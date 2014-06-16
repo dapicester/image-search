@@ -4,7 +4,8 @@
  * @author Paolo D'Apice
  */
 
-#include "hog.hpp"
+#include "vis/hog.hpp"
+
 #include <memory>
 
 namespace vis {

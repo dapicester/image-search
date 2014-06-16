@@ -7,9 +7,11 @@
 #define BOOST_TEST_MODULE kdtree
 #include <boost/test/unit_test.hpp>
 
-#include "kdtree.hpp"
 #include "utils/data.hpp"
 #include "utils/print.hpp"
+
+#include "vis/kdtree.hpp"
+
 #include <iostream>
 #include <random>
 
@@ -28,7 +30,7 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
     tree.build(data);
 
     int numQueries = 2;
-    arma::ivec indices(numQueries);
+    arma::uvec indices(numQueries);
     arma::mat queries(dimension, numQueries);
 
     // pick random records within data
@@ -59,6 +61,20 @@ BOOST_AUTO_TEST_CASE(test_kdtree) {
     {
         // query for index
         std::vector<KDTreeIndex> results = tree.search<KDTreeIndex>(queries);
+        BOOST_REQUIRE_EQUAL(numQueries, results.size());
+
+        for (int i = 0; i < numQueries; i++) {
+            KDTreeIndex record = results[i];
+
+            printvar(record);
+
+            BOOST_REQUIRE_EQUAL(indices.at(i), record.index);
+        }
+    }
+
+    {
+        // query using indices
+        std::vector<KDTreeIndex> results = tree.search<KDTreeIndex>(indices);
         BOOST_REQUIRE_EQUAL(numQueries, results.size());
 
         for (int i = 0; i < numQueries; i++) {

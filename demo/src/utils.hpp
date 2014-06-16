@@ -7,11 +7,14 @@
 #ifndef DEMO_UTILS_HPP
 #define DEMO_UTILS_HPP
 
-#include <QMessageBox>
-#include <QString>
-#include <descriptors_type.hpp>
+#include <vis/descriptors_type.hpp>
+#include <vis/extract.hpp>
+
 #include <boost/filesystem/path.hpp>
 #include <vector>
+
+#include <QMessageBox>
+#include <QString>
 
 class QProgressDialog;
 class QWidget;
@@ -43,52 +46,20 @@ decodeType(vis::DescriptorsType type) {
     }
 }
 
-/// Load file content.
-std::vector<std::string>
-loadNames(const boost::filesystem::path& file);
-
-/// Load file names from file.
-std::vector<boost::filesystem::path>
-loadNames(const boost::filesystem::path& file, const boost::filesystem::path& prefix);
-
 /// Get query images for the given category.
 std::vector<boost::filesystem::path>
 queryNames(const std::vector<boost::filesystem::path>& all, const QString& category);
-
-/// Get the path to the text file containing images for the given category.
-/// @return path to \c dataDir/category.txt
-boost::filesystem::path
-categoryFile(const boost::filesystem::path& dataDir, const QString& category);
-
-/// Get the path to the directory containing images for the given category.
-/// @return path to \c dataDir/category/
-boost::filesystem::path
-categoryDir(const boost::filesystem::path& dataDir, const QString& category);
-
-/// Get the path to the vocabulary file for the given category.
-/// @return path to \c dataDir/vocabulary_category.dgz
-boost::filesystem::path
-vocabularyFile(const boost::filesystem::path& dataDir, const QString& category);
-
-/// Get the path to the descriptors file for the given category and query type.
-/// @return path to \c dataDir/descriptors_category_type.dgz
-boost::filesystem::path
-descriptorsFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
 
 /// Get the path to the query file for the given category and query type.
 /// @return path to \c dataDir/query_category_type.dgz
 boost::filesystem::path
 queryFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
 
-/// Get the path to the index file for the given category.
-/// @return path to \c dataDir/index_category_type.dgz
-boost::filesystem::path
-indexFile(const boost::filesystem::path& dataDir, const QString& category, const QString& type);
-
 void
 extractDescriptors(const QString& category, const QString& queryType,
         const std::vector<boost::filesystem::path>& names,
-        vis::Descriptors* descriptors, vis::Vocabulary* vocabulary);
+        vis::Descriptors* descriptors, vis::Vocabulary* vocabulary,
+        vis::ProgressHandler handler = NULL);
 
 /// Display a confirmation message box.
 bool confirmMessageBox(const QString& message);
@@ -97,7 +68,7 @@ bool confirmMessageBox(const QString& message);
 void messageBox(const QString& message, QMessageBox::Icon icon = QMessageBox::NoIcon);
 
 /// Progress dialog box.
-QProgressDialog* progressDialog(const QString& title, QWidget* parent, int min, int max);
+QProgressDialog* progressDialog(const QString& title, QWidget* parent, int max);
 
 /// Operator << for std::vector.
 template <typename T>

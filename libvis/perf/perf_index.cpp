@@ -5,7 +5,6 @@
  */
 
 #include "perf_index.hpp"
-//#include <random>
 
 namespace perf {
 

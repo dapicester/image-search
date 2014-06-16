@@ -4,8 +4,9 @@
  * @author Paolo D'Apice
  */
 
-#include "callbacks.hpp"
-#include "vocabulary.hpp"
+#include "vis/callbacks.hpp"
+#include "vis/vocabulary.hpp"
+
 #include <opencv2/imgproc/imgproc.hpp>
 
 namespace vis {
@@ -37,6 +38,18 @@ CompositeCallback::operator()(const cv::Mat& image) const {
     arma::fvec d2 = hsv(image);
 
     return arma::join_cols(d1, d2);
+}
+
+Callback*
+getCallback(DescriptorsType t, const Vocabulary* vocabulary) {
+    switch (t) {
+    case HOG:
+        return new HogBagOfWordsCallback(*vocabulary);
+    case HSV:
+        return new HsvHistogramsCallback;
+    case HOG_HSV:
+        return new CompositeCallback(*vocabulary);
+    }
 }
 
 } /* namespace vis */

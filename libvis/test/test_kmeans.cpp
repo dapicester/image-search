@@ -7,8 +7,9 @@
 #define BOOST_TEST_MODULE kmeans
 #include <boost/test/unit_test.hpp>
 
-#include "kmeans.hpp"
 #include "utils/data.hpp"
+
+#include "vis/kmeans.hpp"
 
 BOOST_AUTO_TEST_CASE(test_quantize) {
     int dimension = 2;

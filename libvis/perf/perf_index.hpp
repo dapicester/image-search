@@ -7,10 +7,11 @@
 #ifndef VIS_PERF_INDEX_HPP
 #define VIS_PERF_INDEX_HPP
 
-#include "descriptors_type.hpp"
-#include "index.hpp"
-#include "utils/timer.hpp"
-#include <boost/array.hpp>
+#include "vis/descriptors_type.hpp"
+#include "vis/index.hpp"
+#include "vis/utils/timer.hpp"
+
+#include <array>
 
 namespace perf {
 

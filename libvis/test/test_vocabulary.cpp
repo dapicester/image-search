@@ -7,11 +7,14 @@
 #define BOOST_TEST_MODULE vocabulary
 #include <boost/test/unit_test.hpp>
 
-#include "hog.hpp"
-#include "vocabulary.hpp"
+#include "vis/hog.hpp"
+#include "vis/vocabulary.hpp"
+#include "vis/utils/handlers.hpp"
+
 #include "fixtures.hpp"
 #include "utils/matrix.hpp"
 #include "test_commons.hpp"
+
 #include <boost/scoped_ptr.hpp>
 
 static const fs::path VOCABULARY_FILE = "test_vocabulary.dat";
@@ -49,8 +52,11 @@ arma::fmat descriptors;
 arma::uvec indices;
 
 BOOST_FIXTURE_TEST_CASE(test_vocabulary, test::ImageDir) {
+    auto progress = [&](int i) { vis::handlers::PrintFile(i, files); };
+
     // compute vocabulary
-    VocabularyPtr vocabulary(vis::Vocabulary::fromImageList<vis::HogExtractor>("test", files));
+    VocabularyPtr vocabulary(vis::Vocabulary::fromImageList<vis::HogExtractor>("test",
+                files, vis::vocabulary::NUM_WORDS, progress));
     BOOST_CHECK(vocabulary.get());
 
     // check it's the same as matlab (see test_vocabulary.mat)

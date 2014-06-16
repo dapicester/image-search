@@ -9,7 +9,7 @@
 macro(add_unit_test)
     set(options DISABLED)
     set(oneValueArgs NAME WORKING_DIRECTORY TAG)
-    set(multiValueArgs SOURCES LINK_LIBRARIES ARGS)
+    set(multiValueArgs SOURCES COMPILE_FLAGS LINK_LIBRARIES ARGS)
     cmake_parse_arguments(UNIT_TEST "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if(NOT UNIT_TEST_NAME)
@@ -19,6 +19,10 @@ macro(add_unit_test)
     add_executable(${UNIT_TEST_NAME} ${UNIT_TEST_SOURCES})
     if(UNIT_TEST_LINK_LIBRARIES)
         target_link_libraries(${UNIT_TEST_NAME} ${UNIT_TEST_LINK_LIBRARIES})
+    endif()
+
+    if(UNIT_TEST_COMPILE_FLAGS)
+        set_target_properties(${UNIT_TEST_NAME} PROPERTIES COMPILE_FLAGS ${UNIT_TEST_COMPILE_FLAGS})
     endif()
 
     if(UNIT_TEST_TAG)

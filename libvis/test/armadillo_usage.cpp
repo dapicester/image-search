@@ -8,6 +8,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "utils/matrix.hpp"
+
 #include <armadillo>
 
 using namespace arma;
@@ -15,6 +16,13 @@ using namespace arma;
 BOOST_AUTO_TEST_CASE(arma_mat) {
     mat a = randu<mat>(4,4);
     a.print("randu");
+
+    mat b = a.cols(1,3);
+    b.print("cols");
+
+    uvec i{1,3};
+    mat c = a.cols(i);
+    c.print("cols");
 }
 
 BOOST_AUTO_TEST_CASE(arma_vec) {
