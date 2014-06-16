@@ -5,21 +5,19 @@
  */
 
 #include "request_handler.hpp"
-
-#include "logging.hpp"
 #include "protocol.hpp"
 
 #include <vis/configuration.hpp>
 #include <vis/imsearch.hpp>
 #include <vis/utils/filesystem.hpp>
 
-#define _LOG(X) CLOG(X, "handler")
+#include <glog/logging.h>
 
 namespace vis {
 namespace server {
 
 RequestHandler::RequestHandler(const vis::config::Configuration& config) {
-    _LOG(INFO) << "Initializing image search";
+    LOG(INFO) << "Initializing image search";
 
     std::for_each(config.categories.begin(),
                   config.categories.end(),
@@ -28,7 +26,7 @@ RequestHandler::RequestHandler(const vis::config::Configuration& config) {
         for (auto type_str : category.type) {
             DescriptorsType type = toDescriptorsType(type_str);
 
-            _LOG(INFO) << "Adding " << name << "/" << type_str;
+            LOG(INFO) << "Adding " << name << "/" << type_str;
             ImageSearch* imsearch = new ImageSearch(name, type, category.dir);
             imsearch->load();
 
@@ -42,13 +40,13 @@ RequestHandler::~RequestHandler() {}
 
 void
 RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
-    _LOG(DEBUG) << "Handling request: " << req;
+    DLOG(INFO) << "Handling request: " << req;
 
     if (!service.count(req.category)) {
         res.status = vis::ResponseStatus::ERROR;
         res.message = "Category not found";
 
-        _LOG(DEBUG) << "Response: " << res;
+        DLOG(INFO) << "Response: " << res;
         return;
     }
 
@@ -68,7 +66,7 @@ RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
         res.status = vis::ResponseStatus::ERROR;
         res.message = "Query type not found";
 
-        _LOG(DEBUG) << "Response: " << res;
+        DLOG(INFO) << "Response: " << res;
         return;
     }
 
@@ -89,24 +87,24 @@ RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
     res.status = vis::ResponseStatus::OK;
     toStrings(imsearch.get(res.results), res.paths);
 
-    _LOG(DEBUG) << "Response: " << res;
+    DLOG(INFO) << "Response: " << res;
 }
 
 void RequestHandler::doHandle(const vis::OfflineRequest& req,
         vis::Response& res, const ImageSearch& imsearch) {
-    _LOG(DEBUG) << "Offline: id=" << req.id;
+    DLOG(INFO) << "Offline: id=" << req.id;
     imsearch.query(req.id, res.results, req.numResults);
 }
 
 void RequestHandler::doHandle(const vis::RealtimeRequest& req,
         vis::Response& res, const ImageSearch& imsearch) {
-    _LOG(DEBUG) << "Realtime: descriptors=" << req.descriptors.size();
+    DLOG(INFO) << "Realtime: descriptors=" << req.descriptors.size();
     imsearch.query(req.descriptors, res.results, req.numResults);
 }
 
 void RequestHandler::doHandle(const vis::UploadRequest& req,
         vis::Response& res, const ImageSearch& imsearch) {
-    _LOG(DEBUG) << "Upload: image=TODO";
+    DLOG(INFO) << "Upload: image=TODO";
     // TODO imsearch.query(req.image, res.results, req.numResults);
 }
 
