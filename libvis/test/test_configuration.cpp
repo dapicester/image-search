@@ -10,6 +10,8 @@
 #include "vis/configuration.hpp"
 #include "directories.h"
 
+#include <iostream>
+
 #define argc boost::unit_test::framework::master_test_suite().argc
 #define argv boost::unit_test::framework::master_test_suite().argv
 
