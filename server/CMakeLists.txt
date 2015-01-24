@@ -14,6 +14,10 @@ find_package(Boost COMPONENTS program_options thread REQUIRED)
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
+find_package(Msgpack REQUIRED)
+list(APPEND includes ${MSGPACK_INCLUDE_DIRS})
+list(APPEND libraries ${MSGPACK_LIBRARIES})
+
 set(DATA_DIR ${CMAKE_SOURCE_DIR}/data)
 configure_file("include/directories.h.in" ${CMAKE_CURRENT_BINARY_DIR}/directories.h)
 configure_file("src/config.yml.in" ${CMAKE_CURRENT_BINARY_DIR}/config.yml)

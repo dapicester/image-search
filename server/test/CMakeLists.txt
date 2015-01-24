@@ -13,6 +13,10 @@ set(SRC ${server_SOURCE_DIR}/src)
 
 message(STATUS "Tests:")
 
+add_unit_test(NAME msgpack_usage
+    SOURCES msgpack_usage.cpp
+    LINK_LIBRARIES ${MSGPACK_LIBRARIES} ${Boost_LIBRARIES})
+
 add_unit_test(NAME test_protocol
     SOURCES test_protocol.cpp
     LINK_LIBRARIES ${Boost_LIBRARIES})
