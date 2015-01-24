@@ -30,7 +30,7 @@ struct InitGlog {
 
 int main(int argc, char** argv) {
     try {
-        InitGlog logging;
+        //InitGlog logging;
 
         // TODO move to function
 
