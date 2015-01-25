@@ -10,7 +10,7 @@ list(APPEND libraries vis)
 
 list(APPEND includes "${server_SOURCE_DIR}/include")
 
-find_package(Boost COMPONENTS iostreams program_options serialization thread REQUIRED)
+find_package(Boost COMPONENTS program_options thread REQUIRED)
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 

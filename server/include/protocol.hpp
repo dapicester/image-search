@@ -8,101 +8,60 @@
 #define VIS_PROTOCOL_HPP
 
 #include <iterator>
-#include <sstream>
+#include <iostream>
 #include <vector>
 
 namespace vis {
 
 typedef size_t id_type; // XXX vis::Index::id_type
 
-enum class RequestType : char {
-    OFFLINE  = 'o',
-    REALTIME = 'r',
-    UPLOAD   = 'u'
+enum RequestType { // TODO move into Request
+    OFFLINE,
+    REALTIME,
+    UPLOAD,
 };
 
-// TODO factory method for request objects
-
-struct BaseRequest {
-    BaseRequest();
-    BaseRequest(RequestType requestType,
-            const std::string& category,
-            char queryType,
-            unsigned numResults);
-    virtual ~BaseRequest();
-
-    virtual void print(std::ostream&) const;
-    virtual bool equals(const BaseRequest&) const;
-
-    RequestType requestType;
+struct Request {
+    RequestType type;
     std::string category;
     char queryType; // XXX enum, string or DescriptorsType
     unsigned numResults;
-};
 
-struct OfflineRequest : BaseRequest {
-    OfflineRequest();
-    OfflineRequest(RequestType requestType,
-            const std::string& category,
-            char queryType,
-            unsigned numResults,
-            unsigned id);
-    ~OfflineRequest();
-
-    void print(std::ostream&) const;
-    bool equals(const BaseRequest&) const;
-
-    id_type id;
-};
-
-struct RealtimeRequest : BaseRequest {
-    RealtimeRequest();
-    RealtimeRequest(RequestType requestType,
-            const std::string& category,
-            char queryType,
-            unsigned numResults,
-            const std::vector<float>& descriptors);
-    ~RealtimeRequest();
-
-    void print(std::ostream&) const;
-    bool equals(const BaseRequest&) const;
-
-    std::vector<float> descriptors;
-};
-
-struct UploadRequest : BaseRequest {
-    UploadRequest();
-    UploadRequest(RequestType requestType,
-            const std::string& category,
-            char queryType,
-            unsigned numResults,
-            void* data);
-    ~UploadRequest();
-
-    void print(std::ostream&) const;
-    bool equals(const BaseRequest&) const;
-
+    id_type id; // offline
+    std::vector<float> descriptors; // realtime
     // TODO opencv image
+
+    bool equals(const Request&) const;
 };
 
-enum class ResponseStatus : int {
+enum ResponseStatus { // TODO move into Response
     OK,
     ERROR,
 };
 
 struct Response {
-    Response();
-    Response(ResponseStatus status,
-            const std::string& message,
-            const std::vector<id_type>& results,
-            const std::vector<std::string>& paths);
-    ~Response();
-
     ResponseStatus status;
     std::string message;
     std::vector<id_type> results;
     std::vector<std::string> paths;
 };
+
+inline bool
+operator==(const Request& left, const Request& right) {
+    return left.type == right.type
+        and left.category == right.category
+        and left.queryType == right.queryType
+        and left.numResults == right.numResults
+        and (left.id == right.id or left.descriptors == right.descriptors);
+}
+
+inline bool
+operator==(const vis::Response& left, const vis::Response& right) {
+    return left.status == right.status
+        and left.message == right.message
+        and left.results == right.results
+        and left.paths == right.paths;
+}
 
 template <typename T>
 inline std::ostream&
@@ -115,15 +74,46 @@ operator<<(std::ostream& os, const std::vector<T>& v) {
 }
 
 inline std::ostream&
-operator<<(std::ostream& os, const vis::BaseRequest& r) {
-    r.print(os);
+operator<<(std::ostream& os, const vis::Request& r) {
+    os << r.type << r.category << r.queryType << r.numResults;
+    switch (r.type) {
+        case vis::RequestType::OFFLINE:
+            os << r.id;
+            break;
+        case vis::RequestType::REALTIME:
+            os << r.descriptors;
+            break;
+        case vis::RequestType::UPLOAD:
+            // TODO
+            break;
+    }
     return os;
+}
+
+inline std::istream&
+operator>>(std::istream& is, vis::Request& r) {
+    int t;
+    is >> t >> r.category >> r.queryType >> r.numResults;
+    switch (t) {
+        case 0:
+            r.type = vis::RequestType::OFFLINE;
+            is >> r.id;
+            break;
+        case 1:
+            r.type = vis::RequestType::REALTIME;
+            // TODO is >> r.descriptors;
+            break;
+        case 2:
+            r.type = vis::RequestType::UPLOAD;
+            // TODO
+            break;
+    }
+    return is;
 }
 
 inline std::ostream&
 operator<<(std::ostream& os, const vis::Response& r) {
-    return os << static_cast<int>(r.status) << ":" << r.message
-        << " " << r.results << " " << r.paths;
+    return os << r.status << r.message << r.results << r.paths;
 }
 
 } // namespace vis
