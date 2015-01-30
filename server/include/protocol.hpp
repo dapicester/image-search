@@ -8,6 +8,7 @@
 #define VIS_PROTOCOL_HPP
 
 #include <boost/asio/streambuf.hpp>
+#include <msgpack.hpp>
 #include <iostream>
 #include <iterator>
 #include <vector>
@@ -26,6 +27,13 @@ enum QueryType { // TODO move into Request
     COLOR_SHAPE
 };
 
+} // namespace vis
+
+MSGPACK_ADD_ENUM(vis::RequestType);
+MSGPACK_ADD_ENUM(vis::QueryType);
+
+namespace vis {
+
 typedef size_t id_type; // XXX vis::Index::id_type
 
 struct Request {
@@ -39,7 +47,9 @@ struct Request {
     std::vector<float> descriptors; // realtime
     // TODO opencv image
 
+    MSGPACK_DEFINE(type, category, queryType, numResults, id, descriptors);
 };
+
 
 enum ResponseStatus { // TODO move into Response
     OK,
@@ -48,14 +58,24 @@ enum ResponseStatus { // TODO move into Response
     NO_QUERY_TYPE
 };
 
+} // namespace vis
+
+MSGPACK_ADD_ENUM(vis::ResponseStatus);
+
+namespace vis {
+
 struct Match { // TODO move into Response
     id_type id;
     std::string path;
+
+    MSGPACK_DEFINE(id, path);
 };
 
 struct Response {
     ResponseStatus status;
     std::vector<Match> results;
+
+    MSGPACK_DEFINE(status, results);
 };
 
 inline bool
@@ -169,16 +189,39 @@ operator>>(std::istream& is, vis::Response& r) {
 
 template <typename Object>
 void
-put(boost::asio::streambuf& buf, const Object& obj) {
-    std::ostream os(&buf);
-    os << obj;
+put(boost::asio::streambuf& buf, const Object& obj, bool msgpack = true) {
+    if (msgpack) {
+        msgpack::sbuffer sbuf;
+        msgpack::pack(sbuf, obj);
+
+        std::ostream os(&buf);
+        os << sbuf.data();
+
+        std::cout << sbuf.data() << std::endl;
+    } else {
+        std::ostream os(&buf);
+        os << obj;
+    }
 }
 
 template <typename Object>
 void
-get(boost::asio::streambuf& buf, Object& obj) {
+get(boost::asio::streambuf& buf, Object& obj, bool msgpack = true) {
     std::istream is(&buf);
-    is >> obj;
+    if (msgpack) {
+        std::string data;
+        is >> data;
+
+        std::cout << data << std::endl;
+
+        msgpack::unpacked msg;
+        msgpack::unpack(&msg, data.c_str(), data.size());
+
+        msgpack::object o = msg.get();
+        o.convert(&obj);
+    } else {
+        is >> obj;
+    }
 }
 
 } // namespace vis
