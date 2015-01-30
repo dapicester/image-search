@@ -9,41 +9,11 @@
 
 #include "protocol.hpp"
 
-vis::Request offline() {
-    vis::Request req;
-    req.type = vis::RequestType::OFFLINE;
-    req.category = "bag";
-    req.queryType = vis::QueryType::COLOR;
-    req.numResults = 20;
-    req.id = 42;
-    return req;
-}
-
-vis::Request realtime() {
-    vis::Request req;
-    req.type = vis::RequestType::REALTIME;
-    req.category = "bag";
-    req.queryType = vis::QueryType::COLOR;
-    req.numResults = 20;
-    req.descriptors = std::vector<float>(166, 0.f);
-    return req;
-}
-
-vis::Request upload() {
-    vis::Request req;
-    req.type = vis::RequestType::UPLOAD;
-    req.category = "bag";
-    req.queryType = vis::QueryType::COLOR;
-    req.numResults = 20;
-    // TODO req.descriptors = image;
-    return req;
-}
-
 BOOST_AUTO_TEST_CASE(serialize_request) {
     const vis::Request requests[] = {
-        offline(),
-        realtime(),
-        upload()
+        { vis::RequestType::OFFLINE, "bag", vis::QueryType::COLOR, 20, 42, {} },
+        { vis::RequestType::REALTIME, "bag", vis::QueryType::COLOR, 20, 0, std::vector<float>(166, 0.f) },
+        { vis::RequestType::UPLOAD, "bag", vis::QueryType::COLOR, 20, 0, {} /* TODO image */},
     };
     std::for_each(std::begin(requests), std::end(requests), [](const vis::Request& request) {
         boost::asio::streambuf buf;
