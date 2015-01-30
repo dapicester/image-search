@@ -7,31 +7,36 @@
 #ifndef VIS_PROTOCOL_HPP
 #define VIS_PROTOCOL_HPP
 
-#include <iterator>
+#include <boost/asio/streambuf.hpp>
 #include <iostream>
 #include <vector>
 
 namespace vis {
 
-typedef size_t id_type; // XXX vis::Index::id_type
-
 enum RequestType { // TODO move into Request
     OFFLINE,
     REALTIME,
-    UPLOAD,
+    UPLOAD
 };
+
+enum QueryType { // TODO move into Request
+    COLOR,
+    SHAPE,
+    COLOR_SHAPE
+};
+
+typedef size_t id_type; // XXX vis::Index::id_type
 
 struct Request {
     RequestType type;
     std::string category;
-    char queryType; // XXX enum, string or DescriptorsType
+    QueryType queryType;
     unsigned numResults;
 
     id_type id; // offline
     std::vector<float> descriptors; // realtime
     // TODO opencv image
 
-    bool equals(const Request&) const;
 };
 
 enum ResponseStatus { // TODO move into Response
@@ -48,11 +53,21 @@ struct Response {
 
 inline bool
 operator==(const Request& left, const Request& right) {
-    return left.type == right.type
+    bool b = left.type == right.type
         and left.category == right.category
         and left.queryType == right.queryType
-        and left.numResults == right.numResults
-        and (left.id == right.id or left.descriptors == right.descriptors);
+        and left.numResults == right.numResults;
+    if (!b) return false;
+
+    switch(left.type) {
+        case vis::RequestType::OFFLINE:
+            return left.id == right.id;
+        case vis::RequestType::REALTIME:
+            return left.descriptors == right.descriptors;
+        case vis::RequestType::UPLOAD:
+            // TODO
+            return true;
+    }
 }
 
 inline bool
@@ -66,16 +81,30 @@ operator==(const vis::Response& left, const vis::Response& right) {
 template <typename T>
 inline std::ostream&
 operator<<(std::ostream& os, const std::vector<T>& v) {
-    os << "[";
-    std::copy(v.begin(), v.end(), std::ostream_iterator<T>(os, ","));
-    if (not v.empty()) os << "\b";
-    os << "]";
+    std::copy(v.begin(), v.end(), std::ostream_iterator<T>(os, " "));
     return os;
+}
+
+template <typename T>
+inline std::istream&
+operator>>(std::istream& is, std::vector<T>& v) {
+    std::copy(std::istream_iterator<T>(is), std::istream_iterator<T>(), std::back_inserter(v));
+    return is;
+}
+
+template <typename E>
+typename std::enable_if<std::is_enum<E>::value, std::istream&>::type
+operator>>(std::istream& is, E& e) {
+    unsigned int value = 0;
+    if (is >> value)
+        e = static_cast<E>(value);
+    return is;
 }
 
 inline std::ostream&
 operator<<(std::ostream& os, const vis::Request& r) {
-    os << r.type << r.category << r.queryType << r.numResults;
+    os << r.type << ' ' << r.category << ' '
+        << r.queryType << ' ' << r.numResults << ' ';
     switch (r.type) {
         case vis::RequestType::OFFLINE:
             os << r.id;
@@ -92,28 +121,33 @@ operator<<(std::ostream& os, const vis::Request& r) {
 
 inline std::istream&
 operator>>(std::istream& is, vis::Request& r) {
-    int t;
-    is >> t >> r.category >> r.queryType >> r.numResults;
-    switch (t) {
-        case 0:
-            r.type = vis::RequestType::OFFLINE;
+    is >> r.type >> r.category >> r.queryType >> r.numResults;
+    switch (r.type) {
+        case vis::RequestType::OFFLINE:
             is >> r.id;
             break;
-        case 1:
-            r.type = vis::RequestType::REALTIME;
-            // TODO is >> r.descriptors;
+        case vis::RequestType::REALTIME:
+            is >> r.descriptors;
             break;
-        case 2:
-            r.type = vis::RequestType::UPLOAD;
+        case vis::RequestType::UPLOAD:
             // TODO
             break;
     }
     return is;
 }
 
-inline std::ostream&
-operator<<(std::ostream& os, const vis::Response& r) {
-    return os << r.status << r.message << r.results << r.paths;
+template <typename Object>
+void
+put(boost::asio::streambuf& buf, const Object& obj) {
+    std::ostream os(&buf);
+    os << obj;
+}
+
+template <typename Object>
+void
+get(boost::asio::streambuf& buf, Object& obj) {
+    std::istream is(&buf);
+    is >> obj;
 }
 
 } // namespace vis
