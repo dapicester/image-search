@@ -29,13 +29,12 @@ BOOST_AUTO_TEST_CASE(serialize_request) {
     });
 }
 
-#if 0
-static const vis::Response ok(vis::ResponseStatus::OK, "", { 0 }, { "" });
-static const vis::Response error(vis::ResponseStatus::OK, "message", {}, {});
-
 BOOST_AUTO_TEST_CASE(serialize_response) {
-    const vis::Response responses[] = { ok, error };
-    std::for_each(std::begin(responses), std::end(responses), [](const vis::Response response) {
+    const vis::Response responses[] = {
+        { vis::ResponseStatus::OK, { { 33, "path33" }, { 42, "path42" } } },
+        { vis::ResponseStatus::ERROR }
+    };
+    std::for_each(std::begin(responses), std::end(responses), [](const vis::Response& response) {
         boost::asio::streambuf buf;
 
         // serialize
@@ -45,11 +44,7 @@ BOOST_AUTO_TEST_CASE(serialize_response) {
         vis::Response deserialized;
         vis::get(buf, deserialized);
 
-        PRINT(response);
-        PRINT(deserialized);
-
         BOOST_CHECK_EQUAL(response, deserialized);
     });
 }
-#endif
 

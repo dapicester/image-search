@@ -33,6 +33,7 @@ struct Request {
     QueryType queryType;
     unsigned numResults;
 
+// TODO boost::variant?
     id_type id; // offline
     std::vector<float> descriptors; // realtime
     // TODO opencv image
@@ -44,11 +45,14 @@ enum ResponseStatus { // TODO move into Response
     ERROR,
 };
 
+struct Match { // TODO move into Response
+    id_type id;
+    std::string path;
+};
+
 struct Response {
     ResponseStatus status;
-    std::string message;
-    std::vector<id_type> results;
-    std::vector<std::string> paths;
+    std::vector<Match> results;
 };
 
 inline bool
@@ -71,11 +75,13 @@ operator==(const Request& left, const Request& right) {
 }
 
 inline bool
+operator==(const vis::Match& left, const vis::Match& right) {
+    return left.id == right.id and left.path == right.path;
+}
+
+inline bool
 operator==(const vis::Response& left, const vis::Response& right) {
-    return left.status == right.status
-        and left.message == right.message
-        and left.results == right.results
-        and left.paths == right.paths;
+    return left.status == right.status and left.results == right.results;
 }
 
 template <typename T>
@@ -99,6 +105,16 @@ operator>>(std::istream& is, E& e) {
     if (is >> value)
         e = static_cast<E>(value);
     return is;
+}
+
+inline std::ostream&
+operator<<(std::ostream& os, const vis::Match& m) {
+    return os << m.id << " " << m.path;
+}
+
+inline std::istream&
+operator>>(std::istream& is, vis::Match& m) {
+    return is >> m.id >> m.path;
 }
 
 inline std::ostream&
@@ -133,6 +149,18 @@ operator>>(std::istream& is, vis::Request& r) {
             // TODO
             break;
     }
+    return is;
+}
+
+inline std::ostream&
+operator<<(std::ostream& os, const vis::Response& r) {
+    os << r.status << " " << r.results;
+    return os;
+}
+
+inline std::istream&
+operator>>(std::istream& is, vis::Response& r) {
+    is >> r.status >> r.results;
     return is;
 }
 
