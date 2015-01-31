@@ -6,4 +6,5 @@
   - Apply threshold on returned images distance, so that
     actual #returned <= #requested
 - Use msgpack or protobuf for tcp protocol
+- Find a better logging library
 - Cleanup core classes (Descriptors, Index)
