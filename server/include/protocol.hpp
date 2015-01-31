@@ -43,6 +43,8 @@ struct Request {
 enum ResponseStatus { // TODO move into Response
     OK,
     ERROR,
+    NO_CATEGORY,
+    NO_QUERY_TYPE
 };
 
 struct Match { // TODO move into Response

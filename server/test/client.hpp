@@ -1,7 +1,7 @@
 #ifndef VIS_CLIENT_HPP
 #define VIS_CLIENT_HPP
 
-#include "protocol_serialization.hpp"
+#include "protocol.hpp"
 
 #include <boost/asio.hpp>
 #include <glog/logging.h>
@@ -31,8 +31,8 @@ public:
         }
     }
 
-    Response sendRequest(const BaseRequest* request) {
-        LOG(INFO) << "Sending request [" << *request << "] ...";
+    Response sendRequest(const Request& request) {
+        LOG(INFO) << "Sending request [" << request << "] ...";
         {
             put(buf, request);
             header = buf.size();

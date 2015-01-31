@@ -6,7 +6,6 @@
 
 #include "connection.hpp"
 #include "connection_manager.hpp"
-#include "protocol_serialization.hpp"
 #include "request_handler.hpp"
 
 #include <glog/logging.h>
@@ -45,12 +44,11 @@ Connection::doRead() {
                         buf.commit(header);
                         LOG(INFO) << "read: " << len + sizeof(header) << " bytes";
 
-                        BaseRequest* request;
+                        Request request;
                         get(buf, request);
 
                         // TODO handle parse errors
-                        handler.handle(*request, response);
-                        delete request;
+                        handler.handle(request, response);
 
                         doWrite();
                     }

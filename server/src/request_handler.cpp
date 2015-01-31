@@ -39,14 +39,13 @@ RequestHandler::RequestHandler(const vis::config::Configuration& config) {
 RequestHandler::~RequestHandler() {}
 
 void
-RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
+RequestHandler::handle(const vis::Request& req, vis::Response& res) {
     DLOG(INFO) << "Handling request: " << req;
 
     if (!service.count(req.category)) {
-        res.status = vis::ResponseStatus::ERROR;
-        res.message = "Category not found";
+        res.status = vis::ResponseStatus::NO_CATEGORY;
 
-        DLOG(INFO) << "Response: " << res;
+        LOG(INFO) << "Response: " << res;
         return;
     }
 
@@ -54,58 +53,48 @@ RequestHandler::handle(const vis::BaseRequest& req, vis::Response& res) {
     auto it = range.begin();
     for (auto end = range.end(); it != end; ++it) {
         vis::DescriptorsType type = it->second->getType();
-        char t = req.queryType;
+        QueryType t = req.queryType;
         // XXX quick'n dirty (TM)
-        if ((t == 'c' and type == vis::HSV)
-                or (t == 's' and type == vis::HOG)
-                or (t == 'b' and type == vis::HOG_HSV))
+        if ((t == QueryType::COLOR and type == vis::HSV)
+                or (t == QueryType::SHAPE and type == vis::HOG)
+                or (t == QueryType::COLOR_SHAPE and type == vis::HOG_HSV))
             break;
     }
 
     if (it == range.end()) {
-        res.status = vis::ResponseStatus::ERROR;
-        res.message = "Query type not found";
+        res.status = vis::ResponseStatus::NO_QUERY_TYPE;
 
-        DLOG(INFO) << "Response: " << res;
+        LOG(INFO) << "Response: " << res;
         return;
     }
 
     const vis::ImageSearch& imsearch = *(it->second);
+    std::vector<id_type> results;
 
-    switch (req.requestType) {
+    switch (req.type) {
     case vis::RequestType::OFFLINE:
-        doHandle(dynamic_cast<const vis::OfflineRequest&>(req), res, imsearch);
+        LOG(INFO) << "Offline: id=" << req.id;
+        imsearch.query(req.id, results, req.numResults);
         break;
     case vis::RequestType::REALTIME:
-        doHandle(dynamic_cast<const vis::RealtimeRequest&>(req), res, imsearch);
+        LOG(INFO) << "Realtime: descriptors=" << req.descriptors.size();
+        imsearch.query(req.descriptors, results, req.numResults);
         break;
     case vis::RequestType::UPLOAD:
-        doHandle(dynamic_cast<const vis::UploadRequest&>(req), res, imsearch);
+        LOG(INFO) << "Upload: image=TODO";
+        // TODO imsearch.query(req.image, results, req.numResults);
         break;
     }
 
     res.status = vis::ResponseStatus::OK;
-    toStrings(imsearch.get(res.results), res.paths);
+
+    auto paths = imsearch.get(results);
+    for (auto i = 0; i < paths.size(); ++i) {
+        Match m = { results[i], paths[i].string() };
+        res.results.push_back(m);
+    };
 
     DLOG(INFO) << "Response: " << res;
-}
-
-void RequestHandler::doHandle(const vis::OfflineRequest& req,
-        vis::Response& res, const ImageSearch& imsearch) {
-    DLOG(INFO) << "Offline: id=" << req.id;
-    imsearch.query(req.id, res.results, req.numResults);
-}
-
-void RequestHandler::doHandle(const vis::RealtimeRequest& req,
-        vis::Response& res, const ImageSearch& imsearch) {
-    DLOG(INFO) << "Realtime: descriptors=" << req.descriptors.size();
-    imsearch.query(req.descriptors, res.results, req.numResults);
-}
-
-void RequestHandler::doHandle(const vis::UploadRequest& req,
-        vis::Response& res, const ImageSearch& imsearch) {
-    DLOG(INFO) << "Upload: image=TODO";
-    // TODO imsearch.query(req.image, res.results, req.numResults);
 }
 
 } // namespace server

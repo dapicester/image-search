@@ -14,10 +14,7 @@ namespace vis {
 
 class ImageSearch;
 
-struct BaseRequest;
-struct OfflineRequest;
-struct RealtimeRequest;
-struct UploadRequest;
+struct Request;
 struct Response;
 
 namespace config {
@@ -39,12 +36,7 @@ public:
     ~RequestHandler();
 
     /// Handle a request and produce a reply.
-    void handle(const vis::BaseRequest& req, vis::Response& res);
-
-private:
-    void doHandle(const vis::OfflineRequest&, vis::Response&, const ImageSearch&);
-    void doHandle(const vis::RealtimeRequest&, vis::Response&, const ImageSearch&);
-    void doHandle(const vis::UploadRequest&, vis::Response&, const ImageSearch&);
+    void handle(const vis::Request& req, vis::Response& res);
 
 private:
     boost::ptr_multimap<std::string, vis::ImageSearch> service;
