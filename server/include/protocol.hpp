@@ -9,6 +9,7 @@
 
 #include <boost/asio/streambuf.hpp>
 #include <iostream>
+#include <iterator>
 #include <vector>
 
 namespace vis {
