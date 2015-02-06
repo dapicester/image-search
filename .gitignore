@@ -4,3 +4,4 @@ data
 dependencies/
 tags
 build/
+build.xcode/
