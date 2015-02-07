@@ -1,6 +1,10 @@
 source 'https://rubygems.org'
 
+gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'haml'
 group :test do
   gem 'service_manager'
   gem 'minitest'
+  gem 'rerun'
 end

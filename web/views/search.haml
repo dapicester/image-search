@@ -1,0 +1,10 @@
+%a(href='/all') See all
+
+%form#search(action="/search" method="post")
+  %input(type='number' name='id' value="#{params[:id]||0}")
+  %input(type='submit' value='Search')
+
+- if @images
+  #images
+    - @images.each do |img|
+      %img(src=img alt=img)
