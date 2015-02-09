@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'haml'
+require 'coffee-script'
 require_relative 'client'
 
 before do
