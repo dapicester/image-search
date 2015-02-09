@@ -1,45 +1,23 @@
 require 'sinatra'
-require 'sinatra/reloader' if development?
+require 'sinatra/reloader'
 require 'haml'
 require 'coffee-script'
 require_relative 'client'
+require_relative 'data_helper'
+require_relative 'pagination_helper'
 
 before do
   cache_control :public, :must_revalidate, :max_age => 60
 end
 
-helpers do
-
-  def images_for(category)
-    Dir["#{settings.public_folder}/data/#{category}/**"].map { |p| p.gsub settings.public_folder, '' }
-  end
-
-  def bags
-    @bags ||= images_for 'bag'
-  end
-
-  def paginate(array, page, size = 10)
-    start = (page - 1) * size
-    stop  = page * size - 1
-
-    array[start..stop]
-  end
-
-  def page
-    (params[:page] || 1).to_i
-  end
-
-  def pages(array, size = 10)
-    (array.count.to_f / 10).ceil
-  end
-
-  def client
-    @client ||= Vis::Client.new
-  end
-end
+helpers DataHelper, PaginationHelper
 
 get '/' do
-  redirect to '/search'
+  redirect to '/search', 301
+end
+
+get '/search.js' do
+  coffee :search
 end
 
 get '/search' do
@@ -49,10 +27,10 @@ end
 post '/search' do
   results = client.send({
     type: Vis::RequestType::OFFLINE,
-    category: 'bag',
-    query_type: Vis::QueryType::COLOR,
+    category: params[:category],
+    query_type: params[:query_type],
     num_results: 10,
-    id: params[:id]
+    id: params[:'query_id']
   })
   @images = results[:results].map { |r| "data/#{r[:path]}" }
   haml :search
