@@ -3,14 +3,14 @@ require 'sinatra/reloader' if development?
 require 'haml'
 require_relative 'client'
 
-DATA_DIR = File.expand_path '../../data', __FILE__
-
-set :public_folder, DATA_DIR
+before do
+  cache_control :public, :must_revalidate, :max_age => 60
+end
 
 helpers do
 
   def images_for(category)
-    Dir["#{DATA_DIR}/#{category}/**"].map { |p| p.gsub DATA_DIR, '' }
+    Dir["#{settings.public_folder}/data/#{category}/**"].map { |p| p.gsub settings.public_folder, '' }
   end
 
   def bags
@@ -53,7 +53,7 @@ post '/search' do
     num_results: 10,
     id: params[:id]
   })
-  @images = results[:results].map { |r| r[:path] }
+  @images = results[:results].map { |r| "data/#{r[:path]}" }
   haml :search
 end
 
