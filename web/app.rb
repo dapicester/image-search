@@ -6,6 +6,10 @@ require_relative 'client'
 require_relative 'data_helper'
 require_relative 'pagination_helper'
 
+configure :development do
+  register Sinatra::Reloader
+end
+
 before do
   cache_control :public, :must_revalidate, :max_age => 60
 end
