@@ -9,4 +9,10 @@
     %script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
     %script(src='search.js' type='text/javascript')
   %body
-    = yield
+    %nav.navbar.navbar-inverse.navbar-fixed-top
+      .container
+        .navbar-header
+          %a.navbar-brand(href='/search') Image Search Web
+        #navbar
+    .container-fluid
+      = yield
