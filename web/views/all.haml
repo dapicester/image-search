@@ -1,8 +1,17 @@
-%a(href='/search') Search
+%h2 All images in category
 
-#images
+.images
   - @images.each do |img|
-    %img(src=img alt=img)
-#pagination
-  - (1...@num_pages).each do |p|
-    %a{href: url("#{request.path}?page=#{p}")}= p
+    %img.img-rounded(src=img)
+
+%nav
+  %ul.pagination.pagination-sm
+    %li{class: page == 1 && 'disabled'}
+      %a{href: prev_page, aria: { label: 'Previous'}}
+        %span{aria: { hidden: true}} &laquo;
+    - (1...@num_pages).each do |p|
+      %li{class: page == p && 'active'}
+        %a{href: to_page(p)}= p
+    %li{class: page == @num_pages && 'disabled'}
+      %a{href: next_page, aria: { label: 'Next'}}
+        %span{aria: { hidden: true}} &raquo;

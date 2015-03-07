@@ -17,4 +17,18 @@ module PaginationHelper
     (array.count.to_f / size).ceil
   end
 
+  def to_page(page)
+    url "#{request.path}?page=#{page}"
+  end
+
+  def next_page
+    return '#' if page == @num_pages
+    to_page page+1
+  end
+
+  def prev_page
+    return '#' if page == 1
+    to_page page-1
+  end
+
 end
