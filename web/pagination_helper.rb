@@ -1,6 +1,8 @@
 module PaginationHelper
 
-  def paginate(array, page, size = 10)
+  PAGE_SIZE = 20
+
+  def paginate(array, page, size = PAGE_SIZE)
     start = (page - 1) * size
     stop  = page * size - 1
 
@@ -11,8 +13,8 @@ module PaginationHelper
     (params[:page] || 1).to_i
   end
 
-  def pages(array, size = 10)
-    (array.count.to_f / 10).ceil
+  def pages(array, size = PAGE_SIZE)
+    (array.count.to_f / size).ceil
   end
 
 end
