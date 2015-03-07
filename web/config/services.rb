@@ -5,8 +5,8 @@ ServiceManager.define_service 'image-search' do |s|
   s.port = 4567
 
   s.cwd = File.expand_path '../../../build/server', __FILE__
-
-  s.start_cmd = Proc.new { "./server -p #{port} -f config.yml" }
+  config = File.join Dir.pwd, 'server-config.yml'
+  s.start_cmd = Proc.new { "./server -p #{port} -f #{config}" }
 
   s.color = 33 # 30~37
 
