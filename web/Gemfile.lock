@@ -8,8 +8,8 @@ GEM
     coffee-script (2.3.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.9.0)
-    execjs (2.3.0)
+    coffee-script-source (1.9.1)
+    execjs (2.4.0)
     ffi (1.9.6)
     haml (4.0.6)
       tilt
@@ -21,6 +21,9 @@ GEM
     minitest (5.5.1)
     multi_json (1.10.1)
     rack (1.6.0)
+    rack-coffee (1.0.3)
+      coffee-script
+      rack
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
@@ -53,9 +56,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  coffee-script
   haml
   minitest
+  rack-coffee
   rerun
   service_manager
   sinatra

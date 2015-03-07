@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'haml'
-require 'coffee-script'
+
 require_relative 'client'
 require_relative 'data_helper'
 require_relative 'pagination_helper'
@@ -14,10 +14,6 @@ helpers DataHelper, PaginationHelper
 
 get '/' do
   redirect to '/search', 301
-end
-
-get '/search.js' do
-  coffee :search
 end
 
 get '/search' do
