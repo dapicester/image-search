@@ -25,5 +25,5 @@
 #results
   - if @images
     #images
-      - @images.each do |img|
-        %img(src=img alt=img)
+      - @images.each do |id, img|
+        %img.img-rounded(src=img data-id=id)

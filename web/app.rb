@@ -32,7 +32,7 @@ post '/search' do
     num_results: 10,
     id: params[:'query_id']
   })
-  @images = results[:results].map { |r| "data/#{r[:path]}" }
+  @images = results[:results].map { |r| [r[:id], "data/#{r[:path]}"] }
   haml :search
 end
 
