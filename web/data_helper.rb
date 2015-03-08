@@ -1,11 +1,21 @@
+require 'yaml'
+
 module DataHelper
 
-  CATEGORIES = %w[ bag ]
+  def categories
+    server_config['categories']
+  end
 
-  # TODO dynamically generate the following method using CATEGORIES
-
-  def bags
-    @bags ||= images_for 'bag'
+  def query_types_for(category)
+    types = categories[category]['type']
+    types.map { |s|
+      id = case s
+      when 'color' then 0
+      when 'shape' then 1
+      when 'color_shape' then 2
+      end
+      [id, s]
+    }
   end
 
   # Get file names for images belonging to category.
@@ -14,21 +24,20 @@ module DataHelper
     File.readlines(file).map { |s| File.join '/data', category, s.chomp }
   end
 
-  QUERY_TYPES = {
-    Vis::QueryType::COLOR => 'color',
-    #Vis::QueryType::SHAPE => 'shape',
-    #Vis::QueryType::COLOR_SHAPE => 'combined'
-  }
-
-  def queries_for(category)
-    #TODO eval "@#{category}".values_at 1,9,15,27
-    list = bags
-    queries = [302,298,1,9,15,27]
-    Hash[queries.map { |i| [i, list[i]] }]
+  def queries_for(category, n = 5)
+    images =  images_for(category)
+    queries = [1,10,20,30,40]
+    queries.map { |i| [i, images[i]] }
+    #queries = images_for(category).shuffle[0...5]
+    #queries.map.with_index { |image, i| [i, image] }
   end
 
   def client
     @client ||= Vis::Client.new
+  end
+
+  def server_config
+    @server_config ||= YAML.load File.read 'server-config.yml'
   end
 
 end

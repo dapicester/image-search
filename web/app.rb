@@ -12,12 +12,15 @@ end
 
 before do
   cache_control :public, :must_revalidate, :max_age => 60
+  @category = params[:category]
+  @query_id = params[:query_id]
+  @query_type = params[:query_type]
 end
 
 helpers DataHelper, PaginationHelper
 
 get '/' do
-  redirect to '/search', 301
+  redirect to '/search?category=bag'
 end
 
 get '/search' do
@@ -27,18 +30,19 @@ end
 post '/search' do
   results = client.send({
     type: Vis::RequestType::OFFLINE,
-    category: params[:category],
-    query_type: params[:query_type],
+    category: @category,
+    query_type: @query_type,
     num_results: 10,
-    id: params[:'query_id']
+    id: @query_id
   })
   @images = results[:results].map { |r| [r[:id], File.join('/data', r[:path])] }
   haml :search
 end
 
 get '/all' do
-  @images = paginate bags, page
-  @num_pages = pages bags
+  list = images_for @category
+  @images = paginate list, page
+  @num_pages = pages list
   haml :all
 end
 

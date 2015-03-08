@@ -18,7 +18,7 @@ module PaginationHelper
   end
 
   def to_page(page)
-    url "#{request.path}?page=#{page}"
+    url "#{request.path}?page=#{page}&category=#{@category}"
   end
 
   def next_page

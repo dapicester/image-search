@@ -4,29 +4,27 @@
       .form-group
         %label(for='category') Category
         %select#category(name="category")
-          - CATEGORIES.each do |name|
-            %option(value=name)= name
+          - categories.each do |name,_|
+            %option{value: name, selected: @category == name}= name
       .form-group
         %label(for='query') Query image
         %select#query(name="query_id")
-          - category = 'bag'
-          - queries_for(category).each_with_index do |(id, name), i|
-            - selected = params[:query_id].to_i == id
-            %option{value: id, selected: selected, 'data-image'=>name}
-              = "#{category} #{i+1}"
+          - queries_for(@category).each_with_index do |(id, name), i|
+            %option{value: id, selected: @query_id.to_i == id, 'data-image'=>name}
+              = "#{@category} #{i+1}"
       .form-group
         #preview
           %img.thumbnail.img-rounded
       .form-group
         %label Query type
         .radio
-          - QUERY_TYPES.each do |val, name|
+          - query_types_for(@category).each do |val, name|
             %label
-              %input{type: 'radio', name: 'query_type', value: val, checked: val==0}
+              %input{type: 'radio', name: 'query_type', value: val, checked: @query_type.to_i == val}
               = name
       .form-group
         %button.btn.btn-primary(type='submit') Search
-        %a.btn.btn-default(href='/all') See all
+        %a#all.btn.btn-default(href='#') See all
 
   .results.col-md-8.col-md-offset-3
     - if @images
