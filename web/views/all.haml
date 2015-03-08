@@ -1,0 +1,9 @@
+%h2 All images for #{@category}
+
+= will_paginate @images, renderer: BootstrapPagination::Sinatra
+
+.images
+  - @images.each_with_index do |img, i|
+    %img.img-rounded(src=img data-id=i)
+
+= will_paginate @images, renderer: BootstrapPagination::Sinatra

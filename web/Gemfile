@@ -1,0 +1,15 @@
+source 'https://rubygems.org'
+
+gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'haml'
+gem 'rack-coffee'
+gem 'sass'
+gem 'will_paginate'
+gem 'will_paginate-bootstrap'
+
+group :test do
+  gem 'service_manager'
+  gem 'minitest'
+  gem 'rerun'
+end

@@ -1,0 +1,44 @@
+.row
+  .sidebar.col-md-3
+    %form#search.form-horizontal(action="/search" method="post")
+      .form-group
+        %label.col-sm-6.control-label(for='category')
+          Category
+        .col-sm-6
+          %select#category.form-control(name="category")
+            - categories.each do |name,_|
+              %option{value: name, selected: @category == name}= name
+      .form-group
+        %label.col-sm-6.control-label(for='query')
+          Query image
+        .col-sm-6
+          %select#query.form-control(name="query_id")
+            - queries_for(@category).each_with_index do |(id, name), i|
+              %option{value: id, selected: @query_id.to_i == id, 'data-image'=>name}
+                = "#{@category} #{i+1}"
+      .form-group
+        %label.col-sm-6.control-label(for='num_results')
+          Number of results
+        .col-sm-6
+          %input.form-control(type='number' name='num_results' min='1' max='20' value=@num_results)
+      .form-group
+        #preview
+          %img.img-rounded.center-block
+      .form-group
+        %label.col-sm-6.control-label
+          Query type
+        .radio.col-sm-6
+          - query_types_for(@category).each do |val, name|
+            %label
+              %input{type: 'radio', name: 'query_type', value: val, checked: @query_type.to_i == val}
+              = name
+      .form-group
+        .col-sm-6
+          %a#all.btn.btn-default.form-control(href='#') See all
+        .col-sm-6
+          %button.btn.btn-primary.form-control(type='submit') Search
+
+  .results.col-md-8.col-md-offset-3
+    - if @images
+      - @images.each do |id, img|
+        %img.img-rounded(src=img data-id=id)

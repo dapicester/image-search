@@ -1,0 +1,16 @@
+categories:
+  bag:
+    dir: /Users/paolo/Projects/image-search/data
+    type:
+      - color
+      - shape
+  shoe:
+    dir: /Users/paolo/Projects/image-search/data
+    type:
+      - color
+      - shape
+  woman_shoe:
+    dir: /Users/paolo/Projects/image-search/data
+    type:
+      - color
+      - shape

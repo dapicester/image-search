@@ -1,0 +1,17 @@
+body {
+  padding-top: 55px;
+}
+
+img {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+@mixin cursor-pointer {
+  cursor: pointer;
+}
+
+.results {
+  position: absolute;
+  img { @include cursor-pointer; }
+}
