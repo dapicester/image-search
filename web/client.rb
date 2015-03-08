@@ -32,7 +32,7 @@ module Vis
   class Client
 
     DEFAULT_ADDRESS = '0.0.0.0'
-    DEFAULT_PORT = 4567
+    DEFAULT_PORT = 5858
 
     def initialize(address = DEFAULT_ADDRESS, port = DEFAULT_PORT)
       @address = address

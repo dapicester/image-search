@@ -2,7 +2,7 @@ require 'service_manager'
 
 ServiceManager.define_service 'image-search' do |s|
   s.host = 'localhost'
-  s.port = 4567
+  s.port = 5858
 
   s.cwd = File.expand_path '../../../build/server', __FILE__
   config = File.join Dir.pwd, 'server-config.yml'
