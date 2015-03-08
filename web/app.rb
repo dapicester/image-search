@@ -13,6 +13,9 @@ end
 
 before do
   cache_control :public, :must_revalidate, :max_age => 60
+end
+
+before /(search|all)/ do
   @category = params[:category] || categories.first.first
   @query_type = params[:query_type]
   @num_results = params[:num_results] || 10
