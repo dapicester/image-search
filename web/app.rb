@@ -2,12 +2,12 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'haml'
 
-require_relative 'client'
-require_relative 'data_helper'
-require_relative 'pagination_helper'
+my_requires = %w[client data_helper pagination_helper]
+my_requires.each { |f| require_relative f }
 
 configure :development do
-  register Sinatra::Reloader
+  enable :reloader
+  my_requires.each { |f| also_reload "#{f}.rb" }
 end
 
 before do
