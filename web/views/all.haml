@@ -1,8 +1,8 @@
 %h2 All images for #{@category}
 
 .images
-  - @images.each do |img|
-    %img.img-rounded(src=img)
+  - @images.each_with_index do |img, i|
+    %img.img-rounded(src=img data-id=i)
 
 %nav
   %ul.pagination.pagination-sm

@@ -7,6 +7,11 @@ img {
   max-height: 200px;
 }
 
+@mixin cursor-pointer {
+  cursor: pointer;
+}
+
 .results {
   position: absolute;
+  img { @include cursor-pointer; }
 }

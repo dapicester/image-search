@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'haml'
+require 'json'
 
 my_requires = %w[client data_helper pagination_helper]
 my_requires.each { |f| require_relative f }
@@ -27,15 +28,17 @@ get '/search' do
   haml :search
 end
 
-post '/search' do
-  results = client.send({
+post '/search.?:format?' do
+  response = client.send({
     type: Vis::RequestType::OFFLINE,
     category: @category,
     query_type: @query_type,
     num_results: 10,
     id: @query_id
   })
-  @images = results[:results].map { |r| [r[:id], File.join('/data', r[:path])] }
+  @images = response[:results].map { |r| [r[:id], File.join('/data', r[:path])] }
+
+  return JSON.dump @images if params[:format] == 'json'
   haml :search
 end
 
