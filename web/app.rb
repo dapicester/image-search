@@ -13,15 +13,16 @@ end
 
 before do
   cache_control :public, :must_revalidate, :max_age => 60
-  @category = params[:category]
-  @query_id = params[:query_id]
+  @category = params[:category] || categories.first.first
   @query_type = params[:query_type]
+  @num_results = params[:num_results] || 10
+  @query_id = params[:query_id]
 end
 
 helpers DataHelper, PaginationHelper
 
 get '/' do
-  redirect to '/search?category=bag'
+  redirect to '/search'
 end
 
 get '/search' do
@@ -33,7 +34,7 @@ post '/search.?:format?' do
     type: Vis::RequestType::OFFLINE,
     category: @category,
     query_type: @query_type,
-    num_results: 10,
+    num_results: @num_results,
     id: @query_id
   })
   @images = response[:results].map { |r| [r[:id], File.join('/data', r[:path])] }
