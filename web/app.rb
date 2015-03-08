@@ -2,6 +2,10 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'haml'
 require 'json'
+require 'will_paginate/array'
+require 'will_paginate-bootstrap'
+
+WillPaginate.per_page = 12;
 
 my_requires = %w[client data_helper pagination_helper]
 my_requires.each { |f| require_relative f }
@@ -18,7 +22,7 @@ end
 before /(search|all)/ do
   @category = params[:category] || categories.first.first
   @query_type = params[:query_type]
-  @num_results = params[:num_results] || 10
+  @num_results = params[:num_results] || WillPaginate.per_page
   @query_id = params[:query_id]
 end
 
@@ -47,9 +51,7 @@ post '/search.?:format?' do
 end
 
 get '/all' do
-  list = images_for @category
-  @images = paginate list, page
-  @num_pages = pages list
+  @images = images_for(@category).paginate page: page
   haml :all
 end
 

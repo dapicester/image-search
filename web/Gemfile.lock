@@ -52,6 +52,9 @@ GEM
     tilt (1.4.1)
     timers (4.0.1)
       hitimes
+    will_paginate (3.0.7)
+    will_paginate-bootstrap (1.0.1)
+      will_paginate (>= 3.0.3)
 
 PLATFORMS
   ruby
@@ -65,3 +68,5 @@ DEPENDENCIES
   service_manager
   sinatra
   sinatra-contrib
+  will_paginate
+  will_paginate-bootstrap

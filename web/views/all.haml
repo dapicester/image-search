@@ -1,17 +1,9 @@
 %h2 All images for #{@category}
 
+= will_paginate @images, renderer: BootstrapPagination::Sinatra
+
 .images
   - @images.each_with_index do |img, i|
     %img.img-rounded(src=img data-id=i)
 
-%nav
-  %ul.pagination.pagination-sm
-    %li{class: page == 1 && 'disabled'}
-      %a{href: prev_page, aria: { label: 'Previous'}}
-        %span{aria: { hidden: true}} &laquo;
-    - (1...@num_pages).each do |p|
-      %li{class: page == p && 'active'}
-        %a{href: to_page(p)}= p
-    %li{class: page == @num_pages && 'disabled'}
-      %a{href: next_page, aria: { label: 'Next'}}
-        %span{aria: { hidden: true}} &raquo;
+= will_paginate @images, renderer: BootstrapPagination::Sinatra
