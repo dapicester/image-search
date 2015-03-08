@@ -1,0 +1,15 @@
+require 'rake/testtask'
+require 'service_manager'
+
+Rake::TestTask.new do |t|
+  t.libs << %w[test .]
+  t.pattern = 'test/**/*_test.rb'
+end
+
+task :default => :test
+
+task :services do
+  ServiceManager.start
+end
+
+task :test => :services

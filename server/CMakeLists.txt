@@ -10,7 +10,7 @@ list(APPEND libraries vis)
 
 list(APPEND includes "${server_SOURCE_DIR}/include")
 
-find_package(Boost COMPONENTS iostreams program_options serialization thread REQUIRED)
+find_package(Boost COMPONENTS program_options thread REQUIRED)
 list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
@@ -22,8 +22,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(server_SRCS
     src/connection.cpp
     src/connection_manager.cpp
-    src/logging.cpp
-    src/protocol.cpp
     src/main.cpp
     src/request_handler.cpp
     src/server.cpp

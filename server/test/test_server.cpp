@@ -11,20 +11,12 @@
 
 #include "client.hpp"
 #include "directories.h"
-#include "logging.hpp"
 #include "protocol.hpp"
 #include "server.hpp"
 
 #include <vis/configuration.hpp>
 
 #include <boost/filesystem.hpp>
-#include <boost/serialization/export.hpp>
-
-_INITIALIZE_EASYLOGGINGPP
-
-BOOST_CLASS_EXPORT(vis::OfflineRequest);
-BOOST_CLASS_EXPORT(vis::RealtimeRequest);
-BOOST_CLASS_EXPORT(vis::UploadRequest);
 
 namespace fs = boost::filesystem;
 
@@ -33,7 +25,10 @@ static const std::string PORT = "4567";
 
 struct InitLogging {
     InitLogging() {
-        vis::logging::registerLoggers({ "server", "client", "connection", "handler", "manager" });
+        google::InitGoogleLogging("vis_server");
+    }
+    ~InitLogging() {
+        google::ShutdownGoogleLogging();
     }
 };
 
@@ -62,61 +57,57 @@ BOOST_FIXTURE_TEST_CASE(connect, ServerConfig) {
     server.stop();
 }
 
-static const vis::OfflineRequest offline(
-        vis::RequestType::OFFLINE, "bag", 'c', 20,
-        42);
-static const vis::RealtimeRequest realtime(
-        vis::RequestType::REALTIME, "shoe", 's', 10,
-        std::vector<float>(300, 0.f));
-
 BOOST_FIXTURE_TEST_CASE(request, ServerConfig) {
     vis::server::Server server(HOST, PORT, config);
     server.startAsync();
 
-    const vis::BaseRequest* requests[] = { &offline, &realtime }; // TODO upload request
-    std::for_each(std::begin(requests), std::end(requests), [](const vis::BaseRequest* request) {
+    const vis::Request requests[] = {
+        { vis::RequestType::OFFLINE, "bag", vis::QueryType::COLOR, 20, 42, {} },
+        { vis::RequestType::REALTIME, "shoe", vis::QueryType::SHAPE, 10, 0, std::vector<float>(300, 0.f) },
+        // TODO upload
+    };
+    std::for_each(std::begin(requests), std::end(requests), [](const vis::Request& request) {
         vis::Client client(HOST, PORT);
         BOOST_REQUIRE(client.probe());
 
         vis::Response response = client.sendRequest(request);
 
         BOOST_CHECK_EQUAL((int) vis::ResponseStatus::OK, (int) response.status);
-        BOOST_CHECK(response.message.empty());
-        BOOST_CHECK_EQUAL(request->numResults, response.results.size()); // XXX actually should be CHECK_GE
-        BOOST_CHECK_EQUAL(request->numResults, response.paths.size());   // XXX actually should be CHECK_GE
-        for (const std::string& s : response.paths) {
+        BOOST_CHECK_EQUAL(request.numResults, response.results.size()); // XXX actually should be CHECK_GE
+        for (auto r : response.results) {
             static fs::path dir(DATA_DIR);
-            BOOST_CHECK(fs::is_regular_file(dir/s));
+            BOOST_CHECK(fs::is_regular_file(dir/r.path));
         }
     });
 
     server.stop();
 }
 
-static const vis::UploadRequest bad_category(vis::RequestType::UPLOAD,
-        "none", 'c', 20,
-        nullptr /* TODO image data*/);
-
-static const vis::UploadRequest bad_type(vis::RequestType::UPLOAD,
-        "bag", 's', 20,
-        nullptr /* TODO image data*/);
-
 BOOST_FIXTURE_TEST_CASE(failure, ServerConfig) {
     vis::server::Server server(HOST, PORT, config);
     server.startAsync();
 
-    const vis::BaseRequest* failures[] = { &bad_category, &bad_type };
-    std::for_each(std::begin(failures), std::end(failures), [](const vis::BaseRequest* request) {
+    const vis::Request failures[] = {
+        { vis::RequestType::UPLOAD, "none", vis::QueryType::COLOR, 20 },
+        { vis::RequestType::UPLOAD, "bag", static_cast<vis::QueryType>(5), 20 }
+    };
+    const vis::ResponseStatus expected[] = {
+        vis::ResponseStatus::NO_CATEGORY,
+        vis::ResponseStatus::NO_QUERY_TYPE
+    };
+
+    for (auto i = 0; i < 2; i++) {
+        const vis::Request& request = failures[i];
+        const vis::ResponseStatus& status = expected[i];
+
         vis::Client client(HOST, PORT);
         BOOST_REQUIRE(client.probe());
 
         vis::Response response = client.sendRequest(request);
 
-        BOOST_CHECK_EQUAL((int) vis::ResponseStatus::ERROR, (int) response.status);
-        BOOST_CHECK(not response.message.empty()); // TODO define error messages or error status codes
+        BOOST_CHECK_EQUAL((int) status, (int) response.status);
         BOOST_CHECK(response.results.empty());
-        BOOST_CHECK(response.paths.empty());
-    });
+    };
 
     server.stop();
 }

@@ -1,17 +1,15 @@
 #ifndef VIS_CLIENT_HPP
 #define VIS_CLIENT_HPP
 
-#include "logging.hpp"
-#include "protocol_serialization.hpp"
+#include "protocol.hpp"
 
 #include <boost/asio.hpp>
+#include <glog/logging.h>
 #include <iostream>
 
 namespace vis {
 
 static const int maxLength = 1024;
-
-#define _LOG(X) CLOG(X, "client")
 
 class Client {
 public:
@@ -21,20 +19,20 @@ public:
     virtual ~Client() {}
 
     bool probe() {
-        _LOG(INFO) << "Probing " << host << ":" << port << " ...";
+        LOG(INFO) << "Probing " << host << ":" << port << " ...";
         try {
             boost::asio::ip::tcp::resolver resolver(io_service);
             boost::asio::connect(socket, resolver.resolve({host,port}));
-            _LOG(INFO) << "Probe OK";
+            LOG(INFO) << "Probe OK";
             return true;
         } catch (std::exception& e) {
-            _LOG(WARNING) << "Probe ERROR: " << e.what();
+            LOG(WARNING) << "Probe ERROR: " << e.what();
             return false;
         }
     }
 
-    Response sendRequest(const BaseRequest* request) {
-        _LOG(INFO) << "Sending request [" << *request << "] ...";
+    Response sendRequest(const Request& request) {
+        LOG(INFO) << "Sending request [" << request << "] ...";
         {
             put(buf, request);
             header = buf.size();
@@ -46,17 +44,17 @@ public:
 
             const size_t n = boost::asio::write(socket, buffers);
             buf.consume(n);
-            _LOG(INFO) << "Request sent " << n << " bytes";
+            LOG(INFO) << "Request sent " << n << " bytes";
         }
 
-        _LOG(INFO) << "Waiting for response ...";
+        LOG(INFO) << "Waiting for response ...";
         {
             size_t n = boost::asio::read(socket, boost::asio::buffer(&header, sizeof(header)));
 
             boost::system::error_code ec;
             n += boost::asio::read(socket, buf.prepare(header), ec);
             buf.commit(header);
-            _LOG(INFO) << "Response received " << n << " bytes";
+            LOG(INFO) << "Response received " << n << " bytes";
 
             Response response;
             get(buf, response);

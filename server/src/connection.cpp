@@ -6,16 +6,13 @@
 
 #include "connection.hpp"
 #include "connection_manager.hpp"
-#include "logging.hpp"
-#include "protocol_serialization.hpp"
 #include "request_handler.hpp"
 
+#include <glog/logging.h>
 #include <iostream>
 
 namespace vis {
 namespace server {
-
-#define _LOG(X) CLOG(X, "connection")
 
 Connection::Connection(boost::asio::ip::tcp::socket socket,
         ConnectionManager& mgr, RequestHandler& h)
@@ -30,29 +27,28 @@ Connection::start() {
 void
 Connection::stop() {
     socket.close();
-    _LOG(INFO) << "Connection closed";
+    LOG(INFO) << "Connection closed";
 }
 
 void
 Connection::doRead() {
     auto self(shared_from_this());
-    _LOG(INFO) << "Reading request data ...";
+    LOG(INFO) << "Reading request data ...";
 
     boost::asio::async_read(socket, boost::asio::buffer(&header, sizeof(header)),
         [this, self](boost::system::error_code ec, size_t transferred) {
-            _LOG(INFO) << "transferred: " << transferred << " bytes";
+            LOG(INFO) << "transferred: " << transferred << " bytes";
             if (not ec) {
                 boost::asio::async_read(socket, buf.prepare(header),
                     [this, self](boost::system::error_code, size_t len) {
                         buf.commit(header);
-                        _LOG(INFO) << "read: " << len + sizeof(header) << " bytes";
+                        LOG(INFO) << "read: " << len + sizeof(header) << " bytes";
 
-                        BaseRequest* request;
+                        Request request;
                         get(buf, request);
 
                         // TODO handle parse errors
-                        handler.handle(*request, response);
-                        delete request;
+                        handler.handle(request, response);
 
                         doWrite();
                     }
@@ -76,12 +72,12 @@ Connection::doWrite() {
         buf.data()
     };
 
-    _LOG(INFO) << "Writing response ...";
+    LOG(INFO) << "Writing response ...";
     boost::asio::async_write(socket, buffers,
         [this, self](boost::system::error_code ec, size_t len) {
             if (not ec) {
                 buf.consume(len);
-                _LOG(INFO) << "written: " << len << " bytes";
+                LOG(INFO) << "written: " << len << " bytes";
 
                 boost::system::error_code ignored;
                 socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);

@@ -43,7 +43,7 @@ int main(int, char**) {
     perf::TimingsVector results;
 
     for (vis::DescriptorsType type : TYPES) {
-        size_t length = perf::getLength(type);
+        size_t length = vis::getLength(type);
 
         perf::Timings t;
         t.addParam("descriptor", vis::toString(type));

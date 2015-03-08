@@ -1,6 +1,7 @@
 .directory
-data
+/data
 *~
-dependencies/
+/dependencies/
 tags
-build/
+/build/
+/build.xcode/

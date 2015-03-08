@@ -8,6 +8,7 @@
 #define VIS_TEST_COMMONS_HPP
 
 #include <boost/filesystem.hpp>
+#include <iostream>
 
 namespace fs = boost::filesystem;
 

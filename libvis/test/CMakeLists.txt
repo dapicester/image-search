@@ -5,9 +5,6 @@ include_directories(${SRC_DIR})
 # new version of cmake overwrite instead of append, so let's backup
 set(BOOST_LIBRARIES ${Boost_LIBRARIES})
 
-# new version of cmake overwrite instead of append, so let's backup
-set(BOOST_LIBRARIES ${Boost_LIBRARIES})
-
 find_package(Boost COMPONENTS system unit_test_framework REQUIRED)
 add_definitions(-DBOOST_TEST_DYN_LINK)
 
@@ -25,20 +22,30 @@ message(STATUS "Tests:")
 
 add_unit_test(NAME opencv_usage
     SOURCES opencv_usage.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME armadillo_usage
     SOURCES armadillo_usage.cpp
-    LINK_LIBRARIES ${ARMADILLO_LIBRARIES} ${Boost_LIBRARIES})
+    LINK_LIBRARIES ${MATH_LIBRARIES} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_conversions
     SOURCES test_conversions.cpp
-    LINK_LIBRARIES ${ARMADILLO_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+    LINK_LIBRARIES ${MATH_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME vlfeat_usage
     SOURCES vlfeat_usage.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${Boost_LIBRARIES})
+
+add_unit_test(NAME glog_usage
+    SOURCES glog_usage.cpp
+    LINK_LIBRARIES ${GLOG_LIBRARIES} ${Boost_LIBRARIES})
+
+add_unit_test(NAME test_thread_pool
+    SOURCES test_thread_pool.cpp
+            ${SRC_DIR}/utils/thread_pool.cpp
+    LINK_LIBRARIES ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_kmeans
     SOURCES test_kmeans.cpp
@@ -50,18 +57,21 @@ add_unit_test(NAME test_kdtree
 
 add_unit_test(NAME test_standardize
     SOURCES test_standardize.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hog
     SOURCES test_hog.cpp
             ${SRC_DIR}/hog.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
 add_unit_test(NAME test_hsv_aux
     SOURCES test_hsv_aux.cpp
             ${SRC_DIR}/hsv_aux.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
@@ -69,6 +79,7 @@ add_unit_test(NAME test_hsv
     SOURCES test_hsv.cpp
             ${SRC_DIR}/hsv.cpp
             ${SRC_DIR}/hsv_aux.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
@@ -94,8 +105,10 @@ add_unit_test(NAME test_timer
 
 add_unit_test(NAME test_vocabulary
     SOURCES test_vocabulary.cpp
+            ${SRC_DIR}/extract.cpp
             ${SRC_DIR}/hog.cpp
             ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 
@@ -103,6 +116,7 @@ add_unit_test(NAME test_hog_bow
     SOURCES test_hog_bow.cpp
             ${SRC_DIR}/hog.cpp
             ${SRC_DIR}/vocabulary.cpp
+            ${SRC_DIR}/standardize.cpp
             ${SRC_DIR}/utils/filesystem.cpp
     LINK_LIBRARIES ${VLFEAT_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
 

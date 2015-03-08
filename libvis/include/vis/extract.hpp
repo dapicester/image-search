@@ -9,10 +9,14 @@
 
 #include <armadillo>
 #include <boost/filesystem/path.hpp>
+#include <opencv2/core/core.hpp>
 #include <functional>
 #include <vector>
 
 namespace vis {
+
+struct Callback;
+template <typename E> struct VocabularyCallback;
 
 enum class ColorMode {
     COLORS,
@@ -21,15 +25,17 @@ enum class ColorMode {
 
 typedef std::function<void (int)> ProgressHandler;
 
+cv::Mat
+readStandardized(const std::string& name, ColorMode mode);
+
 /**
- * @brief Extract descriptors on a list of images.
+ * @brief Extract descriptor vectors on a list of images.
  * @param names List of full pathnames to images
  * @param[out] data Descriptors.
  * @param cv Callback computing descriptors.
  * @param mode Color type of loaded images.
  * @param handler Callback to monitor extraction progress (e.g. adjust a progress counter).
  */
-template <typename Callback>
 void
 extract(const std::vector<boost::filesystem::path>& names,
         arma::fmat& data,
@@ -37,9 +43,37 @@ extract(const std::vector<boost::filesystem::path>& names,
         ColorMode mode = ColorMode::COLORS,
         ProgressHandler handler = NULL);
 
-} /* namespace vis */
+/**
+ * @brief Extract descriptor matrices on a list of images.
+ * @param names List of full pathnames to images
+ * @param[out] data Descriptors.
+ * @param cv Callback computing descriptors.
+ * @param mode Color type of loaded images.
+ * @param handler Callback to monitor extraction progress (e.g. adjust a progress counter).
+ */
+// TODO move this into vocabulary
+template <typename Extractor>
+void
+extract_mat(const std::vector<boost::filesystem::path>& names,
+        arma::fmat& data,
+        const VocabularyCallback<Extractor>& cb,
+        ColorMode mode = ColorMode::COLORS,
+        ProgressHandler handler = NULL) {
 
-#include "detail/extract_impl.hpp"
+    std::vector<arma::fmat> temp(names.size());
+    for (int i = 0; i < names.size(); ++i) {
+        if (handler) handler(i);
+
+        cv::Mat image = readStandardized(names[i].string(), mode);
+        temp[i] = cb(image);
+    }
+
+    for (int i = 0; i < names.size(); ++i) {
+        data = arma::join_rows(data, temp[i]); // XXX this is slow
+    }
+}
+
+} /* namespace vis */
 
 #endif /* VIS_EXTRACT_HPP */
 

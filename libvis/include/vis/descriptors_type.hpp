@@ -11,6 +11,8 @@
 
 namespace vis {
 
+// TODO use a class like Java Enum types.
+
 /// Available descriptors types.
 enum DescriptorsType {
     HOG,        ///< HOG descriptors.
@@ -18,15 +20,28 @@ enum DescriptorsType {
     HOG_HSV,    ///< Both HOG descriptors and HSV color histograms.
 };
 
+/// Returns the length of a vector for the given type.
+inline size_t
+getLength(DescriptorsType type) {
+    switch(type) {
+        case HSV:
+            return 166;
+        case HOG:
+            return 300;
+        case HOG_HSV:
+            return 466;
+    }
+}
+
 /// Returns a textual representation of the enum value.
 inline std::string
 toString(DescriptorsType type) {
     switch(type) {
-        case vis::HSV:
+        case HSV:
             return "HSV";
-        case vis::HOG:
+        case HOG:
             return "HOG";
-        case vis::HOG_HSV:
+        case HOG_HSV:
             return "HOG_HSV";
     }
 }
@@ -35,11 +50,11 @@ toString(DescriptorsType type) {
 inline DescriptorsType
 toDescriptorsType(const std::string& type) {
     if (type == "HSV" or type == "color")
-        return vis::HSV;
+        return HSV;
     else if (type == "HOG" or type == "shape")
-        return vis::HOG;
+        return HOG;
     else if (type == "HOG_HSV" or type == "combined")
-        return vis::HOG_HSV;
+        return HOG_HSV;
     else
         throw "invalid type";
 }

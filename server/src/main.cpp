@@ -4,16 +4,13 @@
  * @author Paolo D'Apice
  */
 
-#include "logging.hpp"
 #include "server.hpp"
-
 #include <vis/configuration.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
+#include <glog/logging.h>
 #include <iostream>
-
-_INITIALIZE_EASYLOGGINGPP
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
@@ -21,14 +18,19 @@ namespace po = boost::program_options;
 static const std::string DEFAULT_ADDRESS = "0.0.0.0";
 static const std::string DEFAULT_PORT    = "4567";
 
-void init(int argc, char** argv) {
-    _START_EASYLOGGINGPP(argc, argv);
-    vis::logging::registerLoggers({"server", "connection", "handler", "manager"});
-}
+/// @brief Logging initialization structure.
+struct InitGlog {
+    InitGlog() {
+        google::InitGoogleLogging("vis_server");
+    }
+    ~InitGlog() {
+        google::ShutdownGoogleLogging();
+    }
+};
 
 int main(int argc, char** argv) {
     try {
-        init(argc, argv);
+        //InitGlog logging;
 
         // TODO move to function
 
