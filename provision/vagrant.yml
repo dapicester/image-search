@@ -1,0 +1,10 @@
+---
+- name: Setup
+  hosts: all
+  tasks:
+  - name: Update package cache (30 days)
+    apt: update_cache=yes cache_valid_time=2592000
+  - name: Install required packages
+    apt: name={{item}} state=present
+    sudo: yes
+    with_items: build-essential

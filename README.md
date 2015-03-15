@@ -1,11 +1,30 @@
-Image Search Project
-====================
+Image Search
+============
 
 This is the visual image search project.
-It contains a Matlab prototype, a C++ library, a TCP server and a demo application.
+It contains the following modules:
+- Matlab prototype
+- C++ library
+- TCP server
+
+As usage examples, two applications are provided:
+- GUI application using the C++ library
+- a web application using the TCP server
 
 Build Instructions
 ------------------
+
+It is possible to use Vagrant to setup and build the project.
+
+Please refer to the Ansible provisioning script for a list of
+required dependencies.
+
+Build C++ modules:
+
+    $ mkdir build && cd build
+    $ cmake ..
+    $ make
+    $ make test
 
 ### Dependencies:
 
@@ -30,10 +49,4 @@ Optional
 - Gnuplot-iostream
 
 ### Build
-
-    $ mkdir build && cd build
-    $ cmake ..
-    $ make
-    $ make test
-
 
