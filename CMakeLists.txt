@@ -30,8 +30,12 @@ endif()
 option(ENABLE_CTAGS "Enable CTags" OFF)
 
 add_subdirectory(libvis)
-#add_subdirectory(demo)
 add_subdirectory(server)
+
+option(ENABLE_QTDEMO "Compile the Qt demo" OFF)
+if(ENABLE_QTDEMO)
+    add_subdirectory(demo)
+endif()
 
 if(ENABLE_CTAGS)
     add_ctags_for(libvis demo server)
