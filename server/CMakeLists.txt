@@ -30,6 +30,8 @@ set(server_SRCS
 list(APPEND includes ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${includes})
 
+list(APPEND libraries "pthread")
+
 macro_build_info()
 
 add_executable(server ${server_SRCS})

@@ -24,4 +24,4 @@ add_unit_test(NAME test_server
             ${SRC}/request_handler.cpp
             ${SRC}/server.cpp
     ARGS ${server_BINARY_DIR}/config.yml
-    LINK_LIBRARIES vis ${Boost_LIBRARIES})
+    LINK_LIBRARIES vis pthread ${Boost_LIBRARIES})
