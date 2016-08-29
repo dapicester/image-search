@@ -1,8 +1,17 @@
-Image Search Project
-====================
+Image Search
+============
 
 This is the visual image search project.
-It contains a Matlab prototype, a C++ library, a TCP server and a demo application.
+It contains the following modules:
+
+- Matlab prototype
+- C++ library
+- TCP server
+
+As usage examples, two applications are provided:
+
+- GUI application using the C++ library
+- a Ruby web application using the TCP server
 
 IMPORTANT
 ---------
@@ -40,9 +49,17 @@ Optional
 
 ### Build
 
+Build C++ modules:
+
     $ mkdir build && cd build
     $ cmake ..
     $ make
     $ make test
 
+By default the GUI demo application is not built.
+In order to build and run:
+
+    $ cd build
+    $ cmake .. -DENABLE_QT_DEMO=1
+    $ make
 
