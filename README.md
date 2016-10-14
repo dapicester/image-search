@@ -63,3 +63,7 @@ In order to build and run:
     $ cmake .. -DENABLE_QT_DEMO=1
     $ make
 
+Screenshot
+---
+
+![screenshot](screenshot.png)
